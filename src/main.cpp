@@ -5,6 +5,7 @@
 #include "./commands/all_commands.h"
 #include "./global_var.h"
 #include "./parser.cpp"
+#include "./call_function.cpp"
 
 using namespace std;
 
@@ -14,9 +15,10 @@ int main(){
     
     while(exit_check == 0){
         cout << "\n\n";
-        cout << userName << "> ";
+        cout << user_name << "> ";
         getline(cin, input);
         parse_command(input);
+        call_function(parsed_cmd);
     }
     return 0;
 }
