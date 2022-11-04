@@ -11,6 +11,9 @@ int call_function(vector<string> i){
     if(i.at(0) == "clear"){
         clear();
     }
+    if(i.at(0) == "date"){
+        date();
+    }
     else if(i.at(0) == "echo"){
         echo(i);
     }
@@ -19,6 +22,9 @@ int call_function(vector<string> i){
     }
     else if(i.at(0) == "help"){
         help(commands);
+    }
+    else if(i.at(0) == "time"){
+        time();
     }
     else if(i.at(0) == "whoami"){
         whoami(user_name);

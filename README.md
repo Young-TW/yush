@@ -5,9 +5,11 @@ A simple shell.
 ## Commands
 
 - [x] clear
+- [x] date
 - [x] echo
 - [x] exit
 - [x] help
+- [x] time
 - [x] whoami
 
 ## Usage

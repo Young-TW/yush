@@ -12,9 +12,11 @@ vector<string> parsed_cmd;
 
 map<string, string> commands ={
     {"clear", "clear texts"},
+    {"date", "display current date"},
     {"echo", "display texts"},
     {"exit", "exit shell"},
     {"help", "print all commands"},
+    {"time", "display current time"},
     {"whoami", "print user name"},
 };
 
