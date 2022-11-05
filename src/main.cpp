@@ -8,6 +8,7 @@
 #include "./call_function.cpp"
 
 using namespace std;
+using namespace std::filesystem;
 
 int main(){
     cout << "Welcome to yush 0.0.1 \n Copyright (c) 2022 Young Studio.";
@@ -15,7 +16,7 @@ int main(){
     
     while(exit_check == 0){
         cout << "\n\n";
-        cout << user_name << "> ";
+        cout << user_name << " " << fs_current_path << "> ";
         getline(cin, input);
         parse_command(input);
         call_function(parsed_cmd);

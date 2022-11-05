@@ -8,10 +8,16 @@
 using namespace std;
 
 int call_function(vector<string> i){
-    if(i.at(0) == "clear"){
+    if(i.at(0) == "cat"){
+        cat(i.at(1));
+    }
+    else if(i.at(0) == "cd"){
+        cd(i.at(1));
+    }
+    else if(i.at(0) == "clear"){
         clear();
     }
-    if(i.at(0) == "date"){
+    else if(i.at(0) == "date"){
         date();
     }
     else if(i.at(0) == "echo"){
@@ -22,6 +28,9 @@ int call_function(vector<string> i){
     }
     else if(i.at(0) == "help"){
         help(commands);
+    }
+    else if(i.at(0) == "ls"){
+        ls();
     }
     else if(i.at(0) == "time"){
         time();

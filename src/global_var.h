@@ -4,11 +4,15 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <filesystem>
+
 using namespace std;
+using namespace std::filesystem;
 
 const string user_name = "Young";
 bool exit_check = 0;
 vector<string> parsed_cmd;
+path fs_current_path("/Users/young");
 
 map<string, string> commands ={
     {"clear", "clear texts"},
