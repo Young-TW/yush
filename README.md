@@ -11,24 +11,25 @@ A simple shell.
 - [x] echo
 - [x] exit
 - [x] help
+- [x] la
 - [ ] ls
-    - [x] la
 - [x] time
 - [x] whoami
 
 # Feature
 
 - [ ] arrow (select past commands)
+- [x] varible $system
 
 ## Usage
 
-clone the repository
+clone the repository  
 
 ```sh
 git clone https://github.com/Young-TW/yush.git
 ```
 
-build
+build  
 
 ```sh
 cd yush

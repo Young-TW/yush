@@ -7,6 +7,8 @@
 #include "./parser.cpp"
 #include "./call_function.cpp"
 #include "./arrow.cpp"
+#include "./init.h"
+#include "./input_stack.cpp"
 
 using namespace std;
 using namespace std::filesystem;
@@ -16,6 +18,7 @@ int main(){
     string input;
     
     while(exit_check == 0){
+        init();
         cout << "\n\n";
         cout << user_name << " " << fs_current_path << "> ";
         

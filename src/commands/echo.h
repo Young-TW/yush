@@ -4,11 +4,18 @@
 #include <iostream>
 #include <vector>
 #include <string>
+
+#include "../global_var.h"
+
 using namespace std;
 
 int echo(vector<string> i){
-    for(size_t j=1;j<i.size();j++){
-        cout << i.at(j) << " ";
+    if(i.at(1) == "$system"){
+        cout << sys;
+    }else{
+        for(size_t j=1;j<i.size();j++){
+            cout << i.at(j) << " ";
+        }
     }
     return 0;
 }
