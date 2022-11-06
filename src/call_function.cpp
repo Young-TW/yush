@@ -29,6 +29,9 @@ int call_function(vector<string> i){
     else if(i.at(0) == "help"){
         help(commands);
     }
+    else if(i.at(0) == "la"){
+        la();
+    }
     else if(i.at(0) == "ls"){
         ls();
     }

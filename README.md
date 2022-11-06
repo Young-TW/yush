@@ -11,9 +11,14 @@ A simple shell.
 - [x] echo
 - [x] exit
 - [x] help
-- [x] ls
+- [ ] ls
+    - [x] la
 - [x] time
 - [x] whoami
+
+# Feature
+
+- [ ] arrow (select past commands)
 
 ## Usage
 
@@ -28,5 +33,9 @@ build
 ```sh
 cd yush
 
-cmake ./build
+mkdir build
+
+cd build
+
+cmake ..
 ```

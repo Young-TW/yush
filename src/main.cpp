@@ -6,6 +6,7 @@
 #include "./global_var.h"
 #include "./parser.cpp"
 #include "./call_function.cpp"
+#include "./arrow.cpp"
 
 using namespace std;
 using namespace std::filesystem;
@@ -17,6 +18,7 @@ int main(){
     while(exit_check == 0){
         cout << "\n\n";
         cout << user_name << " " << fs_current_path << "> ";
+        
         getline(cin, input);
         parse_command(input);
         call_function(parsed_cmd);

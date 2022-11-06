@@ -16,6 +16,8 @@ int cd(string i){
     }
     if(i == ".."){
         fs_current_path = fs_current_path.parent_path();
+    }else if(i == "/"){
+        fs_current_path = fs_current_path.root_path();
     }else{
         fs_current_path = fs_current_path.append(i);
     }

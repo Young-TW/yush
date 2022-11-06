@@ -15,7 +15,20 @@ int ls(){
     }
     directory_iterator list(fs_current_path);
     for(auto& it : list){
-        cout << it.path().filename() << endl;
+        if(1/* file not start with . */){
+            cout << it.path().filename() << "\t";
+        }
+    }
+    return 0;
+}
+
+int la(){
+    if(!exists(fs_current_path)){
+        return 1;
+    }
+    directory_iterator list(fs_current_path);
+    for(auto& it : list){
+        cout << it.path().filename() << "\n";
     }
     return 0;
 }
