@@ -12,15 +12,27 @@ A simple shell.
 - [x] exit
 - [x] help
 - [x] la
-- [ ] ls
+- [x] ls
+- [x] pwd
+- [ ] su
 - [x] time
+- [ ] useradd
 - [x] whoami
 
-# Feature
+## Feature
 
 - [ ] arrow (select past commands)
-    - [ ] vector (to save past commands)
+    - [x] vector (to save past commands)
 - [x] varible $system
+- [ ] User system
+
+## Todo
+
+- [ ] cd command
+- [ ] user system
+- [ ] arrow switch past commands
+- [ ] arrow switch input place
+- [ ] cat command
 
 ## Usage
 

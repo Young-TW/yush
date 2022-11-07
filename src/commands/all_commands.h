@@ -9,8 +9,11 @@
 #include "./exit.h"
 #include "./help.h"
 #include "./ls.h"
+#include "./pwd.h"
+#include "./su.h"
 #include "./time.h"
 #include "./unknown_command.h"
+#include "./useradd.h"
 #include "./whoami.h"
 
 #endif

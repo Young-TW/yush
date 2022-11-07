@@ -9,37 +9,40 @@ using namespace std;
 
 int call_function(vector<string> i){
     if(i.at(0) == "cat"){
-        cat(i.at(1));
+        return cat(i.at(1));
     }
     else if(i.at(0) == "cd"){
-        cd(i.at(1));
+        return cd(i.at(1));
     }
     else if(i.at(0) == "clear"){
-        clear();
+        return clear();
     }
     else if(i.at(0) == "date"){
-        date();
+        return date();
     }
     else if(i.at(0) == "echo"){
-        echo(i);
+        return echo(i);
     }
     else if(i.at(0) == "exit"){
-        exit();
+        return exit();
     }
     else if(i.at(0) == "help"){
-        help(commands);
+        return help(commands);
     }
     else if(i.at(0) == "la"){
-        la();
+        return la();
     }
     else if(i.at(0) == "ls"){
-        ls();
+        return ls();
+    }
+    else if(i.at(0) == "pwd"){
+        return pwd();
     }
     else if(i.at(0) == "time"){
-        time();
+        return time();
     }
     else if(i.at(0) == "whoami"){
-        whoami(user_name);
+        return whoami(Young.name);
     }
     else{
         unknown();

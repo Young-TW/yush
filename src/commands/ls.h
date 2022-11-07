@@ -15,8 +15,12 @@ int ls(){
     }
     directory_iterator list(fs_current_path);
     for(auto& it : list){
-        if(1/* file not start with . */){
-            cout << it.path().filename() << "\t";
+        if(it.path().filename().u8string()[0] != '.'){
+            cout << it.path().filename().u8string();
+            if(it.is_directory()){
+                cout << "/";
+            }
+            cout << "\t";
         }
     }
     return 0;
@@ -28,7 +32,11 @@ int la(){
     }
     directory_iterator list(fs_current_path);
     for(auto& it : list){
-        cout << it.path().filename() << "\n";
+        cout << it.path().filename().u8string();
+        if(it.is_directory()){
+            cout << "/";
+        }
+        cout << "\n";
     }
     return 0;
 }

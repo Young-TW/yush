@@ -8,30 +8,34 @@
 #include <string>
 
 #include "./env/system.h"
+#include "./user.cpp"
 
 using namespace std;
 using namespace std::filesystem;
 
 string input;
 const string sys = system();
-const string user_name = "Young";
 bool exit_check = 0;
 vector<string> parsed_cmd;
-path fs_current_path("/Users/young");
+path fs_current_path;
 vector<string> input_past;
 int place_input_past = 0;
+User Young = User("Young");
 
 map<string, string> commands ={
-    {"cat"   , "print content of file"},
-    {"cd"    , "change current path"},
-    {"clear" , "clear texts"},
-    {"date"  , "display current date"},
-    {"echo"  , "display texts or using $ to display varible"},
-    {"exit"  , "exit shell"},
-    {"help"  , "print all commands"},
-    {"ls"    , "display file and directory in current path"},
-    {"time"  , "display current time"},
-    {"whoami", "print user name"},
+    {"cat"    , "print content of file"},
+    {"cd"     , "change current path"},
+    {"clear"  , "clear texts"},
+    {"date"   , "display current date"},
+    {"echo"   , "display texts or using $ to display varible"},
+    {"exit"   , "exit shell"},
+    {"help"   , "print all commands"},
+    {"ls"     , "display file and directory in current path"},
+    {"pwd"    , "display current path"},
+    {"su"     , "switch to another user"},
+    {"time"   , "display current time"},
+    {"useradd", "add another user"},
+    {"whoami" , "print user name"},
 };
 
 #endif
