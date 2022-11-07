@@ -13,6 +13,7 @@ int useradd(){
     // User temp;
     // User_list.push_back(temp);
     // User Young = User(name);
+    cout << "new user added, your user name is " << name;
     return 0;
 }
 
@@ -20,6 +21,7 @@ int useradd(string name){
     // User Young = User(name);
     // User temp;
     // User_list.push_back(temp);
+    cout << "new user added";
     return 0;
 }
 

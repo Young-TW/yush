@@ -14,6 +14,7 @@ int userdel(){
 }
 
 int userdel(string name){
+    // User_list.erase(name);
     // ~User();
     return 0;
 }

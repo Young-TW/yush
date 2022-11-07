@@ -16,10 +16,11 @@ int main(){
     cout << "Welcome to yush 0.0.1 \nCopyright (c) 2022 Young Studio.";
     User Young = User("Young");
     fs_current_path = User_list.at(current_user).home_dir;
+    int home_dir_length = User_list.at(current_user).home_dir.u8string().length();
     while(exit_check == 0){
         cout << "\n\n";
         cout << User_list.at(current_user).name << " ";
-        if(fs_current_path.u8string() == User_list.at(current_user).home_dir.u8string()){
+        if(!fs_current_path.u8string().compare(User_list.at(current_user).home_dir.u8string())){
             cout << "~";
         }else{
             cout << fs_current_path.u8string();
