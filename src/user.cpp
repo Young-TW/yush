@@ -3,19 +3,29 @@
 
 #include <string>
 #include <filesystem>
+#include <vector>
+
+#include "./global_var.h"
 
 using namespace std;
+using namespace std::filesystem;
 
 class User{
     public:
         User();
         User(string user_name);
         string name;
-        filesystem::path home_dir;
+        path home_dir;
+        ~User();
 };
 
 User::User(string user_name){
-    home_dir = string("/Users/").append(user_name);
+    home_dir = path(string("/Users/").append(user_name));
+    name = user_name;
+}
+
+User::~User(){
+    // User_list.erase(User);
 }
 
 #endif

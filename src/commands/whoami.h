@@ -5,8 +5,8 @@
 #include <string>
 using namespace std;
 
-int whoami(string userName){
-    cout << userName;
+int whoami(string user_name){
+    cout << user_name;
     return 0;
 }
 

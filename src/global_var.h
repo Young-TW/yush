@@ -21,6 +21,8 @@ path fs_current_path;
 vector<string> input_past;
 int place_input_past = 0;
 User Young = User("Young");
+vector<User> User_list = {Young};
+int current_user = 0;
 
 map<string, string> commands ={
     {"cat"    , "print content of file"},
@@ -35,6 +37,7 @@ map<string, string> commands ={
     {"su"     , "switch to another user"},
     {"time"   , "display current time"},
     {"useradd", "add another user"},
+    {"userdel", "delete selected user"},
     {"whoami" , "print user name"},
 };
 

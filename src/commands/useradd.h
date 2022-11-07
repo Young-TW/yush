@@ -9,13 +9,17 @@ using namespace std;
 #include "../feature/rand_str_gen.h"
 
 int useradd(){
-    string user_name = string("guest_").append(gen_random(7));
-    User(user_name);
+    string name = string("guest_").append(gen_random(7));
+    // User temp;
+    // User_list.push_back(temp);
+    // User Young = User(name);
     return 0;
 }
 
 int useradd(string name){
-    User(user_name);
+    // User Young = User(name);
+    // User temp;
+    // User_list.push_back(temp);
     return 0;
 }
 

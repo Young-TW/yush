@@ -13,11 +13,18 @@ using namespace std;
 using namespace std::filesystem;
 
 int main(){
-    cout << "Welcome to yush 0.0.1 \n Copyright (c) 2022 Young Studio.";
-    fs_current_path = Young.home_dir;
+    cout << "Welcome to yush 0.0.1 \nCopyright (c) 2022 Young Studio.";
+    User Young = User("Young");
+    fs_current_path = User_list.at(current_user).home_dir;
     while(exit_check == 0){
         cout << "\n\n";
-        cout << Young.name << " " << fs_current_path.u8string() << "> ";
+        cout << User_list.at(current_user).name << " ";
+        if(fs_current_path.u8string() == User_list.at(current_user).home_dir.u8string()){
+            cout << "~";
+        }else{
+            cout << fs_current_path.u8string();
+        }
+        cout << "> ";
         getline(cin, input);
         input_past.push_back(input);
         place_input_past = input_past.size();

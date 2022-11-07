@@ -17,6 +17,7 @@ A simple shell.
 - [ ] su
 - [x] time
 - [ ] useradd
+- [ ] userdel
 - [x] whoami
 
 ## Feature

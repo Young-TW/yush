@@ -49,6 +49,7 @@ int arrow_right(){
 }
 
 int arrow(){
+    /*
     char a;
     while(true){
         a = getchar();
@@ -73,5 +74,6 @@ int arrow(){
             }
         }
     }
+    */
     return 0;
 }

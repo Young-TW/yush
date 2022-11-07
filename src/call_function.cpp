@@ -41,6 +41,12 @@ int call_function(vector<string> i){
     else if(i.at(0) == "time"){
         return time();
     }
+    else if(i.at(0) == "useradd"){
+        return useradd();
+    }
+    else if(i.at(0) == "userdel"){
+        return userdel();
+    }
     else if(i.at(0) == "whoami"){
         return whoami(Young.name);
     }

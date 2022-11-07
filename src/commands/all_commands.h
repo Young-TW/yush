@@ -14,6 +14,7 @@
 #include "./time.h"
 #include "./unknown_command.h"
 #include "./useradd.h"
+#include "./userdel.h"
 #include "./whoami.h"
 
 #endif
