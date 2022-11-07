@@ -19,6 +19,7 @@ A simple shell.
 # Feature
 
 - [ ] arrow (select past commands)
+    - [ ] vector (to save past commands)
 - [x] varible $system
 
 ## Usage

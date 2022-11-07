@@ -16,10 +16,10 @@ int main(){
     cout << "Welcome to yush 0.0.1 \n Copyright (c) 2022 Young Studio.";
     while(exit_check == 0){
         cout << "\n\n";
-        cout << user_name << " " << fs_current_path << "> ";
+        cout << user_name << " " << fs_current_path.u8string() << "> ";
         // thread th_arrow(arrow);
         getline(cin, input);
-        input_past.at(place_input_past) = input;
+        input_past.push_back(input);
         place_input_past = input_past.size();
         parse_command(input);
         call_function(parsed_cmd);

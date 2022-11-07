@@ -64,8 +64,10 @@ int arrow(){
                         arrow_down();
                         break;
                     case 'C':
+                        arrow_right();
                         break;
                     case 'D':
+                        arrow_left();
                         break;
                 }
             }

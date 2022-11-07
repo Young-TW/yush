@@ -18,7 +18,7 @@ const string user_name = "Young";
 bool exit_check = 0;
 vector<string> parsed_cmd;
 path fs_current_path("/Users/young");
-vector<string> input_past(100);
+vector<string> input_past;
 int place_input_past = 0;
 
 map<string, string> commands ={
