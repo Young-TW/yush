@@ -32,6 +32,7 @@ map<string, string> commands ={
     {"exit"   , "exit shell"},
     {"help"   , "print all commands"},
     {"ls"     , "display file and directory in current path"},
+    {"mkdir"  , "create directory in current path"},
     {"pwd"    , "display current path"},
     {"su"     , "switch to another user"},
     {"time"   , "display current time"},

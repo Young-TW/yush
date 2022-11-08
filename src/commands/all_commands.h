@@ -9,6 +9,7 @@
 #include "./exit.h"
 #include "./help.h"
 #include "./ls.h"
+#include "./mkdir.h"
 #include "./pwd.h"
 #include "./su.h"
 #include "./time.h"

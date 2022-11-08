@@ -13,6 +13,7 @@ A simple shell.
 - [x] help
 - [x] la
 - [x] ls
+- [x] mkdir
 - [x] pwd
 - [ ] su
 - [x] time

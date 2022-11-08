@@ -35,6 +35,12 @@ int call_function(vector<string> i){
     else if(i.at(0) == "ls"){
         return ls();
     }
+    else if(i.at(0) == "mkdir"){
+        if(i.at(1) == string("")){
+            return mkdir();
+        }
+        return mkdir(i.at(1));
+    }
     else if(i.at(0) == "pwd"){
         return pwd();
     }
@@ -51,8 +57,7 @@ int call_function(vector<string> i){
         return whoami(Young.name);
     }
     else{
-        unknown();
-        return 1;
+        return unknown();
     }
     return 0;
 }

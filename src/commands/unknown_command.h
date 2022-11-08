@@ -6,7 +6,7 @@ using namespace std;
 
 int unknown(){
     cout << "Unknown command.";
-    return 0;
+    return 1;
 }
 
 #endif
