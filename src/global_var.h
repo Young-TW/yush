@@ -5,7 +5,6 @@
 #include <map>
 #include <vector>
 #include <filesystem>
-#include <string>
 
 #include "./env/system.h"
 #include "./user.cpp"
@@ -14,7 +13,7 @@ using namespace std;
 using namespace std::filesystem;
 
 string input;
-const string sys = system();
+// const string sys = system();
 bool exit_check = 0;
 vector<string> parsed_cmd;
 path fs_current_path;

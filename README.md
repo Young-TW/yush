@@ -26,6 +26,7 @@ A simple shell.
     - [x] vector (to save past commands)
 - [x] varible $system
 - [ ] User system
+- [x] home path print as `~`
 
 ## Todo
 
@@ -34,6 +35,7 @@ A simple shell.
 - [ ] arrow switch past commands
 - [ ] arrow switch input place
 - [ ] cat command
+- [ ] colored text
 
 ## Usage
 
