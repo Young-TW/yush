@@ -40,6 +40,12 @@ A simple shell.
 - [ ] cat command
 - [ ] colored text
 
+## System support
+
+- [x] Linux (Ubuntu 22.04)
+- [x] MacOS
+- [x] Windows 10
+
 ## Usage
 
 clone the repository  

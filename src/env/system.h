@@ -8,20 +8,20 @@
 using namespace std;
 
 string system(){
-    string system = "Unknown";
+    string system = string("Unknown");
 
     #ifdef __WINDOWS__
-        string system = "Windows";
+        system = string("Windows");
     #elif __WIN64
-        string system = "Windows 64";
+        system = string("Windows 64");
     #elif __WIN32
-        string system = "Windows 32\n";
+        system = string("Windows 32");
     #elif __APPLE__
-        string system = "Apple";
+        system = string("Apple");
     #elif __unix__
-        string system = "Unux";
+        system = string("Unix");
     #elif __linux__
-        string system = "Linux";
+        system = string("Linux");
     #endif
 
     return system;

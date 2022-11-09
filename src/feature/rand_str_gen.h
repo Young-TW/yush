@@ -1,7 +1,14 @@
 #include <ctime>
 #include <iostream>
-// #include <unistd.h>
+#ifdef __APPLE__
+#include <unistd.h>
+#elif __unix__
+#include <unistd.h>
+#elif __linux__
+#include <unistd.h>
+#else
 #include <io.h>
+#endif
 #include <string>
 
 using namespace std;
