@@ -18,10 +18,7 @@ int main(){
     User Young = User("Young");
     fs_current_path = User_list.at(current_user).home_dir;
     while(exit_check == 0){
-        cout << "\n\n";
-        cout << User_list.at(current_user).name << " ";
-        cout << gen_path_str();
-        cout << "> ";
+        cout << "\n\n" << User_list.at(current_user).name << " " << gen_path_str() << "> ";
         getline(cin, input);
         input_past.push_back(input);
         place_input_past = input_past.size();

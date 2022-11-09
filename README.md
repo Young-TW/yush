@@ -15,8 +15,10 @@ A simple shell.
 - [x] ls
 - [x] mkdir
 - [x] pwd
+- [ ] rm
 - [ ] su
 - [x] time
+- [x] touch
 - [ ] useradd
 - [ ] userdel
 - [x] whoami
