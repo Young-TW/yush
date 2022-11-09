@@ -8,6 +8,8 @@
 using namespace std;
 
 string system(){
+    string system = "Unknown";
+
     #ifdef __WINDOWS__
         string system = "Windows";
     #elif __WIN64
@@ -20,8 +22,6 @@ string system(){
         string system = "Unux";
     #elif __linux__
         string system = "Linux";
-    #elif
-        string system = "Other";
     #endif
 
     return system;

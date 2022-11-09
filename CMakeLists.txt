@@ -4,6 +4,8 @@ project(yush VERSION 0.0.1)
 include(CTest)
 enable_testing()
 
+add_compile_options(/std:c++17)
+
 add_executable(yush ./src/main.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

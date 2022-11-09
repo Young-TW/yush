@@ -20,7 +20,15 @@ class User{
 };
 
 User::User(string user_name){
-    home_dir = path(string("/Users/").append(user_name));
+        home_dir = path(string("C://Users/").append(user_name));
+    #ifdef __APPLE__
+        home_dir = path(string("/Users/").append(user_name));
+    #elif __Linux__
+        home_dir = path(string("/Users/").append(user_name));
+    #elif __Unix
+        home_dir = path(string("/Users/").append(user_name));
+    #else
+    #endif
     name = user_name;
 }
 

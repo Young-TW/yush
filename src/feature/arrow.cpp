@@ -11,8 +11,8 @@ bool place_is_current(){
 }
 
 int arrow_up(){
-    if(place_is_current){
-        for(int i=0;i<input_past[place_input_past].length();i++){
+    if(place_is_current()){
+        for(size_t i=0;i<input_past[place_input_past].length();i++){
             cout << "\b";
         }
     }
@@ -24,14 +24,14 @@ int arrow_up(){
 int arrow_down(){
     if(place_input_past == 0){
         return 1;
-    }else if(!place_is_current){
-        for(int i=0;i<input_past[place_input_past].length();i++){
+    }else if(!place_is_current()){
+        for(size_t i=0;i<input_past[place_input_past].length();i++){
             cout << "\b";
             cout << input_past[++place_input_past];
         }
         return 0;
     }else if(place_is_current()){
-        for(int i=0;i<input_past[place_input_past].length();i++){
+        for(size_t i=0;i<input_past[place_input_past].length();i++){
             cout << "\b";
         }
         return 0;
