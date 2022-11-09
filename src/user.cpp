@@ -24,10 +24,10 @@ User::User(string user_name){
     name = user_name;
     #ifdef __APPLE__
         home_dir = path(string("/Users/").append(user_name));
-    #elif __Linux__
+    #elif __linux__
         transform(user_name.begin(), user_name.end(), user_name.begin(), [](unsigned char c){ return std::tolower(c); });
         home_dir = path(string("/home/").append(tolower(user_name)));
-    #elif __Unix
+    #elif __unix__
         home_dir = path(string("/Users/").append(user_name));
     #else
         home_dir = path(string("C://Users/").append(user_name));

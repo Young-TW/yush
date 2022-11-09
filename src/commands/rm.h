@@ -9,15 +9,19 @@
 using namespace std;
 using namespace std::filesystem;
 
-int rm(string file,string dir){
-    if(file == "-rf"){
-        //remove dir
-        remove(dir);
+int rm(string arg,string dir){
+    if(arg == "-rf"){
+        // remove(fs_current_path.u8string() + dir);
         return 0;
     }else{
-        //remove file
-        remove(file);
+        cout << "Unknown argument";
+        return 1;
     }
+    return 0;
+}
+
+int rm(string file){
+    // remove(fs_current_path.u8string() + file);
     return 0;
 }
 

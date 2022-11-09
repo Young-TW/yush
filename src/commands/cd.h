@@ -19,7 +19,7 @@ int cd(string i){
     }else if(i == "~"){
         fs_current_path = User_list.at(current_user).home_dir;
     }else if(!exists(fs_current_path.append(i))){
-        cout << i << "is not a directory";
+        cout << i << " is not a directory";
         fs_current_path = if_fail;
         return 1;
     }
