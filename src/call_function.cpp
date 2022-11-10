@@ -69,7 +69,7 @@ int call_function(vector<string> i){
         return whoami(current_user.name);
     }
     else{
-        return unknown();
+        return unknown(i.at(0));
     }
     return 0;
 }

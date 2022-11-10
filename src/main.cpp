@@ -15,7 +15,6 @@ using namespace std::filesystem;
 
 int main(){
     cout << "Welcome to yush 0.0.1 \nCopyright (c) 2022 Young Studio.";
-    User Young = User("Young");
     fs_current_path = current_user.home_dir;
     while(exit_check == 0){
         cout << "\n\n" << current_user.name << " " << gen_path_str() << "> ";

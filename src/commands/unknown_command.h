@@ -2,10 +2,13 @@
 #define CMD_UNKNOWN_H__
 
 #include <iostream>
+
+#include "../feature/color_text.h"
+
 using namespace std;
 
-int unknown(){
-    cout << "Unknown command.";
+int unknown(string cmd){
+    cout << red << "Unknown command: " << reset << cmd;
     return 1;
 }
 

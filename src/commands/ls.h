@@ -5,6 +5,7 @@
 #include <filesystem>
 
 #include "../global_var.h"
+#include "../feature/color_text.h"
 
 using namespace std;
 using namespace std::filesystem;
@@ -16,9 +17,11 @@ int ls(){
     directory_iterator list(fs_current_path);
     for(auto& it : list){
         if(it.path().filename().u8string()[0] != '.'){
-            cout << it.path().filename().u8string();
             if(it.is_directory()){
+                cout << cyan << it.path().filename().u8string() << reset;
                 cout << "/";
+            }else{
+                cout << it.path().filename().u8string();
             }
             cout << "\t";
         }
