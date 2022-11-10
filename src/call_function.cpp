@@ -47,6 +47,13 @@ int call_function(vector<string> i){
     else if(i.at(0) == "rm"){
         return rm(i.at(1), i.at(2));
     }
+    else if(i.at(0) == "su"){
+        if(i.at(1) == ""){
+            return su();
+        }else{
+            return su(i.at(1));
+        }
+    }
     else if(i.at(0) == "time"){
         return time();
     }else if(i.at(0) == "touch"){
@@ -59,7 +66,7 @@ int call_function(vector<string> i){
         return userdel();
     }
     else if(i.at(0) == "whoami"){
-        return whoami(Young.name);
+        return whoami(current_user.name);
     }
     else{
         return unknown();

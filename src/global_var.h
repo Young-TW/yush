@@ -19,7 +19,9 @@ path fs_current_path;
 vector<string> input_past;
 int place_input_past = 0;
 User Young = User("Young");
-vector<User> User_list = {Young};
-int current_user = 0;
+User sudo = User("sudo");
+User virtual_user = User("virtual_user");
+vector<User> User_list = {Young, sudo, virtual_user};
+User current_user = Young;
 
 #endif
