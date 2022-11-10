@@ -31,7 +31,7 @@ A simple shell.
 - [x] user system
 - [x] home path print as `~` and root as `/`
 - [x] colored text
-- [ ] color theme
+- [x] color theme
 
 ## Todo
 

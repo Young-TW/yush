@@ -19,7 +19,7 @@ int main(){
     cout << "Welcome to yush 0.0.1 \nCopyright (c) 2022 Young Studio.";
     fs_current_path = current_user.home_dir;
     while(exit_check == 0){
-        cout << "\n\n" << theme_def["name_color"] << current_user.name << reset << " " << theme_def["path_color"] << gen_path_str() << reset << "\n⟩ ";
+        cout << "\n\n" << theme["name_color"] << current_user.name << reset << " " << theme["path_color"] << gen_path_str() << reset << "\n⟩ ";
         getline(cin, input);
         input_past.push_back(input);
         place_input_past = input_past.size();

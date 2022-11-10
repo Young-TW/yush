@@ -9,7 +9,7 @@
 using namespace std;
 
 int unknown(string cmd){
-    cout << theme_def["warn_color"] << "Unknown command: " << reset << cmd;
+    cout << theme["warn_color"] << "Unknown command: " << reset << cmd;
     return 1;
 }
 

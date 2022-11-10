@@ -11,10 +11,13 @@
 using namespace std;
 using namespace std::filesystem;
 
-map<string, string> theme_def{
+map<string, string> theme_defalut{
     {"name_color", yellow},
     {"path_color", magenta},
+    {"dir_color", cyan},
     {"warn_color", red},
 };
+
+map theme = theme_defalut;
 
 #endif
