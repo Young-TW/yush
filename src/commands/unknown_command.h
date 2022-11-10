@@ -4,11 +4,12 @@
 #include <iostream>
 
 #include "../feature/color_text.h"
+#include "../feature/theme.h"
 
 using namespace std;
 
 int unknown(string cmd){
-    cout << red << "Unknown command: " << reset << cmd;
+    cout << theme_def["warn_color"] << "Unknown command: " << reset << cmd;
     return 1;
 }
 

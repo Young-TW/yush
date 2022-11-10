@@ -18,10 +18,10 @@ vector<string> parsed_cmd;
 path fs_current_path;
 vector<string> input_past;
 int place_input_past = 0;
-User Young = User("Young");
+User young = User("young");
 User sudo = User("sudo");
 User virtual_user = User("virtual_user");
-vector<User> User_list = {Young, sudo, virtual_user};
-User current_user = Young;
+vector<User> User_list = {young, sudo, virtual_user};
+User current_user = young;
 
 #endif

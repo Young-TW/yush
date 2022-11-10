@@ -28,17 +28,16 @@ A simple shell.
 - [ ] arrow (select past commands)
     - [x] vector (to save past commands)
 - [x] varible $system
-- [ ] User system
-- [x] home path print as `~`
+- [x] user system
+- [x] home path print as `~` and root as `/`
+- [x] colored text
+- [ ] color theme
 
 ## Todo
 
-- [ ] cd command
-- [ ] user system
 - [ ] arrow switch past commands
 - [ ] arrow switch input place
 - [ ] cat command
-- [ ] colored text
 
 ## System support
 
