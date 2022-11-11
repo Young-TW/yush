@@ -51,26 +51,24 @@ int arrow_right(){
 int arrow(){
     /*
     char a;
-    while(true){
+    a = cin.peek();
+    if(a=='^['){
         a = getchar();
-        if(a=='033'){
+        if(a=='['){
             a = getchar();
-            if(a=='['){
-                a = getchar();
-                switch(a){
-                    case 'A':
-                        arrow_up();
-                        break;
-                    case 'B':
-                        arrow_down();
-                        break;
-                    case 'C':
-                        arrow_right();
-                        break;
-                    case 'D':
-                        arrow_left();
-                        break;
-                }
+            switch(a){
+                case 'A':
+                    arrow_up();
+                    break;
+                case 'B':
+                    arrow_down();
+                    break;
+                case 'C':
+                    arrow_right();
+                    break;
+                case 'D':
+                    arrow_left();
+                    break;
             }
         }
     }

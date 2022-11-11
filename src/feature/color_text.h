@@ -3,7 +3,6 @@
 
 #include <string>
 
-const std::string default("\033[0;0m");
 const std::string black("\033[0;30m");
 const std::string red("\033[0;31m");
 const std::string green("\033[1;32m");

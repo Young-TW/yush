@@ -14,10 +14,10 @@ const std::map<string, string> theme_defalut{
 };
 
 const std::map<string, string> theme_one_color{
-    {"name", default},
-    {"path", default},
-    {"dir", default},
-    {"warn", default},
+    {"name", reset},
+    {"path", reset},
+    {"dir", reset},
+    {"warn", reset},
 };
 
 const std::map<string, string> theme_lightmode{
