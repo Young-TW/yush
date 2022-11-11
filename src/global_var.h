@@ -6,13 +6,13 @@
 #include <filesystem>
 
 #include "./env/system.h"
-#include "./user.cpp"
+#include "./user.h"
+#include "./feature/theme.h"
 
 using namespace std;
 using namespace std::filesystem;
 
 string input;
-// const string sys = system();
 bool exit_check = 0;
 vector<string> parsed_cmd;
 path fs_current_path;
@@ -23,5 +23,6 @@ User sudo = User("sudo");
 User virtual_user = User("virtual_user");
 vector<User> User_list = {young, sudo, virtual_user};
 User current_user = young;
+map theme = theme_defalut;
 
 #endif

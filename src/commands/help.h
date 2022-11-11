@@ -3,9 +3,8 @@
 
 #include <iostream>
 #include <map>
-using namespace std;
 
-map<string, string> commands ={
+std::map<string, string> commands ={
     {"cat"    , "print content of file"},
     {"cd"     , "change current path"},
     {"clear"  , "clear texts"},
@@ -27,7 +26,7 @@ map<string, string> commands ={
 
 int help(map<string, string> commands){
     for(const auto& c : commands){
-        cout << "\n" << c.first << "\t : " << c.second;
+        std::cout << "\n" << c.first << "\t : " << c.second;
     }
     return 0;
 }

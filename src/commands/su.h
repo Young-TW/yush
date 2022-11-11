@@ -1,15 +1,10 @@
 #ifndef CMD_SU_H__
 #define CMD_SU_H__
 
-#include <string>
-
-#include "../user.cpp"
 #include "../global_var.h"
 
-using namespace std;
-
 int su(){
-    current_user = sudo;
+    current_user = User("sudo");
     return 0;
 }
 

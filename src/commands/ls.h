@@ -5,8 +5,6 @@
 #include <filesystem>
 
 #include "../global_var.h"
-#include "../feature/color_text.h"
-#include "../feature/theme.h"
 
 using namespace std;
 using namespace std::filesystem;
@@ -19,7 +17,7 @@ int ls(){
     for(auto& it : list){
         if(it.path().filename().u8string()[0] != '.'){
             if(it.is_directory()){
-                cout << theme["dir_color"] << it.path().filename().u8string() << reset;
+                cout << theme["dir"] << it.path().filename().u8string() << reset;
                 cout << "/";
             }else{
                 cout << it.path().filename().u8string();

@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <string>
-using namespace std;
 
-#include "../user.cpp"
 #include "../global_var.h"
+
+using namespace std;
 
 int userdel(){
     cout << "Please input user name.";

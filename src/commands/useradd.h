@@ -3,9 +3,10 @@
 
 #include <iostream>
 #include <string>
+
 using namespace std;
 
-#include "../user.cpp"
+#include "../user.h"
 #include "../feature/rand_str_gen.h"
 
 int useradd(){

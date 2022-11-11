@@ -3,13 +3,12 @@
 
 #include <iostream>
 
-#include "../feature/color_text.h"
-#include "../feature/theme.h"
+#include "../global_var.h"
 
 using namespace std;
 
 int unknown(string cmd){
-    cout << theme["warn_color"] << "Unknown command: " << reset << cmd;
+    cout << theme["warn"] << "Unknown command: " << reset << cmd;
     return 1;
 }
 

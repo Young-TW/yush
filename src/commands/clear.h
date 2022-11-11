@@ -5,8 +5,6 @@
 
 #include "../env/system_var.h"
 
-using namespace std;
-
 int clear(){
     if(sys != "Linux" && sys != "Apple" && sys != "Unix"){
         system("CLS");

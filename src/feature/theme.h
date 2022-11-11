@@ -2,22 +2,29 @@
 #define THEME_H__
 
 #include <iostream>
-#include <filesystem>
 #include <map>
 
-#include "../global_var.h"
 #include "./color_text.h"
 
-using namespace std;
-using namespace std::filesystem;
-
-map<string, string> theme_defalut{
-    {"name_color", yellow},
-    {"path_color", magenta},
-    {"dir_color", cyan},
-    {"warn_color", red},
+const std::map<string, string> theme_defalut{
+    {"name", yellow},
+    {"path", magenta},
+    {"dir", cyan},
+    {"warn", red},
 };
 
-map theme = theme_defalut;
+const std::map<string, string> theme_one_color{
+    {"name", default},
+    {"path", default},
+    {"dir", default},
+    {"warn", default},
+};
+
+const std::map<string, string> theme_lightmode{
+    {"name", white_back},
+    {"path", white_back},
+    {"dir", white_back},
+    {"warn", white_back},
+};
 
 #endif

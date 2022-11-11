@@ -14,7 +14,7 @@ int rm(string arg,string dir){
         // remove(fs_current_path.u8string() + dir);
         return 0;
     }else{
-        cout << "Unknown argument";
+        std::cout << theme["warn"] << "Unknown argument" << reset;
         return 1;
     }
     return 0;

@@ -23,7 +23,7 @@ int cat(string i){
     string temp;
     while(!fin.eof()){
         fin >> temp;
-        cout << temp;
+        cout << temp << " ";
     }
     return 0;
 }

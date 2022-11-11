@@ -12,10 +12,10 @@ string system(){
 
     #ifdef __WINDOWS__
         system = string("Windows");
+    #elif _WIN32
+        system = string("Windows 32");
     #elif __WIN64
         system = string("Windows 64");
-    #elif __WIN32
-        system = string("Windows 32");
     #elif __APPLE__
         system = string("Apple");
     #elif __unix__

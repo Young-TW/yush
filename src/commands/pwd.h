@@ -6,11 +6,8 @@
 
 #include "../global_var.h"
 
-using namespace std;
-using namespace std::filesystem;
-
 int pwd(){
-    cout << fs_current_path.u8string();
+    std::cout << fs_current_path.u8string();
     return 0;
 }
 
