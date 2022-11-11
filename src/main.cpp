@@ -14,7 +14,7 @@ using namespace std;
 using namespace std::filesystem;
 
 int init(){
-    cout << "Welcome to yush 0.0.1 \nCopyright (c) 2022 Young Studio.";
+    cout << "Welcome to yush 0.1.0 \nHave a good time!\n- Young Studio";
     fs_current_path = current_user.home_dir;
 
     return 0;
