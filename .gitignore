@@ -1,4 +1,4 @@
 /build/*
 /test
 *.DS_Store
-/.vscode/*
+/.vscode
