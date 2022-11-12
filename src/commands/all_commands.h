@@ -1,6 +1,7 @@
 #ifndef CMD_ALL_H__
 #define CMD_ALL_H__
 
+#include "./alias.h"
 #include "./cat.h"
 #include "./cd.h"
 #include "./clear.h"

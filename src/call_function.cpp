@@ -8,7 +8,10 @@
 using namespace std;
 
 int call_function(vector<string> i){
-    if(i.at(0) == "cat"){
+    if(i.at(0) == "alias"){
+        return alias(i.at(1));
+    }
+    else if(i.at(0) == "cat"){
         return cat(i.at(1));
     }
     else if(i.at(0) == "cd"){
