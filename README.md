@@ -4,6 +4,7 @@ A simple shell.
 
 ## Commands
 
+- [ ] alias
 - [ ] cat
 - [x] cd (basic)
 - [x] clear
@@ -34,10 +35,10 @@ A simple shell.
 
 - [ ] arrow (select past commands)
     - [x] vector (to save past commands)
-- [x] varible $system
+- [x] varibles
+    - [x] $system
 - [x] user system
 - [x] home path print as `~` and root as `/`
-- [x] colored text
 - [x] color theme
 - [ ] copy & paste shortcut key
 - [ ] load commands from env var
