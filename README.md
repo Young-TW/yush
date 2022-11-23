@@ -23,6 +23,13 @@ A simple shell.
 - [ ] userdel
 - [x] whoami
 
+### maybe will make
+- [ ] finger
+- [ ] man
+- [ ] whatis
+- [ ] which
+- [ ] whereis
+
 ## Feature
 
 - [ ] arrow (select past commands)
@@ -32,6 +39,10 @@ A simple shell.
 - [x] home path print as `~` and root as `/`
 - [x] colored text
 - [x] color theme
+- [ ] copy & paste shortcut key
+- [ ] load commands from env var
+    - [ ] Windows
+    - [ ] Linux & MacOS
 
 ## Todo
 
