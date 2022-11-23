@@ -11,6 +11,7 @@ const std::map<string, string> theme_defalut{
     {"path", magenta},
     {"dir", cyan},
     {"warn", red},
+    {"save", green},
 };
 
 const std::map<string, string> theme_one_color{

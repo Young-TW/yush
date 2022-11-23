@@ -76,3 +76,17 @@ cd build
 
 cmake ..
 ```
+
+### build & install to path
+
+- Windows 
+
+```ps1
+./install.ps1
+```
+
+- Linux & MacOS 
+
+```sh
+sudo bash ./install.sh
+```
