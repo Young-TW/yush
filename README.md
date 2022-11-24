@@ -63,13 +63,13 @@ clone the repository
 
 ```sh
 git clone https://github.com/Young-TW/yush.git
+
+cd yush
 ```
 
-build  
+### build only
 
 ```sh
-cd yush
-
 mkdir build
 
 cd build
