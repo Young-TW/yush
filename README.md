@@ -35,21 +35,22 @@ A simple shell.
 
 - [ ] arrow (select past commands)
     - [x] vector (to save past commands)
+    - [ ] up/down switch past commands
+    - [ ] left/right switch input place
 - [x] varibles
     - [x] $system
 - [x] user system
 - [x] home path print as `~` and root as `/`
 - [x] color theme
 - [ ] copy & paste shortcut key
-- [ ] load commands from env var
-    - [ ] Windows
-    - [ ] Linux & MacOS
+- [x] load commands from env var
+    - [x] Windows
+    - [x] Linux & MacOS
 
 ## Todo
 
 - [ ] arrow switch past commands
 - [ ] arrow switch input place
-- [ ] cat command
 
 ## System support
 

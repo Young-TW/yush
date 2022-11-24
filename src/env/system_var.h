@@ -1,12 +1,29 @@
-#ifndef SYSTEM_VAR_H__
-#define SYSTEM_VAR_H__
+#ifndef ENV_SYSTEM_VAR_H__
+#define ENV_SYSTEM_VAR_H__
 
 #include <string>
 
-#include "./system.h"
+std::string system_parse(){
+    std::string system = string("Unknown");
 
-using namespace std;
+    #ifdef __WINDOWS__
+        system = string("Windows");
+    #elif _WIN32
+        system = string("Windows 32");
+    #elif __WIN64
+        system = string("Windows 64");
+    #elif __APPLE__
+        system = string("Apple");
+    #elif __unix__
+        system = string("Unix");
+    #elif __linux__
+        system = string("Linux");
+    #endif
 
-const string sys = system();
+    return system;
+}
+
+const std::string sys = system_parse();
+
 
 #endif
