@@ -24,7 +24,8 @@ A simple shell.
 - [ ] userdel
 - [x] whoami
 
-### maybe will make
+### Other commands
+
 - [ ] finger
 - [ ] man
 - [ ] whatis
@@ -33,24 +34,19 @@ A simple shell.
 
 ## Feature
 
-- [ ] arrow (select past commands)
-    - [x] vector (to save past commands)
-    - [ ] up/down switch past commands
-    - [ ] left/right switch input place
 - [x] varibles
     - [x] $system
 - [x] user system
 - [x] home path print as `~` and root as `/`
 - [x] color theme
-- [ ] copy & paste shortcut key
 - [x] load commands from env var
     - [x] Windows
     - [x] Linux & MacOS
-
-## Todo
-
-- [ ] arrow switch past commands
-- [ ] arrow switch input place
+- [ ] tab auto fill command
+- [ ] arrow (select past commands)
+    - [x] vector (to save past commands)
+    - [ ] up/down switch past commands
+    - [ ] left/right switch input place
 
 ## System support
 

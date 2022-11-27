@@ -1,3 +1,5 @@
+# Yush – Young's Shell
+
 # build
 
 $projectPath = Get-Location
