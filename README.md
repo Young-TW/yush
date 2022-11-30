@@ -35,13 +35,14 @@ A simple shell.
 ## Feature
 
 - [x] varibles
-    - [x] $system
+    - [x] `$system`
 - [x] user system
 - [x] home path print as `~` and root as `/`
 - [x] color theme
 - [x] load commands from env var
     - [x] Windows
     - [x] Linux & MacOS
+- [ ] run `.yush` script file
 - [ ] tab auto fill command
 - [ ] arrow (select past commands)
     - [x] vector (to save past commands)

@@ -9,14 +9,15 @@
 #include "./feature/arrow.cpp"
 #include "./user.h"
 #include "./feature/gen_path_str.h"
+#include "./feature/yush_script.h"
 
 int init(){
-    std::cout << "yush 0.1.0\n- Young Studio";
     fs_current_path = current_user.home_dir;
     return 0;
 }
 
 int loop(){
+    exit_check = 0;
     int runtime_status=0;
     while(exit_check == 0){
         std::cout << "\n\n" << theme["name"] << current_user.name << reset << " " << theme["path"] << gen_path_str() << reset;
@@ -34,8 +35,17 @@ int loop(){
     return exit_check;
 }
 
-int main(){
-    init();
-    loop();
+int main(int argc, char *argv[]){
+    if(argc > 1){
+        for(int target_index=0;target_index<argc;target_index++){
+            init();
+            run_yush_script(std::filesystem::path(argv[target_index]));
+        }
+    }else if(argc == 1){
+        std::cout << "yush 0.1.0\n- Young Studio";
+        init();
+        loop();
+    }
     return 0;
 }
+

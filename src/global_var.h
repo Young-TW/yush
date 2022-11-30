@@ -13,7 +13,7 @@ bool exit_check = 0;
 std::vector<std::string> parsed_cmd;
 std::filesystem::path fs_current_path;
 std::vector<std::string> input_past;
-int place_input_past = 0;
+size_t place_input_past = 0;
 const User young = User("young");
 const User sudo = User("sudo");
 const User virtual_user = User("virtual_user");

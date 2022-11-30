@@ -8,10 +8,9 @@
 
 #include "../global_var.h"
 
-std::ifstream fin;
-std::ofstream fout;
-
 int cat(std::string input){
+    std::ifstream fin;
+    std::ofstream fout;
     if(!exists(fs_current_path)){
         return 1;
     }

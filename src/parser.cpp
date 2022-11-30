@@ -2,7 +2,6 @@
 #include <map>
 #include <vector>
 
-#include "./commands/all_commands.h"
 #include "./global_var.h"
 
 int parse_command(std::string i){

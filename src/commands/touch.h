@@ -8,6 +8,8 @@
 #include "../global_var.h"
 
 int touch(std::string file){
+    std::ifstream fin;
+    std::ofstream fout;
     std::string file_path = fs_current_path.u8string() + "/" + file;
     fout.open(file_path);
     fout << "";
