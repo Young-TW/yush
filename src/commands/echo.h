@@ -8,7 +8,7 @@
 #include "../env/system_var.h"
 #include "../global_var.h"
 
-int echo(vector<string> i){
+int echo(std::vector<std::string> i){
     if(i.at(1) == "$system"){
         std::cout << sys;
     }else{

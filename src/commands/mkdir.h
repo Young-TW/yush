@@ -16,7 +16,7 @@ int mkdir(){
     return 0;
 }
 
-int mkdir(string i){
+int mkdir(std::string i){
     if(!exists(fs_current_path.append(i))){
         std::filesystem::create_directories(fs_current_path);
         fs_current_path = fs_current_path.parent_path();

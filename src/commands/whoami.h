@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-int whoami(string user_name){
+int whoami(std::string user_name){
     std::cout << user_name;
     return 0;
 }

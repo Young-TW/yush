@@ -6,8 +6,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 int date() {
     /*
     time_t curr_time;

@@ -5,7 +5,7 @@ project(yush VERSION 0.1.0)
 # enable_testing()
 
 # if windows
-add_compile_options(/std:c++19)
+add_compile_options(/std:c++17)
 
 add_executable(yush ./src/main.cpp)
 

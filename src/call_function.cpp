@@ -5,7 +5,7 @@
 #include "./commands/all_commands.h"
 #include "./global_var.h"
 
-int call_function(std::vector<string> i){
+int call_function(std::vector<std::string> i){
     if(i.at(0) == "alias"){
         return alias(i.at(1));
     }
@@ -37,7 +37,7 @@ int call_function(std::vector<string> i){
         return ls();
     }
     else if(i.at(0) == "mkdir"){
-        if(i.at(1) == string("")){
+        if(i.at(1) == std::string("")){
             return mkdir();
         }
         return mkdir(i.at(1));

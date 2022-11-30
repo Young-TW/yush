@@ -10,7 +10,7 @@ int ls(){
     if(!exists(fs_current_path)){
         return 1;
     }
-    std::filesystem::directory_iterator std::list(fs_current_path);
+    std::filesystem::directory_iterator list(fs_current_path);
     for(auto& it : list){
         if(it.path().filename().u8string()[0] != '.'){
             if(it.is_directory()){

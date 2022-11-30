@@ -19,7 +19,7 @@ const User sudo = User("sudo");
 const User virtual_user = User("virtual_user");
 std::vector<User> User_list = {young, sudo, virtual_user};
 User current_user = young;
-std::map theme = theme_defalut;
+std::map<std::string, std::string> theme = theme_defalut;
 std::map<std::string, std::string> alias_map;
 
 #endif

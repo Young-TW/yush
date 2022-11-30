@@ -4,7 +4,7 @@
 #include <iostream>
 #include <map>
 
-std::map<string, string> commands ={
+std::map<std::string, std::string> commands ={
     {"cat"    , "print content of file"},
     {"cd"     , "change current path"},
     {"clear"  , "clear texts"},
@@ -24,7 +24,7 @@ std::map<string, string> commands ={
     {"whoami" , "print user name"},
 };
 
-int help(map<string, string> commands){
+int help(std::map<std::string, std::string> commands){
     for(const auto& c : commands){
         std::cout << "\n" << c.first << "\t : " << c.second;
     }

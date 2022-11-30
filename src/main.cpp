@@ -25,7 +25,7 @@ int loop(){
         }else{
             std::cout << "\n⟩ ";
         }
-        getline(cin, input);
+        getline(std::cin, input);
         input_past.push_back(input);
         place_input_past = input_past.size();
         parse_command(input);
