@@ -5,9 +5,7 @@
 #include "./commands/all_commands.h"
 #include "./global_var.h"
 
-using namespace std;
-
-int call_function(vector<string> i){
+int call_function(std::vector<string> i){
     if(i.at(0) == "alias"){
         return alias(i.at(1));
     }

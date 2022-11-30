@@ -5,9 +5,7 @@
 #include "./commands/all_commands.h"
 #include "./global_var.h"
 
-using namespace std;
-
-int parse_command(string i){
+int parse_command(std::string i){
     parsed_cmd.clear();
     while(true){
         parsed_cmd.push_back(i.substr(0, i.find(" ")));

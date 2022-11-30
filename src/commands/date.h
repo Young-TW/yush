@@ -9,6 +9,7 @@
 using namespace std;
 
 int date() {
+    /*
     time_t curr_time;
     curr_time = time(NULL);
 
@@ -25,6 +26,7 @@ int date() {
     }
     date.at(5).pop_back();
     cout << date.at(5) << " " << date.at(1) << " " << date.at(3);
+    */
     return 0;
 }
 

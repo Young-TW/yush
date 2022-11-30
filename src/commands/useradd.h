@@ -4,25 +4,23 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
-
 #include "../user.h"
 #include "../feature/rand_str_gen.h"
 
 int useradd(){
-    string name = string("guest_").append(gen_random(7));
+    std::string name = std::string("guest_").append(gen_random(7));
     // User temp;
     // User_list.push_back(temp);
     // User Young = User(name);
-    cout << "new user added, your user name is " << name;
+    std::cout << "new user added, your user name is " << name;
     return 0;
 }
 
-int useradd(string name){
+int useradd(std::string name){
     // User Young = User(name);
     // User temp;
     // User_list.push_back(temp);
-    cout << "new user added";
+    std::cout << "new user added";
     return 0;
 }
 

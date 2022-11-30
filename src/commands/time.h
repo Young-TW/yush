@@ -5,9 +5,8 @@
 #include <ctime>
 #include <vector>
 
-using namespace std;
-
 int time(){
+    /*
     time_t curr_time;
     curr_time = time(NULL);
 
@@ -23,6 +22,7 @@ int time(){
         }
     }
     cout << time.at(4);
+    */
     return 0;
 }
 

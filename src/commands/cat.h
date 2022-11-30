@@ -8,22 +8,19 @@
 
 #include "../global_var.h"
 
-using namespace std;
-using namespace std::filesystem;
+std::ifstream fin;
+std::ofstream fout;
 
-ifstream fin;
-ofstream fout;
-
-int cat(string i){
+int cat(std::string input){
     if(!exists(fs_current_path)){
         return 1;
     }
-    path target_file = fs_current_path.append(i);
+    std::filesystem::path target_file = fs_current_path.append(input);
     fin.open(target_file);
-    string temp;
+    std::string temp;
     while(!fin.eof()){
         fin >> temp;
-        cout << temp << " ";
+        std::cout << temp << " ";
     }
     return 0;
 }

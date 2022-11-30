@@ -6,10 +6,7 @@
 
 #include "../global_var.h"
 
-using namespace std;
-using namespace std::filesystem;
-
-int rm(string arg,string dir){
+int rm(std::string arg,std::string dir){
     if(arg == "-rf"){
         // remove(fs_current_path.u8string() + dir);
         return 0;
@@ -20,7 +17,7 @@ int rm(string arg,string dir){
     return 0;
 }
 
-int rm(string file){
+int rm(std::string file){
     // remove(fs_current_path.u8string() + file);
     return 0;
 }

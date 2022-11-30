@@ -4,20 +4,20 @@
 #include <string>
 
 std::string system_parse(){
-    std::string system = string("Unknown");
+    std::string system = std::string("Unknown");
 
     #ifdef __WINDOWS__
-        system = string("Windows");
+        system = std::string("Windows");
     #elif _WIN32
-        system = string("Windows 32");
+        system = std::string("Windows 32");
     #elif __WIN64
-        system = string("Windows 64");
+        system = std::string("Windows 64");
     #elif __APPLE__
-        system = string("Apple");
+        system = std::string("Apple");
     #elif __unix__
-        system = string("Unix");
+        system = std::string("Unix");
     #elif __linux__
-        system = string("Linux");
+        system = std::string("Linux");
     #endif
 
     return system;

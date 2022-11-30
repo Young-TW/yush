@@ -8,21 +8,18 @@
 #include "./user.h"
 #include "./feature/theme.h"
 
-using namespace std;
-using namespace std::filesystem;
-
-string input;
+std::string input;
 bool exit_check = 0;
-vector<string> parsed_cmd;
-path fs_current_path;
-vector<string> input_past;
+std::vector<std::string> parsed_cmd;
+std::filesystem::path fs_current_path;
+std::vector<std::string> input_past;
 int place_input_past = 0;
-User young = User("young");
+const User young = User("young");
 const User sudo = User("sudo");
 const User virtual_user = User("virtual_user");
-vector<User> User_list = {young, sudo, virtual_user};
+std::vector<User> User_list = {young, sudo, virtual_user};
 User current_user = young;
-map theme = theme_defalut;
-map<string, string> alias_map;
+std::map theme = theme_defalut;
+std::map<std::string, std::string> alias_map;
 
 #endif

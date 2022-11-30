@@ -4,34 +4,29 @@
 #include <string>
 #include <filesystem>
 
-#include "./global_var.h"
-
-using namespace std;
-using namespace std::filesystem;
-
 class User{
     public:
         User();
-        User(string user_name);
-        string name;
-        path home_dir;
+        User(std::string user_name);
+        std::string name;
+        std::filesystem::path home_dir;
         ~User();
 };
 
-User::User(string user_name){
+User::User(std::string user_name){
     name = user_name;
     if(name == "virtual_user"){
         this -> home_dir = "..";
         return;
     }
     #ifdef __APPLE__
-        home_dir = path(string("/Users/").append(user_name));
+        home_dir = std::filesystem::path(std::string("/Users/").append(user_name));
     #elif __linux__
-        home_dir = path(string("/home/").append(user_name));
+        home_dir = std::filesystem::path(std::string("/home/").append(user_name));
     #elif __unix__
-        home_dir = path(string("/Users/").append(user_name));
+        home_dir = std::filesystem::path(std::string("/Users/").append(user_name));
     #else
-        home_dir = path(string("C://Users/").append(user_name));
+        home_dir = std::filesystem::path(std::string("C://Users/").append(user_name));
     #endif
     return;
 }

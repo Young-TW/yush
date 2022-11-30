@@ -1,5 +1,4 @@
 #include <iostream>
-using namespace std;
 
 #include "../global_var.h"
 
@@ -13,11 +12,11 @@ bool place_is_current(){
 int arrow_up(){
     if(place_is_current()){
         for(size_t i=0;i<input_past[place_input_past].length();i++){
-            cout << "\b";
+            std::cout << "\b";
         }
     }
     place_input_past--;
-    cout << input_past[place_input_past];
+    std::cout << input_past[place_input_past];
     return 0;
 }
 
@@ -26,13 +25,13 @@ int arrow_down(){
         return 1;
     }else if(!place_is_current()){
         for(size_t i=0;i<input_past[place_input_past].length();i++){
-            cout << "\b";
-            cout << input_past[++place_input_past];
+            std::cout << "\b";
+            std::cout << input_past[++place_input_past];
         }
         return 0;
     }else if(place_is_current()){
         for(size_t i=0;i<input_past[place_input_past].length();i++){
-            cout << "\b";
+            std::cout << "\b";
         }
         return 0;
     }else{
