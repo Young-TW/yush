@@ -1,5 +1,5 @@
-#ifndef CMD_PWD_H__
-#define CMD_PWD_H__
+#ifndef _CMD_PWD_H_
+#define _CMD_PWD_H_
 
 #include <iostream>
 #include <filesystem>

@@ -4,8 +4,8 @@
 
 #include "./commands/all_commands.h"
 #include "./global_var.h"
-#include "./parser.cpp"
-#include "./call_function.cpp"
+// #include "./parser.cpp"
+// #include "./call_function.cpp"
 #include "./feature/arrow.cpp"
 #include "./user.h"
 #include "./feature/gen_path_str.h"

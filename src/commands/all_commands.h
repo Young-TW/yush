@@ -1,5 +1,5 @@
-#ifndef CMD_ALL_H__
-#define CMD_ALL_H__
+#ifndef _CMD_ALL_H_
+#define _CMD_ALL_H_
 
 #include "./alias.h"
 #include "./cat.h"
@@ -20,5 +20,6 @@
 #include "./useradd.h"
 #include "./userdel.h"
 #include "./whoami.h"
+#include "./yush.h"
 
 #endif

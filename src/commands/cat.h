@@ -1,5 +1,5 @@
-#ifndef CMD_CAT_H__
-#define CMD_CAT_H__
+#ifndef _CMD_CAT_H_
+#define _CMD_CAT_H_
 
 #include <iostream>
 #include <string>

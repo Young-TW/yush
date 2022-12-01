@@ -1,5 +1,5 @@
-#ifndef CMD_UNKNOWN_H__
-#define CMD_UNKNOWN_H__
+#ifndef _CMD_UNKNOWN_H_
+#define _CMD_UNKNOWN_H_
 
 #include <iostream>
 

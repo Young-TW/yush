@@ -68,7 +68,14 @@ int call_function(std::vector<std::string> input){
     }
     else if(input.at(0) == "whoami"){
         return whoami(current_user.name);
-    }
+    }/*
+    else if(input.at(0) == "yush"){
+        if(input.at(1) == ""){
+            return yush();
+        }else{
+            return yush(input.at(1));
+        }
+    }*/
     else{
         return unknown(input.at(0));
     }

@@ -1,12 +1,16 @@
-#ifndef _YUSH_SCRIPT_H_
-#define _YUSH_SCRIPT_H_
+#ifndef _FEATURE_YUSH_SCRIPT_H_
+#define _FEATURE_YUSH_SCRIPT_H_
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <filesystem>
-#include <sstream>
-#include <codecvt>
+// #include <sstream>
+// #include <codecvt>
+
+#include "../parser.cpp"
+#include "../call_function.cpp"
+#include "../global_var.h"
 
 int run_yush_script(std::filesystem::path target_script_file){
     std::ifstream fin;

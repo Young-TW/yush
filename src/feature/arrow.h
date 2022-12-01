@@ -1,5 +1,5 @@
-#ifndef _ARROW_H_
-#define _ARROW_H_
+#ifndef _FEATURE_ARROW_H_
+#define _FEATURE_ARROW_H_
 
 // not done
 

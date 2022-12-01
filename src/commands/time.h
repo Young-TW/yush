@@ -1,5 +1,5 @@
-#ifndef CMD_TIME_H__
-#define CMD_TIME_H__
+#ifndef _CMD_TIME_H_
+#define _CMD_TIME_H_
 
 #include <iostream>
 #include <ctime>

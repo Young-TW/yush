@@ -1,5 +1,5 @@
-#ifndef ENV_SYSTEM_VAR_H__
-#define ENV_SYSTEM_VAR_H__
+#ifndef _ENV_SYSTEM_VAR_H_
+#define _ENV_SYSTEM_VAR_H_
 
 #include <string>
 

@@ -1,5 +1,5 @@
-#ifndef CMD_TOUCH_H__
-#define CMD_TOUCH_H__
+#ifndef _CMD_TOUCH_H_
+#define _CMD_TOUCH_H_
 
 #include <string>
 #include <filesystem>
