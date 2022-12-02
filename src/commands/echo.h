@@ -8,12 +8,12 @@
 #include "../env/system_var.h"
 #include "../global_var.h"
 
-int echo(std::vector<std::string> i){
-    if(i.at(1) == "$system"){
+int yush::echo(std::vector<std::string> input){
+    if(input.at(1) == "$system"){
         std::cout << sys;
     }else{
-        for(size_t j=1;j<i.size();j++){
-            std::cout << i.at(j) << " ";
+        for(size_t i=1;i<input.size();i++){
+            std::cout << input.at(i) << " ";
         }
     }
     return 0;

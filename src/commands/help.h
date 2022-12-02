@@ -5,6 +5,7 @@
 #include <map>
 
 std::map<std::string, std::string> commands ={
+    {"alias"  , "set command into another name"},
     {"cat"    , "print content of file"},
     {"cd"     , "change current path"},
     {"clear"  , "clear texts"},
@@ -22,9 +23,10 @@ std::map<std::string, std::string> commands ={
     {"useradd", "add another user"},
     {"userdel", "delete selected user"},
     {"whoami" , "print user name"},
+    {"yush"   , "open new yush or run yush script file"},
 };
 
-int help(std::map<std::string, std::string> commands){
+int yush::help(std::map<std::string, std::string> commands){
     for(const auto& c : commands){
         std::cout << "\n" << c.first << "\t : " << c.second;
     }

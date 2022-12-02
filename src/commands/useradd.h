@@ -7,7 +7,7 @@
 #include "../user.h"
 #include "../feature/rand_str_gen.h"
 
-int useradd(){
+int yush::useradd(){
     std::string name = std::string("guest_").append(gen_random(7));
     // User temp;
     // User_list.push_back(temp);
@@ -16,7 +16,7 @@ int useradd(){
     return 0;
 }
 
-int useradd(std::string name){
+int yush::useradd(std::string name){
     // User Young = User(name);
     // User temp;
     // User_list.push_back(temp);

@@ -7,7 +7,7 @@
 
 #include "../global_var.h"
 
-int mkdir(){
+int yush::mkdir(){
     if(!exists(fs_current_path)){
         std::filesystem::create_directories(fs_current_path);
         fs_current_path = fs_current_path.parent_path();
@@ -16,8 +16,8 @@ int mkdir(){
     return 0;
 }
 
-int mkdir(std::string i){
-    if(!exists(fs_current_path.append(i))){
+int yush::mkdir(std::string input){
+    if(!exists(fs_current_path.append(input))){
         std::filesystem::create_directories(fs_current_path);
         fs_current_path = fs_current_path.parent_path();
         return 0;

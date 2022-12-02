@@ -6,7 +6,7 @@
 
 #include "../global_var.h"
 
-int rm(std::string arg,std::string dir){
+int yush::rm(std::string arg,std::string dir){
     if(arg == "-rf"){
         // remove(fs_current_path.u8string() + dir);
         return 0;
@@ -17,7 +17,7 @@ int rm(std::string arg,std::string dir){
     return 0;
 }
 
-int rm(std::string file){
+int yush::rm(std::string file){
     // remove(fs_current_path.u8string() + file);
     return 0;
 }

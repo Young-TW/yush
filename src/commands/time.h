@@ -5,7 +5,7 @@
 #include <ctime>
 #include <vector>
 
-int time(){
+int yush::time(){
     /*
     time_t curr_time;
     curr_time = time(NULL);

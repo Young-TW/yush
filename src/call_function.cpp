@@ -5,6 +5,8 @@
 #include "./commands/all_commands.h"
 #include "./global_var.h"
 
+using namespace yush;
+
 int call_function(std::vector<std::string> input){
     if(input.at(0) == "alias"){
         return alias(input.at(1));
@@ -68,14 +70,14 @@ int call_function(std::vector<std::string> input){
     }
     else if(input.at(0) == "whoami"){
         return whoami(current_user.name);
-    }/*
+    }
     else if(input.at(0) == "yush"){
         if(input.at(1) == ""){
-            return yush();
+            return yush::yush();
         }else{
-            return yush(input.at(1));
+            return yush::yush(input.at(1));
         }
-    }*/
+    }
     else{
         return unknown(input.at(0));
     }

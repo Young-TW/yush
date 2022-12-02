@@ -1,6 +1,8 @@
 #ifndef _CMD_ALL_H_
 #define _CMD_ALL_H_
 
+#include "./namespace/namespace_yush.h"
+
 #include "./alias.h"
 #include "./cat.h"
 #include "./cd.h"

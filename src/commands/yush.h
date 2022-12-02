@@ -7,12 +7,12 @@
 
 #include "../feature/yush_script.h"
 
-int yush(){
+int yush::yush(){
     // new yush
     return 0;
 }
 
-int yush(std::filesystem::path target_script_file){
+int yush::yush(std::filesystem::path target_script_file){
     return run_yush_script(target_script_file);
 }
 

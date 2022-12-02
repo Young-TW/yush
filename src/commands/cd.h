@@ -7,7 +7,7 @@
 
 #include "../global_var.h"
 
-int cd_single(std::string input){
+int yush::cd_single(std::string input){
     std::filesystem::path if_fail = fs_current_path;
     if(input == ".."){
         fs_current_path = fs_current_path.parent_path();
@@ -25,7 +25,7 @@ int cd_single(std::string input){
     return 0;
 }
 
-int cd(std::string input){
+int yush::cd(std::string input){
     while(true){
         if(cd_single(input.substr(0, input.find("/")))){
             std::cout << input << " is not a directory";
