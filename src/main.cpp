@@ -12,7 +12,7 @@
 #include "./feature/yush_script.h"
 
 int init(std::filesystem::path yush_path){
-    fs_current_path = yush_path;
+    fs_current_path = yush_path.parent_path().parent_path();
     return 0;
 }
 
