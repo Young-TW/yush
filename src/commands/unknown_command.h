@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::unknown(std::string cmd){
     std::cout << theme["warn"] << "Unknown command: " << reset << cmd;

@@ -4,7 +4,7 @@
 #include <string>
 #include <filesystem>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::rm(std::string arg,std::string dir){
     if(arg == "-rf"){

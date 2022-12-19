@@ -6,7 +6,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::cat(std::string input){
     std::ifstream fin;

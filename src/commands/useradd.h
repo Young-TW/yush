@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#include "../user.h"
-#include "../feature/rand_str_gen.h"
+#include "src/user.h"
+#include "src/feature/rand_str_gen.h"
 
 int yush::useradd(){
     std::string name = std::string("guest_").append(gen_random(7));

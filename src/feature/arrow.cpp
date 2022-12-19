@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 bool place_is_current(){
     if(place_input_past == input_past.size()){

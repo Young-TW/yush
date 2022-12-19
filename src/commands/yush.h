@@ -5,7 +5,7 @@
 #include <string>
 #include <filesystem>
 
-#include "../feature/yush_script.h"
+#include "src/feature/yush_script.h"
 
 int yush::yush(){
     // new yush

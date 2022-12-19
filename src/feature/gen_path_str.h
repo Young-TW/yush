@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 std::string gen_path_str(){
     std::string s = "~";

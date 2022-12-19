@@ -4,7 +4,7 @@
 #include <iostream>
 #include <filesystem>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::pwd(){
     std::cout << fs_current_path.u8string();

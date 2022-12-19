@@ -7,6 +7,8 @@ project(yush VERSION 0.1.0)
 # if windows
 # add_compile_options(/std:c++17)
 
+include_directories(.)
+
 add_executable(yush ./src/main.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

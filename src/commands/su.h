@@ -1,7 +1,7 @@
 #ifndef _CMD_SU_H_
 #define _CMD_SU_H_
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::su(){
     current_user = User("sudo");

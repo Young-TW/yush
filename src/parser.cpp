@@ -2,7 +2,7 @@
 #include <map>
 #include <vector>
 
-#include "./global_var.h"
+#include "src/global_var.h"
 
 int parse_command(std::string i){
     parsed_cmd.clear();

@@ -8,9 +8,9 @@
 // #include <sstream>
 // #include <codecvt>
 
-#include "../parser.cpp"
-#include "../call_function.cpp"
-#include "../global_var.h"
+#include "src/parser.cpp"
+#include "src/call_function.cpp"
+#include "src/global_var.h"
 
 int run_yush_script(std::filesystem::path target_script_file){
     std::ifstream fin;

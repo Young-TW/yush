@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::userdel(){
     std::cout << "Please input user name.";

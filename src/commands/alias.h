@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::alias(std::string input){
     // add command

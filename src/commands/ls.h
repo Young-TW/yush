@@ -4,7 +4,7 @@
 #include <iostream>
 #include <filesystem>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::ls(){
     if(!exists(fs_current_path)){

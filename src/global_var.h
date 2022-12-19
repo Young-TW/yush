@@ -5,8 +5,8 @@
 #include <vector>
 #include <filesystem>
 
-#include "./user.h"
-#include "./feature/theme.h"
+#include "src/user.h"
+#include "src/feature/theme.h"
 
 std::string input;
 bool exit_check = 0;

@@ -2,8 +2,8 @@
 #include <map>
 #include <vector>
 
-#include "./commands/all_commands.h"
-#include "./global_var.h"
+#include "src/commands/all_commands.h"
+#include "src/global_var.h"
 
 using namespace yush;
 

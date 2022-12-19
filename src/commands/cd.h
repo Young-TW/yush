@@ -5,7 +5,7 @@
 #include <string>
 #include <filesystem>
 
-#include "../global_var.h"
+#include "src/global_var.h"
 
 int yush::cd_single(std::string input){
     std::filesystem::path if_fail = fs_current_path;

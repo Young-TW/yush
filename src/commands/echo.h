@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 
-#include "../env/system_var.h"
-#include "../global_var.h"
+#include "src/env/system_var.h"
+#include "src/global_var.h"
 
 int yush::echo(std::vector<std::string> input){
     if(input.at(1) == "$system"){

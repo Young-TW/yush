@@ -2,14 +2,14 @@
 #include <string>
 #include <map>
 
-#include "./commands/all_commands.h"
-#include "./global_var.h"
+#include "src/commands/all_commands.h"
+#include "src/global_var.h"
 // #include "./parser.cpp"
 // #include "./call_function.cpp"
-#include "./feature/arrow.cpp"
-#include "./user.h"
-#include "./feature/gen_path_str.h"
-#include "./feature/yush_script.h"
+#include "src/feature/arrow.cpp"
+#include "src/user.h"
+#include "src/feature/gen_path_str.h"
+#include "src/feature/yush_script.h"
 
 int init(std::filesystem::path yush_path){
     fs_current_path = yush_path.parent_path().parent_path();
