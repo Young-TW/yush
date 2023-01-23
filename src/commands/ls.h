@@ -14,10 +14,10 @@ int yush::ls(){
     for(auto& it : list){
         if(it.path().filename().u8string()[0] != '.'){
             if(it.is_directory()){
-                std::cout << theme["dir"] << it.path().filename().u8string() << reset;
+                std::cout << theme["dir"] << it.path().filename().string() << reset;
                 std::cout << "/";
             }else{
-                std::cout << it.path().filename().u8string();
+                std::cout << it.path().filename().string();
             }
             std::cout << "\t";
         }
@@ -31,7 +31,7 @@ int yush::la(){
     }
     std::filesystem::directory_iterator list(fs_current_path);
     for(auto& it : list){
-        std::cout << it.path().filename().u8string();
+        std::cout << it.path().filename().string();
         if(it.is_directory()){
             std::cout << "/";
         }

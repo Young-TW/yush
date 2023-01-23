@@ -7,7 +7,7 @@
 #include "src/global_var.h"
 
 int yush::pwd(){
-    std::cout << fs_current_path.u8string();
+    std::cout << fs_current_path.string();
     return 0;
 }
 
