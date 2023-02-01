@@ -1,5 +1,5 @@
-#ifndef _CMD_SU_H_
-#define _CMD_SU_H_
+#ifndef CMD_SU_H
+#define CMD_SU_H
 
 #include "src/global_var.h"
 

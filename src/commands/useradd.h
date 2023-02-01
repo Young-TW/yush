@@ -1,5 +1,5 @@
-#ifndef _CMD_USERADD_H_
-#define _CMD_USERADD_H_
+#ifndef CMD_USERADD_H
+#define CMD_USERADD_H
 
 #include <iostream>
 #include <string>

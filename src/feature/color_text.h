@@ -1,5 +1,5 @@
-#ifndef _FEATURE_COLOR_TEXT_H_
-#define _FEATURE_COLOR_TEXT_H_
+#ifndef FEATURE_COLOR_TEXT_H
+#define FEATURE_COLOR_TEXT_H
 
 #include <string>
 

@@ -1,5 +1,5 @@
-#ifndef _FEATURE_THEME_H_
-#define _FEATURE_THEME_H_
+#ifndef FEATURE_THEME_H
+#define FEATURE_THEME_H
 
 #include <iostream>
 #include <map>

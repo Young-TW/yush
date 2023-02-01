@@ -1,5 +1,5 @@
-#ifndef _CMD_DATE_H_
-#define _CMD_DATE_H_
+#ifndef CMD_DATE_H
+#define CMD_DATE_H
 
 #include <iostream>
 #include <ctime>

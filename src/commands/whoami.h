@@ -1,5 +1,5 @@
-#ifndef _CMD_WHOAMI_H_
-#define _CMD_WHOAMI_H_
+#ifndef CMD_WHOAMI_H
+#define CMD_WHOAMI_H
 
 #include <iostream>
 #include <string>

@@ -1,5 +1,5 @@
-#ifndef _FEATURE_YUSH_SCRIPT_H_
-#define _FEATURE_YUSH_SCRIPT_H_
+#ifndef FEATURE_YUSH_SCRIPT_H
+#define FEATURE_YUSH_SCRIPT_H
 
 #include <iostream>
 #include <fstream>

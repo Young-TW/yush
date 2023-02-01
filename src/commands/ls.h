@@ -1,5 +1,5 @@
-#ifndef _CMD_LS_H_
-#define _CMD_LS_H_
+#ifndef CMD_LS_H
+#define CMD_LS_H
 
 #include <iostream>
 #include <filesystem>

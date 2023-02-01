@@ -1,3 +1,6 @@
+#ifndef FEATURE_RAND_STR_GEN_H
+#define FEATURE_RAND_STR_GEN_H
+
 #include <ctime>
 #include <iostream>
 #ifdef __APPLE__
@@ -24,3 +27,5 @@ std::string gen_random(const int len) {
     }
     return tmp_s;
 }
+
+#endif

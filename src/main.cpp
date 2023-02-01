@@ -22,9 +22,9 @@ int loop(){
     while(exit_check == 0){
         std::cout << "\n\n" << theme["name"] << current_user.name << reset << " " << theme["path"] << gen_path_str() << reset;
         if(runtime_status == 1){
-            std::cout << theme["warn"] << "\n⟩ " << reset;
+            std::cout << theme["warn"] << "\n> " << reset;
         }else{
-            std::cout << "\n⟩ ";
+            std::cout << "\n> ";
         }
         getline(std::cin, input);
         input_past.push_back(input);

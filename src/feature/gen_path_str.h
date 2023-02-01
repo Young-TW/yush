@@ -1,5 +1,5 @@
-#ifndef _FEATURE_GEN_PATH_STR_H_
-#define _FEATURE_GEN_PATH_STR_H_
+#ifndef FEATURE_GEN_PATH_STR_H
+#define FEATURE_GEN_PATH_STR_H
 
 #include <string>
 

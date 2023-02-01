@@ -1,5 +1,5 @@
-#ifndef _CMD_ECHO_H_
-#define _CMD_ECHO_H_
+#ifndef CMD_ECHO_H
+#define CMD_ECHO_H
 
 #include <iostream>
 #include <vector>

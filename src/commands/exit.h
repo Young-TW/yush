@@ -1,5 +1,5 @@
-#ifndef _CMD_EXIT_H_
-#define _CMD_EXIT_H_
+#ifndef CMD_EXIT_H
+#define CMD_EXIT_H
 
 #include "src/global_var.h"
 

@@ -1,5 +1,5 @@
-#ifndef _CMD_RM_H_
-#define _CMD_RM_H_
+#ifndef CMD_RM_H
+#define CMD_RM_H
 
 #include <string>
 #include <filesystem>

@@ -1,5 +1,5 @@
-#ifndef _CMD_YUSH_H_
-#define _CMD_YUSH_H_
+#ifndef CMD_YUSH_H
+#define CMD_YUSH_H
 
 #include <iostream>
 #include <string>

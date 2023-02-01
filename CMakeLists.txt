@@ -5,7 +5,7 @@ project(yush VERSION 0.1.0)
 # enable_testing()
 
 # windows
-# add_compile_options(/std:c++23)
+add_compile_options(/std:c++23)
 
 # MacOS or Linux
 set(CMAKE_CXX_STANDARD 23)

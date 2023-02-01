@@ -1,5 +1,5 @@
-#ifndef _CMD_HELP_H_
-#define _CMD_HELP_H_
+#ifndef CMD_HELP_H
+#define CMD_HELP_H
 
 #include <iostream>
 #include <map>

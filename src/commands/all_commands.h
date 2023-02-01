@@ -1,5 +1,5 @@
-#ifndef _CMD_ALL_H_
-#define _CMD_ALL_H_
+#ifndef CMD_ALL_H
+#define CMD_ALL_H
 
 #include "src/commands/namespace/namespace_yush.h"
 

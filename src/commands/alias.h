@@ -1,5 +1,5 @@
-#ifndef _CMD_ALIAS_H_
-#define _CMD_ALIAS_H_
+#ifndef CMD_ALIAS_H
+#define CMD_ALIAS_H
 
 #include <string>
 #include <map>

@@ -1,5 +1,5 @@
-#ifndef _GLOBAL_VAR_H_
-#define _GLOBAL_VAR_H_
+#ifndef GLOBAL_VAR_H
+#define GLOBAL_VAR_H
 
 #include <string>
 #include <vector>

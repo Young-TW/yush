@@ -1,5 +1,5 @@
-#ifndef _CMD_MKDIR_H_
-#define _CMD_MKDIR_H_
+#ifndef CMD_MKDIR_H
+#define CMD_MKDIR_H
 
 #include <iostream>
 #include <string>

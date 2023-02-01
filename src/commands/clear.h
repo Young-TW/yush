@@ -1,5 +1,5 @@
-#ifndef _CMD_CLEAR_H_
-#define _CMD_CLEAR_H_
+#ifndef CMD_CLEAR_H
+#define CMD_CLEAR_H
 
 #include <iostream>
 

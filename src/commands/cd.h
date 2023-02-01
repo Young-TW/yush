@@ -1,5 +1,5 @@
-#ifndef _CMD_CD_H_
-#define _CMD_CD_H_
+#ifndef CMD_CD_H
+#define CMD_CD_H
 
 #include <iostream>
 #include <string>

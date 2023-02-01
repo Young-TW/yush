@@ -1,5 +1,5 @@
-#ifndef _CMD_NAMESPACE_YUSH_H_
-#define _CMD_NAMESPACE_YUSH_H_
+#ifndef CMD_NAMESPACE_YUSH_H
+#define CMD_NAMESPACE_YUSH_H
 
 #include <string>
 #include <vector>
