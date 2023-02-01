@@ -4,10 +4,6 @@ project(yush VERSION 0.1.0)
 # include(CTest)
 # enable_testing()
 
-# windows
-add_compile_options(/std:c++23)
-
-# MacOS or Linux
 set(CMAKE_CXX_STANDARD 23)
 
 include_directories(.)
