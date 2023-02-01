@@ -5,7 +5,7 @@
 
 #include "src/env/system_var.h"
 
-int yush::clear(){
+int cmd::clear(){
     if(sys != "Linux" && sys != "Apple" && sys != "Unix"){
         system("CLS");
     }else{

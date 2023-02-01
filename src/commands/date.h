@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-int yush::date() {
+int cmd::date() {
     /*
     time_t curr_time;
     curr_time = time(NULL);

@@ -7,7 +7,7 @@
 
 #include "src/global_var.h"
 
-int yush::touch(std::string file){
+int cmd::touch(std::string file){
     std::ifstream fin;
     std::ofstream fout;
     std::string file_path = fs_current_path.string() + "/" + file;

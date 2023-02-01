@@ -5,7 +5,7 @@
 #include "src/commands/all_commands.h"
 #include "src/global_var.h"
 
-using namespace yush;
+using namespace cmd;
 
 int call_function(std::vector<std::string> input){
     if(input.at(0) == "alias"){
@@ -73,9 +73,9 @@ int call_function(std::vector<std::string> input){
     }
     else if(input.at(0) == "yush"){
         if(input.at(1) == ""){
-            return yush::yush();
+            return yush();
         }else{
-            return yush::yush(input.at(1));
+            return yush(input.at(1));
         }
     }
     else{

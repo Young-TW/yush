@@ -3,12 +3,12 @@
 
 #include "src/global_var.h"
 
-int yush::su(){
+int cmd::su(){
     current_user = User("sudo");
     return 0;
 }
 
-int yush::su(User user){
+int cmd::su(User user){
     current_user = user;
     return 0;
 }

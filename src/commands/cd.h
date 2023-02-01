@@ -7,8 +7,8 @@
 
 #include "src/global_var.h"
 
-int yush::cd_single(std::string input){
-    std::filesystem::path if_fail = fs_current_path;
+int cmd::cd_single(std::string input){
+    std::cout << fs_current_path << std::endl;
     if(input == ".."){
         fs_current_path = fs_current_path.parent_path();
         return 0;
@@ -18,24 +18,27 @@ int yush::cd_single(std::string input){
     }else if(input == "~"){
         fs_current_path = current_user.home_dir;
         return 0;
-    }else if(!exists(fs_current_path.append(input))){
-        fs_current_path = if_fail;
+    }else if(is_directory(fs_current_path.append(input))){
+        return 0;
+    }else{
+        std::cout << input << " is not a directory";
         return 1;
     }
     return 0;
 }
 
-int yush::cd(std::string input){
-    while(true){
-        if(cd_single(input.substr(0, input.find("/")))){
-            std::cout << input << " is not a directory";
+int cmd::cd(std::string input){
+    std::filesystem::path current_path_backup = fs_current_path;
+    for (size_t i=0; i<input.size();) {
+        auto slash = input.find('/');
+        if (slash == std::string::npos){
+            slash = input.size();
+        }
+        if(cd_single(input.substr(i, slash))){
+            fs_current_path = current_path_backup;
             return 1;
         }
-        input = input.substr(input.find("/") + 1, input.length());
-        if (input.find("/") == -1) {
-            cd_single(input);
-            break;
-        }
+        i += slash+1;
     }
     return 0;
 }

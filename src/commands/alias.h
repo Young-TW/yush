@@ -6,7 +6,7 @@
 
 #include "src/global_var.h"
 
-int yush::alias(std::string input){
+int cmd::alias(std::string input){
     // add command
     size_t found = input.find("=");
     // std::string cmd_name = i.substr(0, found);

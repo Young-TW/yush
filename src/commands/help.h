@@ -4,7 +4,7 @@
 #include <iostream>
 #include <map>
 
-std::map<std::string, std::string> commands ={
+const std::map<std::string, std::string> commands ={
     {"alias"  , "set command into another name"},
     {"cat"    , "print content of file"},
     {"cd"     , "change current path"},
@@ -26,7 +26,7 @@ std::map<std::string, std::string> commands ={
     {"yush"   , "open new yush or run yush script file"},
 };
 
-int yush::help(std::map<std::string, std::string> commands){
+int cmd::help(std::map<std::string, std::string> commands){
     for(const auto& c : commands){
         std::cout << "\n" << c.first << "\t : " << c.second;
     }

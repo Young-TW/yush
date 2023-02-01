@@ -6,7 +6,7 @@
 
 #include "src/global_var.h"
 
-int yush::pwd(){
+int cmd::pwd(){
     std::cout << fs_current_path.string();
     return 0;
 }

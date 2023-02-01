@@ -1,7 +1,6 @@
 #ifndef FEATURE_THEME_H
 #define FEATURE_THEME_H
 
-#include <iostream>
 #include <map>
 
 #include "src/feature/color_text.h"

@@ -8,7 +8,7 @@
 
 #include "src/global_var.h"
 
-int yush::cat(std::string input){
+int cmd::cat(std::string input){
     std::ifstream fin;
     std::ofstream fout;
     if(!exists(fs_current_path)){

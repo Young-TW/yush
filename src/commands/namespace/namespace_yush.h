@@ -1,5 +1,5 @@
-#ifndef CMD_NAMESPACE_YUSH_H
-#define CMD_NAMESPACE_YUSH_H
+#ifndef CMD_NAMESPACE_H
+#define CMD_NAMESPACE_H
 
 #include <string>
 #include <vector>
@@ -8,7 +8,7 @@
 
 #include "../../global_var.h"
 
-namespace yush{
+namespace cmd{
     int alias(std::string input);
     int cat(std::string input);
     int cd_single(std::string input);

@@ -6,7 +6,7 @@
 
 #include "src/global_var.h"
 
-int yush::ls(){
+int cmd::ls(){
     if(!exists(fs_current_path)){
         return 1;
     }
@@ -25,7 +25,7 @@ int yush::ls(){
     return 0;
 }
 
-int yush::la(){
+int cmd::la(){
     if(!exists(fs_current_path)){
         return 1;
     }

@@ -6,12 +6,12 @@
 
 #include "src/global_var.h"
 
-int yush::userdel(){
+int cmd::userdel(){
     std::cout << "Please input user name.";
     return 1;
 }
 
-int yush::userdel(std::string name){
+int cmd::userdel(std::string name){
     // User_list.erase(name);
     // ~User();
     return 0;

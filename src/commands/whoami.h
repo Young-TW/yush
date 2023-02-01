@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-int yush::whoami(std::string user_name){
+int cmd::whoami(std::string user_name){
     std::cout << user_name;
     return 0;
 }

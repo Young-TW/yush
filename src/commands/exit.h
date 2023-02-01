@@ -3,7 +3,7 @@
 
 #include "src/global_var.h"
 
-int yush::exit(){
+int cmd::exit(){
     exit_check = 1;
     return 0;
 }

@@ -8,7 +8,7 @@
 #include "src/env/system_var.h"
 #include "src/global_var.h"
 
-int yush::echo(std::vector<std::string> input){
+int cmd::echo(std::vector<std::string> input){
     if(input.at(1) == "$system"){
         std::cout << sys;
     }else{
