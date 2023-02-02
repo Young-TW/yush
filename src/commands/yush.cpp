@@ -18,7 +18,8 @@ int cmd::yush(const std::vector<std::string>& arg, std::istream& is, std::ostrea
         return 1;
     }
 
-    return Shell(std::ifstream(target)).run();
+    std::ifstream fin(target);
+    return Shell(fin).run();
 }
 
 #endif

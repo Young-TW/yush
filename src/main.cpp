@@ -8,7 +8,8 @@ int main(int argc, char *argv[]) {
         return Shell(std::cin).run();
     }
     if (argc == 2) {
-        return Shell(std::ifstream(argv[1])).run();
+        std::ifstream fin(argv[1]);
+        return Shell(fin).run();
     }
 
     return 1;
