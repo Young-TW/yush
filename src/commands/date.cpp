@@ -1,12 +1,13 @@
 #ifndef CMD_DATE_H
 #define CMD_DATE_H
 
-#include <iostream>
 #include <ctime>
 #include <vector>
 #include <string>
 
-int cmd::date() {
+#include "commands/cmds.h"
+
+int cmd::date(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables) {
     /*
     time_t curr_time;
     curr_time = time(NULL);

@@ -6,7 +6,7 @@
 #include <cstdlib>
 #include <algorithm>
 
-#include "src/env/system_var.h"
+#include "env/system_var.h"
 
 int read_env_var() {
     // const char *ENV_VAR = "HOME";

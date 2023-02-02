@@ -3,27 +3,22 @@
 
 #include <string>
 
-std::string system_parse(){
-    std::string system = std::string("Unknown");
-
-    #ifdef __WINDOWS__
-        system = std::string("Windows");
-    #elif _WIN32
-        system = std::string("Windows 32");
-    #elif __WIN64
-        system = std::string("Windows 64");
-    #elif __APPLE__
-        system = std::string("Apple");
-    #elif __unix__
-        system = std::string("Unix");
-    #elif __linux__
-        system = std::string("Linux");
-    #endif
-
-    return system;
-}
-
-const std::string sys = system_parse();
-
+const std::string sys =
+#ifdef __WINDOWS__
+    "Windows"
+#elif defined(_WIN32)
+    "Windows 32"
+#elif defined(__WIN64)
+    "Windows 64"
+#elif defined(__APPLE__)
+    "Apple"
+#elif defined(__unix__)
+    "Unix"
+#elif defined(__linux__)
+    "Linux"
+#else
+    "Unknown"
+#endif
+;
 
 #endif

@@ -3,9 +3,9 @@
 
 #include <map>
 
-#include "src/feature/color_text.h"
+#include "feature/color_text.h"
 
-const std::map<std::string, std::string> theme_defalut = {
+const std::map<std::string, std::string> theme_default = {
     {"name", yellow},
     {"path", magenta},
     {"dir", cyan},

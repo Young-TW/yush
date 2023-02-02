@@ -1,10 +1,11 @@
 #ifndef CMD_HELP_H
 #define CMD_HELP_H
 
-#include <iostream>
 #include <map>
 
-const std::map<std::string, std::string> commands ={
+#include "commands/cmds.h"
+
+static const std::map<std::string, std::string> commands ={
     {"alias"  , "set command into another name"},
     {"cat"    , "print content of file"},
     {"cd"     , "change current path"},
@@ -17,18 +18,15 @@ const std::map<std::string, std::string> commands ={
     {"mkdir"  , "create directory in current path"},
     {"pwd"    , "display current path"},
     {"rm"     , "remove selected file or directory"},
-    {"su"     , "switch to another user"},
     {"time"   , "display current time"},
     {"touch"  , "create an empty file"},
-    {"useradd", "add another user"},
-    {"userdel", "delete selected user"},
     {"whoami" , "print user name"},
     {"yush"   , "open new yush or run yush script file"},
 };
 
-int cmd::help(std::map<std::string, std::string> commands){
+int cmd::help(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables){
     for(const auto& c : commands){
-        std::cout << "\n" << c.first << "\t : " << c.second;
+        os << "\n" << c.first << "\t : " << c.second;
     }
     return 0;
 }

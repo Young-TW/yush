@@ -1,11 +1,12 @@
 #ifndef CMD_TIME_H
 #define CMD_TIME_H
 
-#include <iostream>
 #include <ctime>
 #include <vector>
 
-int cmd::time(){
+#include "commands/cmds.h"
+
+int cmd::time(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables){
     /*
     time_t curr_time;
     curr_time = time(NULL);
