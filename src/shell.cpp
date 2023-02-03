@@ -8,16 +8,17 @@
 Shell::Shell()
     : exit_check(false)
     , is(std::cin)
+    ,current_theme(theme_default)
 {
     variables = {
         {"PWD", std::filesystem::current_path().lexically_normal().string()},
         {"USER", "young"},
-        {"COLOR_NAME", yellow},
-        {"COLOR_PATH", magenta},
-        {"COLOR_DIR", cyan},
-        {"COLOR_WARN", red},
-        {"COLOR_SAVE", green},
-        {"COLOR_RESET", reset},
+        {"COLOR_NAME", current_theme.at("name")},
+        {"COLOR_PATH", current_theme.at("path")},
+        {"COLOR_DIR", current_theme.at("dir")},
+        {"COLOR_WARN", current_theme.at("warn")},
+        {"COLOR_SAVE", current_theme.at("save")},
+        {"COLOR_RESET", current_theme.at("reset")},
         {"SYSTEM", sys},
     };
 }
@@ -25,16 +26,17 @@ Shell::Shell()
 Shell::Shell(std::istream& is)
     : exit_check(false)
     , is(is)
+    ,current_theme(theme_default)
 {
     variables = {
         {"PWD", std::filesystem::current_path().lexically_normal().string()},
         {"USER", "young"},
-        {"COLOR_NAME", yellow},
-        {"COLOR_PATH", magenta},
-        {"COLOR_DIR", cyan},
-        {"COLOR_WARN", red},
-        {"COLOR_SAVE", green},
-        {"COLOR_RESET", reset},
+        {"COLOR_NAME", current_theme.at("name")},
+        {"COLOR_PATH", current_theme.at("path")},
+        {"COLOR_DIR", current_theme.at("dir")},
+        {"COLOR_WARN", current_theme.at("warn")},
+        {"COLOR_SAVE", current_theme.at("save")},
+        {"COLOR_RESET", current_theme.at("reset")},
         {"SYSTEM", sys},
     };
 }

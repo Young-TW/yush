@@ -11,6 +11,7 @@ const std::map<std::string, std::string> theme_default = {
     {"dir", cyan},
     {"warn", red},
     {"save", green},
+    {"reset", reset},
 };
 
 const std::map<std::string, std::string> theme_one_color = {
@@ -18,6 +19,8 @@ const std::map<std::string, std::string> theme_one_color = {
     {"path", reset},
     {"dir", reset},
     {"warn", reset},
+    {"save", reset},
+    {"reset", reset},
 };
 
 const std::map<std::string, std::string> theme_lightmode = {
@@ -25,6 +28,8 @@ const std::map<std::string, std::string> theme_lightmode = {
     {"path", white_back},
     {"dir", white_back},
     {"warn", white_back},
+    {"save", white_back},
+    {"reset", reset},
 };
 
 #endif

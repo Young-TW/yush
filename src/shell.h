@@ -25,6 +25,7 @@ private:
     bool exit_check;
     std::istream& is;
     std::map<std::string, std::string> variables;
+    std::map<std::string, std::string> current_theme;
 };
 
 #endif
