@@ -5,6 +5,23 @@
 #include "commands/cmds.h"
 #include "feature/theme.h"
 
+Shell::Shell()
+    : exit_check(false)
+    , is(std::cin)
+{
+    variables = {
+        {"PWD", std::filesystem::current_path().lexically_normal().string()},
+        {"USER", "young"},
+        {"COLOR_NAME", yellow},
+        {"COLOR_PATH", magenta},
+        {"COLOR_DIR", cyan},
+        {"COLOR_WARN", red},
+        {"COLOR_SAVE", green},
+        {"COLOR_RESET", reset},
+        {"SYSTEM", sys},
+    };
+}
+
 Shell::Shell(std::istream& is)
     : exit_check(false)
     , is(is)
@@ -27,7 +44,7 @@ int Shell::run() {
     while (!exit_check && is) {
         std::cout << "\n\n" << variables.at("COLOR_NAME") << variables.at("USER") << reset
                   << ' ' << variables.at("COLOR_PATH") << variables.at("PWD") << reset;
-        if (runtime_status == 1) {
+        if (runtime_status != 0) {
             std::cout << variables.at("COLOR_WARN");
         }
         std::cout << '\n' << runtime_status << "> " << reset;
@@ -93,6 +110,7 @@ int Shell::run_command(const std::vector<std::string>& arg, std::istream& is, st
     } else if (command == "yush") {
         return yush(arg, is, os, variables);
     } else {
+        // os << variables.at("COLOR_WARN") << "Error: command not found: " << variables.at("RESET_COLOR") << command;
         return 127;
     }
 }

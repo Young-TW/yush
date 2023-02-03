@@ -12,6 +12,7 @@
 
 class Shell {
 public:
+    explicit Shell();
     explicit Shell(std::istream& is);
 
     int run();
