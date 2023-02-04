@@ -13,6 +13,7 @@ Shell::Shell()
     variables = {
         {"PWD", std::filesystem::current_path().lexically_normal().string()},
         {"USER", "young"},
+        {"COLOR_THEME", current_theme.at("theme_name")},
         {"COLOR_NAME", current_theme.at("name")},
         {"COLOR_PATH", current_theme.at("path")},
         {"COLOR_DIR", current_theme.at("dir")},
@@ -31,6 +32,7 @@ Shell::Shell(std::istream& is)
     variables = {
         {"PWD", std::filesystem::current_path().lexically_normal().string()},
         {"USER", "young"},
+        {"COLOR_THEME", current_theme.at("theme_name")},
         {"COLOR_NAME", current_theme.at("name")},
         {"COLOR_PATH", current_theme.at("path")},
         {"COLOR_DIR", current_theme.at("dir")},
@@ -112,7 +114,7 @@ int Shell::run_command(const std::vector<std::string>& arg, std::istream& is, st
     } else if (command == "yush") {
         return yush(arg, is, os, variables);
     } else {
-        // os << variables.at("COLOR_WARN") << "Error: command not found: " << variables.at("RESET_COLOR") << command;
+        os << variables.at("COLOR_WARN") << "Error: command not found: " << variables.at("COLOR_RESET") << command;
         return 127;
     }
 }

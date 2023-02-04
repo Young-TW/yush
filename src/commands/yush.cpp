@@ -12,7 +12,7 @@ int cmd::yush(const std::vector<std::string>& arg, std::istream& is, std::ostrea
     if(arg.size() == 1){
         return Shell().run();;
     }else if(arg.size() == 2){
-        auto target = std::filesystem::path(variables.at("PWD")) / arg[1];
+        std::filesystem::path target = std::filesystem::path(variables.at("PWD")) / arg[1];
         if (!std::filesystem::is_regular_file(target)) {
             return 1;
         }
