@@ -5,16 +5,18 @@
 #include <filesystem>
 #include <fstream>
 
+#include "stream_manager.hpp"
+#include "variable_manager.h"
 #include "commands/cmds.h"
 
-int cmd::touch(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables) {
+int cmd::touch(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (arg.size() != 2) {
         return 1;
     }
 
-    auto new_file = std::filesystem::path(variables.at("PWD")) / arg[1];
+    auto new_file = std::filesystem::path(variable_manager.get("PWD")) / arg[1];
     if (std::filesystem::exists(new_file)) {
-        os << "file already exists";
+        stream_manager.err() << "File already exists.";
         return 1;
     }
 

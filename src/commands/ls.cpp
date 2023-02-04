@@ -3,10 +3,12 @@
 
 #include <filesystem>
 
+#include "stream_manager.hpp"
+#include "variable_manager.h"
 #include "commands/cmds.h"
 
-int cmd::ls(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables) {
-    std::filesystem::path current_path(variables.at("PWD"));
+int cmd::ls(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+    std::filesystem::path current_path(variable_manager.get("PWD"));
 
     if (!std::filesystem::exists(current_path)) {
         return 1;
@@ -16,18 +18,18 @@ int cmd::ls(const std::vector<std::string>& arg, std::istream& is, std::ostream&
     for (auto& it : list) {
         if (it.path().filename().string()[0] != '.') {
             if (it.is_directory()) {
-                os << variables.at("COLOR_DIR") << it.path().filename().string() << '/' << variables.at("COLOR_RESET");
+                stream_manager.out() << variable_manager.get("COLOR_DIR") << it.path().filename().string() << '/' << variable_manager.get("COLOR_RESET");
             } else {
-                os << it.path().filename().string();
+                stream_manager.out() << it.path().filename().string();
             }
-            os << "\t";
+            stream_manager.out() << "\t";
         }
     }
     return 0;
 }
 
-int cmd::la(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables) {
-    std::filesystem::path current_path(variables.at("PWD"));
+int cmd::la(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+    std::filesystem::path current_path(variable_manager.get("PWD"));
 
     if (!std::filesystem::exists(current_path)) {
         return 1;
@@ -36,11 +38,11 @@ int cmd::la(const std::vector<std::string>& arg, std::istream& is, std::ostream&
     std::filesystem::directory_iterator list(current_path);
     for (auto& it : list) {
         if (it.is_directory()) {
-            os << variables.at("COLOR_DIR") << it.path().filename().string() << '/' << variables.at("COLOR_RESET");
+            stream_manager.out() << variable_manager.get("COLOR_DIR") << it.path().filename().string() << '/' << variable_manager.get("COLOR_RESET");
         } else {
-            os << it.path().filename().string();
+            stream_manager.out() << it.path().filename().string();
         }
-        os << "\t";
+        stream_manager.out() << "\t";
     }
     return 0;
 }

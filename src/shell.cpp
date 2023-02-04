@@ -1,69 +1,52 @@
 #include <iostream>
 #include <string_view>
 
+#include "stream_manager.hpp"
+#include "variable_manager.h"
 #include "shell.h"
 #include "commands/cmds.h"
 #include "feature/theme.h"
 
 Shell::Shell()
     : exit_check(false)
-    , is(std::cin)
-    ,current_theme(theme_default)
 {
-    variables = {
-        {"PWD", std::filesystem::current_path().lexically_normal().string()},
-        {"USER", "young"},
-        {"COLOR_THEME", current_theme.at("theme_name")},
-        {"COLOR_NAME", current_theme.at("name")},
-        {"COLOR_PATH", current_theme.at("path")},
-        {"COLOR_DIR", current_theme.at("dir")},
-        {"COLOR_WARN", current_theme.at("warn")},
-        {"COLOR_SAVE", current_theme.at("save")},
-        {"COLOR_RESET", current_theme.at("reset")},
-        {"SYSTEM", sys},
-    };
+    variable_manager.set("PWD", std::filesystem::current_path().lexically_normal().string())
+                    .set("USER", "young")
+                    .set("COLOR_THEME", theme_default.at("theme_name"))
+                    .set("COLOR_NAME", theme_default.at("name"))
+                    .set("COLOR_PATH", theme_default.at("path"))
+                    .set("COLOR_DIR", theme_default.at("dir"))
+                    .set("COLOR_WARN", theme_default.at("warn"))
+                    .set("COLOR_SAVE", theme_default.at("save"))
+                    .set("COLOR_RESET", theme_default.at("reset"))
+                    .set("SYSTEM", sys);
 }
 
-Shell::Shell(std::istream& is)
-    : exit_check(false)
-    , is(is)
-    ,current_theme(theme_default)
-{
-    variables = {
-        {"PWD", std::filesystem::current_path().lexically_normal().string()},
-        {"USER", "young"},
-        {"COLOR_THEME", current_theme.at("theme_name")},
-        {"COLOR_NAME", current_theme.at("name")},
-        {"COLOR_PATH", current_theme.at("path")},
-        {"COLOR_DIR", current_theme.at("dir")},
-        {"COLOR_WARN", current_theme.at("warn")},
-        {"COLOR_SAVE", current_theme.at("save")},
-        {"COLOR_RESET", current_theme.at("reset")},
-        {"SYSTEM", sys},
-    };
-}
+int Shell::run(std::istream& in, std::ostream& out, std::ostream& err) {
+    StreamManager stream_manager(in, out, err);
 
-int Shell::run() {
     int runtime_status = 0;
-    while (!exit_check && is) {
-        std::cout << "\n\n" << variables.at("COLOR_NAME") << variables.at("USER") << reset
-                  << ' ' << variables.at("COLOR_PATH") << variables.at("PWD") << reset;
+    while (!exit_check && stream_manager.in()) {
+        stream_manager.out() << "\n\n" << variable_manager.get("COLOR_NAME") << variable_manager.get("USER") << variable_manager.get("COLOR_RESET")
+                             << ' ' << variable_manager.get("COLOR_PATH") << variable_manager.get("PWD") << variable_manager.get("COLOR_RESET") << '\n';
         if (runtime_status != 0) {
-            std::cout << variables.at("COLOR_WARN");
+            std::cout << variable_manager.get("COLOR_WARN");
         }
-        std::cout << '\n' << runtime_status << "> " << reset;
+        std::cout << runtime_status << "> " << variable_manager.get("COLOR_RESET");
 
         std::string input;
-        getline(is, input);
+        std::getline(stream_manager.in(), input);
 
-        runtime_status = run_command(parse_command(input), std::cin, std::cout);
+        runtime_status = run_command(parse_command(input), stream_manager);
+
+        std::filesystem::current_path(std::filesystem::path(variable_manager.get("PWD")));
     }
     return runtime_status;
 }
 
 std::vector<std::string> Shell::parse_command(std::string_view input) {
     std::vector<std::string> arg;
-    for (size_t i = 0; i < input.size();) {
+    for (std::size_t i = 0; i < input.size();) {
         auto space = input.find(' ', i);
         if (space == std::string::npos) {
             space = input.size();
@@ -74,52 +57,52 @@ std::vector<std::string> Shell::parse_command(std::string_view input) {
     return arg;
 }
 
-int Shell::run_command(const std::vector<std::string>& arg, std::istream& is, std::ostream& os) {
+int Shell::run_command(const std::vector<std::string>& arg, StreamManager& stream_manager) {
     using namespace cmd;
 
     std::string_view command = arg[0];
 
     if (command == "alias") {
-        return alias(arg, is, os, variables);
+        return alias(arg, stream_manager, variable_manager);
     } else if (command == "cat") {
-        return cat(arg, is, os, variables);
+        return cat(arg, stream_manager, variable_manager);
     } else if (command == "cd") {
-        return cd(arg, is, os, variables);
+        return cd(arg, stream_manager, variable_manager);
     } else if (command == "clear") {
-        return clear(arg, is, os, variables);
+        return clear(arg, stream_manager, variable_manager);
     } else if (command == "date") {
-        return date(arg, is, os, variables);
+        return date(arg, stream_manager, variable_manager);
     } else if (command == "echo") {
-        return echo(arg, is, os, variables);
+        return echo(arg, stream_manager, variable_manager);
     } else if (command == "exit") {
-        return exit(arg, is, os, variables);
+        return exit(arg, stream_manager, variable_manager);
     } else if (command == "help") {
-        return help(arg, is, os, variables);
+        return help(arg, stream_manager, variable_manager);
     } else if (command == "la") {
-        return la(arg, is, os, variables);
+        return la(arg, stream_manager, variable_manager);
     } else if (command == "ls") {
-        return ls(arg, is, os, variables);
+        return ls(arg, stream_manager, variable_manager);
     } else if (command == "mkdir") {
-        return mkdir(arg, is, os, variables);
+        return mkdir(arg, stream_manager, variable_manager);
     } else if (command == "pwd") {
-        return pwd(arg, is, os, variables);
+        return pwd(arg, stream_manager, variable_manager);
     } else if (command == "rm") {
-        return rm(arg, is, os, variables);
+        return rm(arg, stream_manager, variable_manager);
     } else if (command == "time") {
-        return time(arg, is, os, variables);
+        return time(arg, stream_manager, variable_manager);
     } else if (command == "touch") {
-        return touch(arg, is, os, variables);
+        return touch(arg, stream_manager, variable_manager);
     } else if (command == "whoami") {
-        return whoami(arg, is, os, variables);
+        return whoami(arg, stream_manager, variable_manager);
     } else if (command == "yush") {
-        return yush(arg, is, os, variables);
+        return yush(arg, stream_manager, variable_manager);
     } else {
-        os << variables.at("COLOR_WARN") << "Error: command not found: " << variables.at("COLOR_RESET") << command;
+        stream_manager.err() << '`' << command << "` not found.";
         return 127;
     }
 }
 
-int Shell::exit(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables) {
+int Shell::exit(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     exit_check = true;
     return 0;
 }

@@ -4,20 +4,22 @@
 #include <string>
 #include <filesystem>
 
+#include "stream_manager.hpp"
+#include "variable_manager.h"
 #include "commands/cmds.h"
 
-int cmd::mkdir(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables) {
+int cmd::mkdir(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (arg.size() != 2) {
-        os << variables.at("COLOR_WARN") << "Error: argument size error." << variables.at("COLOR_RESET");
+        stream_manager.err() << "Argument size error.";
         return 1;
     }
 
-    auto new_directory = std::filesystem::path(variables.at("PWD")) / arg[1];
+    auto new_directory = std::filesystem::path(variable_manager.get("PWD")) / arg[1];
     if (!exists(new_directory)) {
         std::filesystem::create_directories(new_directory);
         return 0;
     } else {
-        os << variables.at("COLOR_WARN") << "Error: directory already exists" << variables.at("COLOR_RESET");
+        stream_manager.err() << "Directory already exists.";
         return 1;
     }
 }

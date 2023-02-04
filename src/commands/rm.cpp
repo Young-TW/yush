@@ -4,9 +4,11 @@
 #include <string>
 #include <filesystem>
 
+#include "stream_manager.hpp"
+#include "variable_manager.h"
 #include "commands/cmds.h"
 
-int cmd::rm(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables){
+int cmd::rm(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager){
     // if(arg == "-rf"){
     //     // remove(fs_current_path.u8string() + dir);
     //     return 0;

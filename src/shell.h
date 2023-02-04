@@ -6,26 +6,28 @@
 #include <filesystem>
 #include <string>
 
-#include "feature/theme.h"
+#include "stream_manager.hpp"
+#include "variable_manager.h"
 #include "env/system_var.h"
 #include "commands/cmds.h"
 
 class Shell {
 public:
-    explicit Shell();
-    explicit Shell(std::istream& is);
+    Shell();
 
-    int run();
+    int run(std::istream& in, std::ostream& out, std::ostream& err);
 
 private:
-    std::vector<std::string> parse_command(std::string_view input);
-    int run_command(const std::vector<std::string>& arg, std::istream& is, std::ostream& os);
-    int exit(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables);
+    static std::vector<std::string> parse_command(std::string_view input);
+
+    int init();
+
+    int run_command(const std::vector<std::string>& arg, StreamManager& stream_manager);
+
+    int exit(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
 
     bool exit_check;
-    std::istream& is;
-    std::map<std::string, std::string> variables;
-    std::map<std::string, std::string> current_theme;
+    VariableManager variable_manager;
 };
 
 #endif

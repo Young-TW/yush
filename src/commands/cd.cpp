@@ -4,9 +4,11 @@
 #include <string>
 #include <filesystem>
 
+#include "stream_manager.hpp"
+#include "variable_manager.h"
 #include "commands/cmds.h"
 
-static int cd_single(std::istream& is, std::ostream& os, std::string_view path, std::filesystem::path& current_path) {
+static int cd_single(StreamManager& stream_manager, std::string_view path, std::filesystem::path& current_path) {
     if (path == "..") {
         current_path = current_path.parent_path();
         return 0;
@@ -16,22 +18,21 @@ static int cd_single(std::istream& is, std::ostream& os, std::string_view path, 
     // } else if (path == "~") {
     //     current_path = current_user.home_dir;
     //     return 0;
-    } else if (is_directory(current_path.append(path))) {
+    } else if (std::filesystem::is_directory(current_path.append(path))) {
         return 0;
     } else {
-        os << path << " is not a directory";
+        stream_manager.err() << '`' << path << "` is not a directory.";
         return 1;
     }
     return 0;
 }
 
-int cmd::cd(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables) {
+int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (arg.size() != 2) {
         return 1;
     }
 
-    std::filesystem::path current_path(variables.at("PWD"));
-    std::filesystem::path current_path_backup = current_path;
+    std::filesystem::path current_path(variable_manager.get("PWD"));
     std::string_view path = arg[1];
 
     for (size_t i = 0; i < path.size();) {
@@ -39,14 +40,14 @@ int cmd::cd(const std::vector<std::string>& arg, std::istream& is, std::ostream&
         if (slash == std::string::npos) {
             slash = path.size();
         }
-        if (cd_single(is, os, path.substr(i, slash), current_path)) {
-            variables.at("PWD") = current_path_backup.string();
+        if (cd_single(stream_manager, path.substr(i, slash), current_path)) {
             return 1;
         }
         i = slash + 1;
     }
 
-    variables.at("PWD") = current_path.string();
+    variable_manager.set("PWD", current_path.string());
+    stream_manager.out() << variable_manager.get("PWD");
     return 0;
 }
 

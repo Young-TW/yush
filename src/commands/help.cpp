@@ -3,6 +3,8 @@
 
 #include <map>
 
+#include "stream_manager.hpp"
+#include "variable_manager.h"
 #include "commands/cmds.h"
 
 static const std::map<std::string, std::string> commands ={
@@ -24,9 +26,9 @@ static const std::map<std::string, std::string> commands ={
     {"yush"   , "open new yush or run yush script file"},
 };
 
-int cmd::help(const std::vector<std::string>& arg, std::istream& is, std::ostream& os, std::map<std::string, std::string>& variables){
+int cmd::help(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager){
     for(const auto& c : commands){
-        os << "\n" << c.first << "\t : " << c.second;
+        stream_manager.out() << "\n" << c.first << "\t : " << c.second;
     }
     return 0;
 }

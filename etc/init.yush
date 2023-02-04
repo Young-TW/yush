@@ -1,0 +1,33 @@
+set __color_black \033[0;30m
+set __color_red \033[0;31m
+set __color_green \033[1;32m
+set __color_yellow \033[1;33m
+set __color_blue \033[0;34m
+set __color_magenta \033[0;35m
+set __color_cyan \033[0;36m
+set __color_gray \033[0;37m
+set __color_dark_gray \033[0;90m
+set __color_light_red \033[0;91m
+set __color_light_green \033[0;92m
+set __color_light_blue \033[0;93m
+set __color_light_magenta \033[0;95m
+set __color_light_cyan \033[0;96m
+set __color_white \033[0;97m
+
+set __color_bg_black \033[;40m
+set __color_bg_red \033[0;41m
+set __color_bg_green \033[1;42m
+set __color_bg_yellow \033[1;43m
+set __color_bg_magenta \033[0;45m
+set __color_bg_cyan \033[0;46m
+set __color_bg_white \033[0;47m
+
+set __color_reset \033[0m
+
+function __yush_prompt \
+    echo "\n\n$__color_yellow$USER$__color_reset $__color_magenta$PWD$__color_reset\n" \
+    if test ne $status 0 \
+        echo $__color_red \
+    end \
+    echo "$status$__color_reset> " \
+end
