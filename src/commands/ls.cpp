@@ -11,6 +11,7 @@ int cmd::ls(const std::vector<std::string>& arg, StreamManager& stream_manager, 
     std::filesystem::path current_path(variable_manager.get("PWD"));
 
     if (!std::filesystem::exists(current_path)) {
+        stream_manager.err() << "This directory is not exists.\n";
         return 1;
     }
 

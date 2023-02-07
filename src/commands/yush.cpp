@@ -22,7 +22,7 @@ int cmd::yush(const std::vector<std::string>& arg, StreamManager& stream_manager
         std::ifstream fin(target);
         return Shell().run(fin, stream_manager.out(), stream_manager.err());
     }else{
-        stream_manager.err() << variable_manager.get("COLOR_WARN") << "Error: argument size error." << variable_manager.get("COLOR_RESET");
+        stream_manager.err() << "Argument size error.\n";
         return 1;
     }
 }

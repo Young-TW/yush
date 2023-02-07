@@ -21,7 +21,7 @@ static int cd_single(StreamManager& stream_manager, std::string_view path, std::
     } else if (std::filesystem::is_directory(current_path.append(path))) {
         return 0;
     } else {
-        stream_manager.err() << '`' << path << "` is not a directory.";
+        stream_manager.err() << '`' << path << "` is not a directory.\n";
         return 1;
     }
     return 0;
