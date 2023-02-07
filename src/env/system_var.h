@@ -11,7 +11,7 @@ const std::string sys =
 #elif defined(__WIN64)
     "Windows 64"
 #elif defined(__APPLE__)
-    "Apple"
+    "MacOS"
 #elif defined(__unix__)
     "Unix"
 #elif defined(__linux__)
