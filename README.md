@@ -5,7 +5,7 @@ A simple shell.
 ## Commands
 
 - [ ] alias
-- [ ] cat
+- [x] cat
 - [x] cd (basic)
 - [x] clear
 - [x] date
@@ -17,11 +17,8 @@ A simple shell.
 - [x] mkdir
 - [x] pwd
 - [ ] rm
-- [ ] su
 - [x] time
 - [x] touch
-- [ ] useradd
-- [ ] userdel
 - [x] whoami
 
 ### Other commands
@@ -36,6 +33,7 @@ A simple shell.
 
 - [x] varibles
     - [x] `$system`
+    - [x] `$theme`
 - [x] user system
 - [x] home path print as `~` and root as `/`
 - [x] color theme
@@ -44,10 +42,6 @@ A simple shell.
     - [x] Linux & MacOS
 - [ ] run `.yush` script file
 - [ ] tab auto fill command
-- [ ] arrow (select past commands)
-    - [x] vector (to save past commands)
-    - [ ] up/down switch past commands
-    - [ ] left/right switch input place
 
 ## System support
 
@@ -57,7 +51,7 @@ A simple shell.
 
 ## Usage
 
-clone the repository  
+clone the repository
 
 ```sh
 git clone https://github.com/Young-TW/yush.git
@@ -77,13 +71,13 @@ cmake ..
 
 ### build & install to path
 
-- Windows 
+- Windows
 
 ```ps1
 ./install.ps1
 ```
 
-- Linux & MacOS 
+- Linux & MacOS
 
 ```sh
 sudo bash ./install.sh
