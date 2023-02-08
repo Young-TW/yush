@@ -47,7 +47,7 @@ int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, 
     }
 
     variable_manager.set("PWD", current_path.string());
-    stream_manager.out() << variable_manager.get("PWD");
+    // stream_manager.out() << variable_manager.get("PWD");
     return 0;
 }
 
