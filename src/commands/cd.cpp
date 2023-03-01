@@ -8,16 +8,16 @@
 #include "variable_manager.h"
 #include "commands/cmds.h"
 
-static int cd_single(StreamManager& stream_manager, std::string_view path, std::filesystem::path& current_path) {
+static int cd_single(StreamManager& stream_manager, std::string_view path, std::filesystem::path& current_path, VariableManager& variable_manager) {
     if (path == "..") {
         current_path = current_path.parent_path();
         return 0;
     } else if (path == "/") {
         current_path = current_path.root_path();
         return 0;
-    // } else if (path == "~") {
-    //     current_path = current_user.home_dir;
-    //     return 0;
+    } else if (path == "~") {
+        current_path = variable_manager.get("HOME_DIR");
+        return 0;
     } else if (std::filesystem::is_directory(current_path.append(path))) {
         return 0;
     } else {
@@ -40,7 +40,7 @@ int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, 
         if (slash == std::string::npos) {
             slash = path.size();
         }
-        if (cd_single(stream_manager, path.substr(i, slash), current_path)) {
+        if (cd_single(stream_manager, path.substr(i, slash), current_path, variable_manager)) {
             return 1;
         }
         i = slash + 1;

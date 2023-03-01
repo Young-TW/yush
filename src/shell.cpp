@@ -5,13 +5,16 @@
 #include "variable_manager.h"
 #include "shell.h"
 #include "commands/cmds.h"
+#include "env/user.h"
+#include "env/home_dir.h"
 #include "feature/theme.h"
 
 Shell::Shell()
     : exit_check(false)
 {
     variable_manager.set("PWD", std::filesystem::current_path().lexically_normal().string())
-                    .set("USER", "young")
+                    .set("USER", user_name)
+                    .set("HOME_DIR", home_dir)
                     .set("COLOR_THEME", theme_default.at("theme_name"))
                     .set("COLOR_NAME", theme_default.at("name"))
                     .set("COLOR_PATH", theme_default.at("path"))
@@ -30,9 +33,10 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err) {
         stream_manager.out() << "\n\n" << variable_manager.get("COLOR_NAME") << variable_manager.get("USER") << variable_manager.get("COLOR_RESET")
                              << ' ' << variable_manager.get("COLOR_PATH") << variable_manager.get("PWD") << variable_manager.get("COLOR_RESET") << '\n';
         if (runtime_status != 0) {
-            std::cout << variable_manager.get("COLOR_WARN");
+            stream_manager.out() << variable_manager.get("COLOR_WARN");
         }
-        std::cout << runtime_status << "> " << variable_manager.get("COLOR_RESET");
+        // stream_manager.out() << runtime_status;
+        stream_manager.out() << "> " << variable_manager.get("COLOR_RESET");
 
         std::string input;
         std::getline(stream_manager.in(), input);
@@ -97,7 +101,7 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
     } else if (command == "yush") {
         return yush(arg, stream_manager, variable_manager);
     } else {
-        stream_manager.err() << '`' << command << "` not found.";
+        stream_manager.err() << 'command `' << command << "` not found.";
         return 127;
     }
 }
