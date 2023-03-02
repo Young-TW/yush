@@ -8,7 +8,7 @@ A simple shell.
 - [x] cat
 - [x] cd (basic)
 - [x] clear
-- [x] date
+- [ ] date
 - [x] echo
 - [x] exit
 - [x] help
@@ -17,7 +17,7 @@ A simple shell.
 - [x] mkdir
 - [x] pwd
 - [ ] rm
-- [x] time
+- [ ] time
 - [x] touch
 - [x] whoami
 
@@ -34,20 +34,23 @@ A simple shell.
 - [x] varibles
     - [x] `$system`
     - [x] `$theme`
-- [x] user system
-- [x] home path print as `~` and root as `/`
+- [ ] user system
+- [ ] home path print as `~` and root as `/`
 - [x] color theme
-- [x] load commands from env var
-    - [x] Windows
-    - [x] Linux & MacOS
-- [ ] run `.yush` script file
+- [ ] load commands from env var
+    - [ ] Windows
+    - [ ] Linux & MacOS
+- [x] run `.yush` script file
 - [ ] tab auto fill command
 
 ## System support
 
-- [x] Linux (Ubuntu 22.04)
+- [x] Linux
+    - [x] Ubuntu 22.04
 - [x] MacOS
-- [x] Windows 10
+- [x] Windows
+    - [x] 10
+    - [x] 11
 
 ## Usage
 
@@ -62,23 +65,5 @@ cd yush
 ### build only
 
 ```sh
-mkdir build
-
-cd build
-
-cmake ..
-```
-
-### build & install to path
-
-- Windows
-
-```ps1
-./install.ps1
-```
-
-- Linux & MacOS
-
-```sh
-sudo bash ./install.sh
+cmake . -B build
 ```
