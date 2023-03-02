@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string_view>
+#include <fstream>
 
 #include "stream_manager.hpp"
 #include "variable_manager.h"
@@ -29,7 +30,10 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err) {
     StreamManager stream_manager(in, out, err);
 
     int runtime_status = 0;
-    while (!exit_check && stream_manager.in()) {
+    while (!exit_check) {
+        if(stream_manager.in().eof()){
+            break;
+        }
         stream_manager.out() << "\n\n" << variable_manager.get("COLOR_NAME") << variable_manager.get("USER") << variable_manager.get("COLOR_RESET")
                              << ' ' << variable_manager.get("COLOR_PATH") << variable_manager.get("PWD") << variable_manager.get("COLOR_RESET") << '\n';
         if (runtime_status != 0) {
@@ -101,7 +105,7 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
     } else if (command == "yush") {
         return yush(arg, stream_manager, variable_manager);
     } else {
-        stream_manager.err() << 'command `' << command << "` not found.";
+        stream_manager.err() << "command `" << command << "` not found.";
         return 127;
     }
 }
