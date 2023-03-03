@@ -35,7 +35,7 @@ A simple shell.
     - [x] `$system`
     - [x] `$theme`
 - [ ] user system
-- [ ] home path print as `~` and root as `/`
+- [x] home path print as `~` and root as `/`
 - [x] color theme
 - [ ] load commands from env var
     - [ ] Windows
