@@ -8,6 +8,7 @@
 #include "commands/cmds.h"
 #include "env/user.h"
 #include "env/home_dir.h"
+#include "feature/path_str_gen.h"
 #include "feature/theme.h"
 
 Shell::Shell()
@@ -34,8 +35,8 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err) {
         if(stream_manager.in().eof()){
             break;
         }
-        stream_manager.out() << "\n\n" << variable_manager.get("COLOR_NAME") << variable_manager.get("USER") << variable_manager.get("COLOR_RESET")
-                             << ' ' << variable_manager.get("COLOR_PATH") << variable_manager.get("PWD") << variable_manager.get("COLOR_RESET") << '\n';
+        stream_manager.out() << "\n\n" << variable_manager.get("COLOR_NAME") << variable_manager.get("USER") << variable_manager.get("COLOR_RESET");
+        stream_manager.out() << ' ' << variable_manager.get("COLOR_PATH") << path_str_gen(variable_manager.get("PWD"), variable_manager.get("HOME_DIR")) << variable_manager.get("COLOR_RESET") << '\n';
         if (runtime_status != 0) {
             stream_manager.out() << variable_manager.get("COLOR_WARN");
         }
