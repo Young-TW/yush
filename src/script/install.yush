@@ -4,7 +4,7 @@
 
 echo "start Build"
 
-g++ src/main.cpp -o yush -std=c++17
+clang++ src/main.cpp -o yush -std=c++23
 
 # add to path
 

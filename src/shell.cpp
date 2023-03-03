@@ -105,6 +105,8 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
         return whoami(arg, stream_manager, variable_manager);
     } else if (command == "yush") {
         return yush(arg, stream_manager, variable_manager);
+    } else if (command.at(0) == '#') {
+        return 0;
     } else {
         stream_manager.err() << "command `" << command << "` not found.";
         return 127;

@@ -1,0 +1,30 @@
+alias ll=ls
+ll
+
+touch a.cpp
+cat a.cpp
+
+cd ..
+
+clear
+
+date
+
+echo hello
+
+help
+
+ls
+
+mkdir test
+rm -rf test
+
+pwd
+
+time
+
+whoami
+
+yush
+exit
+exit
