@@ -104,6 +104,8 @@
         "stop_token": "cpp",
         "cinttypes": "cpp",
         "xmemory0": "cpp",
-        "__availability": "cpp"
+        "__availability": "cpp",
+        "__verbose_abort": "cpp",
+        "unordered_set": "cpp"
     }
 }

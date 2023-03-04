@@ -15,7 +15,7 @@ class Shell {
 public:
     Shell();
 
-    int run(std::istream& in, std::ostream& out, std::ostream& err);
+    int run(std::istream& in, std::ostream& out, std::ostream& err, bool);
 
 private:
     static std::vector<std::string> parse_command(std::string_view input);
