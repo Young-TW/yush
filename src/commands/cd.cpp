@@ -1,6 +1,3 @@
-#ifndef CMD_CD_H
-#define CMD_CD_H
-
 #include <string>
 #include <filesystem>
 
@@ -51,5 +48,3 @@ int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, 
     // stream_manager.out() << variable_manager.get("PWD");
     return 0;
 }
-
-#endif

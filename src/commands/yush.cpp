@@ -1,6 +1,3 @@
-#ifndef CMD_YUSH_H
-#define CMD_YUSH_H
-
 #include <string>
 #include <filesystem>
 #include <fstream>
@@ -26,5 +23,3 @@ int cmd::yush(const std::vector<std::string>& arg, StreamManager& stream_manager
         return 1;
     }
 }
-
-#endif

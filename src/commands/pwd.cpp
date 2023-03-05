@@ -1,6 +1,3 @@
-#ifndef CMD_PWD_H
-#define CMD_PWD_H
-
 #include <filesystem>
 
 #include "stream_manager.hpp"
@@ -11,5 +8,3 @@ int cmd::pwd(const std::vector<std::string>& arg, StreamManager& stream_manager,
     stream_manager.out() << variable_manager.get("PWD");
     return 0;
 }
-
-#endif

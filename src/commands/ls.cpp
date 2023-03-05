@@ -1,6 +1,3 @@
-#ifndef CMD_LS_H
-#define CMD_LS_H
-
 #include <filesystem>
 
 #include "stream_manager.hpp"
@@ -47,5 +44,3 @@ int cmd::la(const std::vector<std::string>& arg, StreamManager& stream_manager, 
     }
     return 0;
 }
-
-#endif

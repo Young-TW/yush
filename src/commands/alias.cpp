@@ -1,6 +1,3 @@
-#ifndef CMD_ALIAS_H
-#define CMD_ALIAS_H
-
 #include <string>
 #include <map>
 
@@ -16,5 +13,3 @@ int cmd::alias(const std::vector<std::string>& arg, StreamManager& stream_manage
     // alias_map.insert(cmd_name, cmd_content);
     return 0;
 }
-
-#endif

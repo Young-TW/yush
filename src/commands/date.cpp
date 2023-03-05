@@ -1,6 +1,3 @@
-#ifndef CMD_DATE_H
-#define CMD_DATE_H
-
 #include <ctime>
 #include <vector>
 #include <string>
@@ -30,5 +27,3 @@ int cmd::date(const std::vector<std::string>& arg, StreamManager& stream_manager
     */
     return 0;
 }
-
-#endif

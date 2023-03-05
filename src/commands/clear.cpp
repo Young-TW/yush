@@ -1,6 +1,3 @@
-#ifndef CMD_CLEAR_H
-#define CMD_CLEAR_H
-
 #include <string_view>
 
 #include "stream_manager.hpp"
@@ -16,5 +13,3 @@ int cmd::clear(const std::vector<std::string>& arg, StreamManager& stream_manage
     }
     return 0;
 }
-
-#endif

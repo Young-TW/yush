@@ -1,6 +1,3 @@
-#ifndef CMD_TIME_H
-#define CMD_TIME_H
-
 #include <ctime>
 #include <vector>
 
@@ -28,5 +25,3 @@ int cmd::time(const std::vector<std::string>& arg, StreamManager& stream_manager
     */
     return 0;
 }
-
-#endif

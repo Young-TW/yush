@@ -1,6 +1,3 @@
-#ifndef CMD_RM_H
-#define CMD_RM_H
-
 #include <string>
 #include <filesystem>
 
@@ -17,5 +14,3 @@ int cmd::rm(const std::vector<std::string>& arg, StreamManager& stream_manager, 
 
     return 0;
 }
-
-#endif

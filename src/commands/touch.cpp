@@ -1,6 +1,3 @@
-#ifndef CMD_TOUCH_H
-#define CMD_TOUCH_H
-
 #include <string>
 #include <filesystem>
 #include <fstream>
@@ -24,5 +21,3 @@ int cmd::touch(const std::vector<std::string>& arg, StreamManager& stream_manage
     std::ofstream fout(new_file);
     return 0;
 }
-
-#endif

@@ -1,6 +1,3 @@
-#ifndef CMD_CAT_H
-#define CMD_CAT_H
-
 #include <string>
 #include <filesystem>
 #include <fstream>
@@ -27,5 +24,3 @@ int cmd::cat(const std::vector<std::string>& arg, StreamManager& stream_manager,
 
     return 0;
 }
-
-#endif

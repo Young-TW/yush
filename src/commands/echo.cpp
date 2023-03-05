@@ -1,6 +1,3 @@
-#ifndef CMD_ECHO_H
-#define CMD_ECHO_H
-
 #include <vector>
 #include <string_view>
 
@@ -20,5 +17,3 @@ int cmd::echo(const std::vector<std::string>& arg, StreamManager& stream_manager
     }
     return 0;
 }
-
-#endif

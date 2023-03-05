@@ -1,6 +1,3 @@
-#ifndef CMD_WHOAMI_H
-#define CMD_WHOAMI_H
-
 #include <string_view>
 
 #include "stream_manager.hpp"
@@ -11,5 +8,3 @@ int cmd::whoami(const std::vector<std::string>& arg, StreamManager& stream_manag
     stream_manager.out() << variable_manager.get("USER");
     return 0;
 }
-
-#endif

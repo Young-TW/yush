@@ -1,6 +1,3 @@
-#ifndef CMD_HELP_H
-#define CMD_HELP_H
-
 #include <map>
 
 #include "stream_manager.hpp"
@@ -32,5 +29,3 @@ int cmd::help(const std::vector<std::string>& arg, StreamManager& stream_manager
     }
     return 0;
 }
-
-#endif

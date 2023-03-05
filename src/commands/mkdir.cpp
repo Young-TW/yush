@@ -1,6 +1,3 @@
-#ifndef CMD_MKDIR_H
-#define CMD_MKDIR_H
-
 #include <string>
 #include <filesystem>
 
@@ -23,5 +20,3 @@ int cmd::mkdir(const std::vector<std::string>& arg, StreamManager& stream_manage
         return 1;
     }
 }
-
-#endif
