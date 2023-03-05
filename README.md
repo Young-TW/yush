@@ -6,7 +6,7 @@ A simple shell.
 
 - [ ] alias
 - [x] cat
-- [x] cd (basic)
+- [x] cd
 - [x] clear
 - [ ] date
 - [x] echo

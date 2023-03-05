@@ -56,11 +56,11 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
 std::vector<std::string> Shell::parse_command(std::string_view input) {
     std::vector<std::string> arg;
     for (std::size_t i = 0; i < input.size();) {
-        auto space = input.find(' ', i);
+        std::size_t space = input.find(' ', i);
         if (space == std::string::npos) {
             space = input.size();
         }
-        arg.push_back(std::string(input.substr(i, space)));
+        arg.emplace_back(input.substr(i, space-i));
         i = space + 1;
     }
     return arg;

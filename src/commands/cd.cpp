@@ -12,9 +12,6 @@ static int cd_single(StreamManager& stream_manager, std::string_view path, std::
     if (path == "..") {
         current_path = current_path.parent_path();
         return 0;
-    } else if (path == "/") {
-        current_path = current_path.root_path();
-        return 0;
     } else if (path == "~") {
         current_path = variable_manager.get("HOME_DIR");
         return 0;
@@ -35,12 +32,16 @@ int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, 
     std::filesystem::path current_path(variable_manager.get("PWD"));
     std::string_view path = arg[1];
 
+    if(path[0] == '/'){
+        current_path = current_path.root_directory();
+    }
+
     for (size_t i = 0; i < path.size();) {
         auto slash = path.find('/', i);
         if (slash == std::string::npos) {
             slash = path.size();
         }
-        if (cd_single(stream_manager, path.substr(i, slash), current_path, variable_manager)) {
+        if (cd_single(stream_manager, path.substr(i, slash-i), current_path, variable_manager)) {
             return 1;
         }
         i = slash + 1;
