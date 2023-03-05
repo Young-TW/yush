@@ -24,8 +24,6 @@ private:
 
     int run_command(const std::vector<std::string>& arg, StreamManager& stream_manager);
 
-    int exit(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
-
     bool exit_check;
     VariableManager variable_manager;
 };

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string_view>
 #include <fstream>
+#include <map>
 
 #include "stream_manager.hpp"
 #include "variable_manager.h"
@@ -69,51 +70,35 @@ std::vector<std::string> Shell::parse_command(std::string_view input) {
 int Shell::run_command(const std::vector<std::string>& arg, StreamManager& stream_manager) {
     using namespace cmd;
 
-    std::string_view command = arg[0];
+    std::map<std::string, int (*)(const std::vector<std::string>&, StreamManager&, VariableManager&)> command_map = {
+        {"alias", alias},
+        {"cat", cat},
+        {"cd", cd},
+        {"clear", clear},
+        {"date", date},
+        {"echo", echo},
+        {"help", help},
+        {"la", la},
+        {"ls", ls},
+        {"mkdir", mkdir},
+        {"pwd", pwd},
+        {"rm", rm},
+        {"time", time},
+        {"touch", touch},
+        {"whoami", whoami},
+        {"yush", yush},
+    };
 
-    if (command == "alias") {
-        return alias(arg, stream_manager, variable_manager);
-    } else if (command == "cat") {
-        return cat(arg, stream_manager, variable_manager);
-    } else if (command == "cd") {
-        return cd(arg, stream_manager, variable_manager);
-    } else if (command == "clear") {
-        return clear(arg, stream_manager, variable_manager);
-    } else if (command == "date") {
-        return date(arg, stream_manager, variable_manager);
-    } else if (command == "echo") {
-        return echo(arg, stream_manager, variable_manager);
-    } else if (command == "exit") {
-        return exit(arg, stream_manager, variable_manager);
-    } else if (command == "help") {
-        return help(arg, stream_manager, variable_manager);
-    } else if (command == "la") {
-        return la(arg, stream_manager, variable_manager);
-    } else if (command == "ls") {
-        return ls(arg, stream_manager, variable_manager);
-    } else if (command == "mkdir") {
-        return mkdir(arg, stream_manager, variable_manager);
-    } else if (command == "pwd") {
-        return pwd(arg, stream_manager, variable_manager);
-    } else if (command == "rm") {
-        return rm(arg, stream_manager, variable_manager);
-    } else if (command == "time") {
-        return time(arg, stream_manager, variable_manager);
-    } else if (command == "touch") {
-        return touch(arg, stream_manager, variable_manager);
-    } else if (command == "whoami") {
-        return whoami(arg, stream_manager, variable_manager);
-    } else if (command == "yush") {
-        return yush(arg, stream_manager, variable_manager);
-    } else if (command.at(0) == '#') {
+    if(arg[0] == "exit"){
+        exit_check = true;
         return 0;
-    } else {
-        stream_manager.err() << "command `" << command << "` not found.";
-        return 127;
     }
-}
 
-int Shell::exit(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
-    exit_check = true;
-    return 0;
+    auto command_it = command_map.find(arg[0]);
+    if (command_it != command_map.end()) {
+        return command_it->second(arg, stream_manager, variable_manager);
+    }
+
+    stream_manager.err() << "command `" << arg[0] << "` not found.";
+    return 127;
 }
