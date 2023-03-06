@@ -1,10 +1,9 @@
 #include <iostream>
 #include <string_view>
 #include <fstream>
-#include <map>
+#include <unordered_map>
 
 #include "stream_manager.hpp"
-#include "variable_manager.h"
 #include "shell.h"
 #include "commands/cmds.h"
 #include "env/user.h"
@@ -70,7 +69,7 @@ std::vector<std::string> Shell::parse_command(std::string_view input) {
 int Shell::run_command(const std::vector<std::string>& arg, StreamManager& stream_manager) {
     using namespace cmd;
 
-    std::map<std::string, int (*)(const std::vector<std::string>&, StreamManager&, VariableManager&)> command_map = {
+    static const std::unordered_map<std::string, decltype(&alias)> command_map{
         {"alias", alias},
         {"cat", cat},
         {"cd", cd},
@@ -95,7 +94,7 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
     }
 
     auto command_it = command_map.find(arg[0]);
-    if (command_it != command_map.end()) {
+    if (command_it != command_map.cend()) {
         return command_it->second(arg, stream_manager, variable_manager);
     }
 
