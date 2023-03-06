@@ -4,7 +4,7 @@
 #include "variable_manager.h"
 #include "commands/cmds.h"
 
-static const std::map<std::string, std::string> commands ={
+static const std::map<std::string, std::string> commands = {
     {"alias"  , "set command into another name"},
     {"cat"    , "print content of file"},
     {"cd"     , "change current path"},
@@ -23,8 +23,8 @@ static const std::map<std::string, std::string> commands ={
     {"yush"   , "open new yush or run yush script file"},
 };
 
-int cmd::help(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager){
-    for(const auto& c : commands){
+int cmd::help(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+    for (const auto& c : commands) {
         stream_manager.out() << "\n" << c.first << "\t : " << c.second;
     }
     return 0;

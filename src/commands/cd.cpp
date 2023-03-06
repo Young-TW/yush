@@ -6,7 +6,9 @@
 #include "commands/cmds.h"
 
 static int cd_single(StreamManager& stream_manager, std::string_view path, std::filesystem::path& current_path, VariableManager& variable_manager) {
-    if (path == "..") {
+    if (path == ".") {
+        return 0;
+    } else if (path == "..") {
         current_path = current_path.parent_path();
         return 0;
     } else if (path == "~") {
@@ -45,6 +47,5 @@ int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, 
     }
 
     variable_manager.set("PWD", current_path.string());
-    // stream_manager.out() << variable_manager.get("PWD");
     return 0;
 }

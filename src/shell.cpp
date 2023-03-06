@@ -69,7 +69,7 @@ std::vector<std::string> Shell::parse_command(std::string_view input) {
 int Shell::run_command(const std::vector<std::string>& arg, StreamManager& stream_manager) {
     using namespace cmd;
 
-    static const std::unordered_map<std::string, decltype(&alias)> command_map{
+    static const std::unordered_map<std::string, decltype(&alias)> command_map = {
         {"alias", alias},
         {"cat", cat},
         {"cd", cd},
@@ -88,7 +88,7 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
         {"yush", yush},
     };
 
-    if(arg[0] == "exit"){
+    if (arg[0] == "exit") {
         exit_check = true;
         return 0;
     }

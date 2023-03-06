@@ -3,14 +3,6 @@
 
 #include <string>
 
-// This is for Windows
-// #include <windows.h>
-// #include <Lmcons.h>
-
-// char username[UNLEN+1];
-// DWORD username_len = UNLEN+1;
-// GetUserName(username, &username_len);
-
 const std::string user_name =
 #ifdef __WINDOWS__
     "Young"
