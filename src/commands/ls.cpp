@@ -2,7 +2,7 @@
 
 #include "stream_manager.hpp"
 #include "variable_manager.h"
-#include "commands/cmds.h"
+#include "cmds.h"
 
 int cmd::ls(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     std::filesystem::path current_path(variable_manager.get("PWD"));

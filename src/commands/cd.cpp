@@ -3,7 +3,7 @@
 
 #include "stream_manager.hpp"
 #include "variable_manager.h"
-#include "commands/cmds.h"
+#include "cmds.h"
 
 static int cd_single(StreamManager& stream_manager, std::string_view path, std::filesystem::path& current_path, VariableManager& variable_manager) {
     if (path == ".") {

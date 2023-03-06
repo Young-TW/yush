@@ -9,7 +9,7 @@
 #include "stream_manager.hpp"
 #include "variable_manager.h"
 #include "env/system_var.h"
-#include "commands/cmds.h"
+#include "cmds.h"
 
 class Shell {
 public:

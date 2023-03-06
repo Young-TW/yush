@@ -5,7 +5,7 @@
 
 #include "stream_manager.hpp"
 #include "shell.h"
-#include "commands/cmds.h"
+#include "cmds.h"
 #include "env/user.h"
 #include "env/home_dir.h"
 #include "feature/path_str_gen.h"

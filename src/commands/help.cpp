@@ -2,7 +2,7 @@
 
 #include "stream_manager.hpp"
 #include "variable_manager.h"
-#include "commands/cmds.h"
+#include "cmds.h"
 
 static const std::map<std::string, std::string> commands = {
     {"alias"  , "set command into another name"},

@@ -1,3 +1,6 @@
+#ifndef FEATURE_ARROW_H
+#define FEATURE_ARROW_H
+
 #include <iostream>
 
 // bool place_is_current(){
@@ -72,3 +75,5 @@ int arrow(){
     */
     return 0;
 }
+
+#endif
