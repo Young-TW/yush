@@ -8,7 +8,7 @@ A simple shell.
 - [x] cat
 - [x] cd
 - [x] clear
-- [ ] date
+- [x] date
 - [x] echo
 - [x] exit
 - [x] help
@@ -17,7 +17,6 @@ A simple shell.
 - [x] mkdir
 - [x] pwd
 - [ ] rm
-- [ ] time
 - [x] touch
 - [x] whoami
 
