@@ -1,5 +1,5 @@
-#ifndef CMD_NAMESPACE_H
-#define CMD_NAMESPACE_H
+#ifndef CMDS_H
+#define CMDS_H
 
 #include <string>
 #include <string_view>
