@@ -9,14 +9,14 @@
 
 std::string home_dir{std::getenv("USERPROFILE")};
 
-#elifdef __linux__
+#elif __linux__
 
 #include <pwd.h>
 #include <unistd.h>
 
 std::string home_dir{getpwuid(getuid())->pw_dir};
 
-#elifdef __APPLE__
+#elif __APPLE__
 
 #include <pwd.h>
 #include <unistd.h>
