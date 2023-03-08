@@ -106,6 +106,7 @@
         "xmemory0": "cpp",
         "__availability": "cpp",
         "__verbose_abort": "cpp",
-        "unordered_set": "cpp"
+        "unordered_set": "cpp",
+        "csignal": "cpp"
     }
 }

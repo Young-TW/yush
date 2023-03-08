@@ -32,10 +32,12 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
 
     int runtime_status = 0;
     while (!exit_check && !stream_manager.in().eof()) {
-        stream_manager.out() << '\n';
         if (output) {
-            stream_manager.out() << '\n' << variable_manager.get("COLOR_NAME") << variable_manager.get("USER") << variable_manager.get("COLOR_RESET");
-            stream_manager.out() << ' ' << variable_manager.get("COLOR_PATH") << path_str_gen(variable_manager.get("PWD"), variable_manager.get("HOME_DIR")) << variable_manager.get("COLOR_RESET") << '\n';
+            stream_manager.out() << "\n\n"
+                                 << variable_manager.get("COLOR_NAME") << variable_manager.get("USER")
+                                 << variable_manager.get("COLOR_RESET") << ' '
+                                 << variable_manager.get("COLOR_PATH") << path_str_gen(variable_manager.get("PWD"), variable_manager.get("HOME_DIR"))
+                                 << variable_manager.get("COLOR_RESET") << '\n';
             if (runtime_status != 0) {
                 stream_manager.out() << variable_manager.get("COLOR_WARN");
             }
@@ -48,7 +50,9 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
 
         runtime_status = run_command(parse_command(input), stream_manager);
 
-        std::filesystem::current_path(std::filesystem::path(variable_manager.get("PWD")));
+        std::filesystem::path current_path{variable_manager.get("PWD")};
+        std::filesystem::current_path(current_path);
+        variable_manager.set("PWD", current_path.lexically_normal().string());
     }
     return runtime_status;
 }
