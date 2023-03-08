@@ -13,6 +13,8 @@ public:
 
     std::string_view get(const std::string& name);
 
+    bool exist(const std::string& name);
+
 private:
     std::unordered_map<std::string, std::string> variables;
 };

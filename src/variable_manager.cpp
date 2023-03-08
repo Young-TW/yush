@@ -10,3 +10,7 @@ VariableManager& VariableManager::set(const std::string& name, std::string_view 
 std::string_view VariableManager::get(const std::string& name) {
     return variables[name];
 }
+
+bool VariableManager::exist(const std::string& name) {
+    return variables.find(name) != variables.end();
+}

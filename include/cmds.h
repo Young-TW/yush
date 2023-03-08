@@ -23,6 +23,7 @@ namespace cmd {
     int mkdir(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int pwd(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int rm(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
+    int set(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int touch(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int whoami(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int yush(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
