@@ -15,6 +15,7 @@ namespace cmd {
     int cat(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int cd(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int clear(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
+    int cp(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int date(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int echo(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int help(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);

@@ -32,8 +32,9 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
 
     int runtime_status = 0;
     while (!exit_check && !stream_manager.in().eof()) {
+        stream_manager.out() << "\n";
         if (output) {
-            stream_manager.out() << "\n\n"
+            stream_manager.out() << "\n"
                                  << variable_manager.get("COLOR_NAME") << variable_manager.get("USER")
                                  << variable_manager.get("COLOR_RESET") << ' '
                                  << variable_manager.get("COLOR_PATH") << path_str_gen(variable_manager.get("PWD"), variable_manager.get("HOME_DIR"))
@@ -78,6 +79,7 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
         {"cat", cat},
         {"cd", cd},
         {"clear", clear},
+        {"cp", cp},
         {"date", date},
         {"echo", echo},
         {"help", help},
