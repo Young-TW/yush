@@ -3,25 +3,26 @@
 
 #include <string>
 
-#include "env/system_var.h"
+#ifdef _WIN32 // Both of 32-bit and 64-bit define this.
 
-const std::string home_dir =
-#ifdef __WINDOWS__
-    "C:/Users/" + user_name
-#elif defined(_WIN32)
-    "C:/Users/" + user_name
-#elif defined(__WIN64)
-    "C:/Users/" + user_name
-#elif defined(__APPLE__)
-    "/Users/" + user_name
-#elif defined(__unix__)
-    "/home/" + user_name
-#elif defined(__linux__)
-    "/home/" + user_name
-#else
-    "ERROR"
+#include <cstdlib>
+
+std::string home_dir{std::getenv("USERPROFILE")};
+
+#elifdef __linux__
+
+#include <pwd.h>
+#include <unistd.h>
+
+std::string home_dir{getpwuid(getuid())->pw_dir};
+
+#elifdef __APPLE__
+
+#include <pwd.h>
+#include <unistd.h>
+
+std::string home_dir{getpwuid(getuid())->pw_dir};
+
 #endif
-;
-
 
 #endif
