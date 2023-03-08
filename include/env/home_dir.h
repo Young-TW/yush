@@ -7,21 +7,21 @@
 
 #include <cstdlib>
 
-std::string home_dir{std::getenv("USERPROFILE")};
+const std::string home_dir{std::getenv("USERPROFILE")};
 
 #elif __linux__
 
 #include <pwd.h>
 #include <unistd.h>
 
-std::string home_dir{getpwuid(getuid())->pw_dir};
+const std::string home_dir{getpwuid(getuid())->pw_dir};
 
 #elif __APPLE__
 
 #include <pwd.h>
 #include <unistd.h>
 
-std::string home_dir{getpwuid(getuid())->pw_dir};
+const std::string home_dir{getpwuid(getuid())->pw_dir};
 
 #endif
 
