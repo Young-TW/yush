@@ -8,10 +8,10 @@
 int cmd::echo(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (arg[1][0] == '$') {
         if (variable_manager.exist(arg[1].substr(1, arg[1].size()-1))) {
-            stream_manager.out() << variable_manager.get(arg[1].substr(1, arg[1].size()-1));
+            stream_manager.out() << variable_manager.get(arg[1].substr(1, arg[1].size()-1)) << "\n";
             return 0;
         }
-        stream_manager.err() << "Variable not found";
+        stream_manager.err() << "Variable not found\n";
         return 1;
     }
 
@@ -19,5 +19,6 @@ int cmd::echo(const std::vector<std::string>& arg, StreamManager& stream_manager
         stream_manager.out() << arg[i] << " ";
     }
 
+    stream_manager.out() << "\n";
     return 0;
 }

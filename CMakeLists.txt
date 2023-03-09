@@ -9,4 +9,4 @@ file(GLOB_RECURSE SRC_FILES ./src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-install(TARGETS yush)
+install(TARGETS ${PROJECT_NAME})

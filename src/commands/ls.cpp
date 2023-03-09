@@ -23,6 +23,8 @@ int cmd::ls(const std::vector<std::string>& arg, StreamManager& stream_manager, 
             stream_manager.out() << "\t";
         }
     }
+
+    stream_manager.out() << "\n";
     return 0;
 }
 
@@ -42,5 +44,7 @@ int cmd::la(const std::vector<std::string>& arg, StreamManager& stream_manager, 
         }
         stream_manager.out() << "\t";
     }
+
+    stream_manager.out() << "\n";
     return 0;
 }

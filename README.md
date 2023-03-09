@@ -16,7 +16,7 @@ A simple shell.
 - [x] la
 - [x] ls
 - [x] mkdir
-- [ ] mv
+- [x] mv
 - [x] pwd
 - [x] rm
 - [x] touch
