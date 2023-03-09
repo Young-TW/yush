@@ -7,9 +7,9 @@ const std::string sys =
 #ifdef __WINDOWS__
     "Windows"
 #elif defined(_WIN32)
-    "Windows 32"
+    "Windows"
 #elif defined(__WIN64)
-    "Windows 64"
+    "Windows"
 #elif defined(__APPLE__)
     "MacOS"
 #elif defined(__unix__)

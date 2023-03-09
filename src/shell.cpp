@@ -86,6 +86,7 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
         {"la", la},
         {"ls", ls},
         {"mkdir", mkdir},
+        {"mv", mv},
         {"pwd", pwd},
         {"rm", rm},
         {"set", set},

@@ -16,6 +16,7 @@ A simple shell.
 - [x] la
 - [x] ls
 - [x] mkdir
+- [ ] mv
 - [x] pwd
 - [x] rm
 - [x] touch
@@ -62,8 +63,11 @@ git clone https://github.com/Young-TW/yush.git
 cd yush
 ```
 
-### build only
+### install
 
 ```sh
 cmake . -B build
+cd build
+make
+make install
 ```
