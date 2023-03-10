@@ -5,6 +5,6 @@
 #include "cmds.h"
 
 int cmd::pwd(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
-    stream_manager.out() << variable_manager.get("PWD") << "\n";
+    stream_manager.out() << std::filesystem::current_path() << "\n";
     return 0;
 }

@@ -28,7 +28,7 @@ int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, 
         return 1;
     }
 
-    std::filesystem::path current_path(variable_manager.get("PWD"));
+    std::filesystem::path current_path(std::filesystem::current_path());
     std::string_view path = arg[1];
 
     if(path[0] == '/'){
@@ -46,6 +46,6 @@ int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, 
         i = slash + 1;
     }
 
-    variable_manager.set("PWD", current_path.string());
+    std::filesystem::current_path(current_path.lexically_normal());
     return 0;
 }

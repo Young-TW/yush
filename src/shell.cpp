@@ -14,8 +14,7 @@
 Shell::Shell()
     : exit_check(false)
 {
-    variable_manager.set("PWD", std::filesystem::current_path().lexically_normal().string())
-                    .set("USER", user_name)
+    variable_manager.set("USER", user_name)
                     .set("HOME_DIR", home_dir)
                     .set("COLOR_THEME", theme_default.at("theme_name"))
                     .set("COLOR_NAME", theme_default.at("name"))
@@ -36,7 +35,7 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
             stream_manager.out() << "\n"
                                  << variable_manager.get("COLOR_NAME") << variable_manager.get("USER")
                                  << variable_manager.get("COLOR_RESET") << ' '
-                                 << variable_manager.get("COLOR_PATH") << path_str_gen(variable_manager.get("PWD"), variable_manager.get("HOME_DIR"))
+                                 << variable_manager.get("COLOR_PATH") << path_str_gen(variable_manager.get("HOME_DIR"))
                                  << variable_manager.get("COLOR_RESET") << '\n';
             if (runtime_status != 0) {
                 stream_manager.out() << variable_manager.get("COLOR_WARN");
@@ -49,10 +48,6 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
         std::getline(stream_manager.in(), input);
 
         runtime_status = run_command(parse_command(input), stream_manager);
-
-        std::filesystem::path current_path{variable_manager.get("PWD")};
-        std::filesystem::current_path(current_path);
-        variable_manager.set("PWD", current_path.lexically_normal().string());
     }
     return runtime_status;
 }

@@ -1,4 +1,3 @@
-#include <string>
 #include <filesystem>
 
 #include "stream_manager.hpp"
@@ -11,7 +10,7 @@ int cmd::mkdir(const std::vector<std::string>& arg, StreamManager& stream_manage
         return 1;
     }
 
-    auto new_directory = std::filesystem::path(variable_manager.get("PWD")) / arg[1];
+    auto new_directory = std::filesystem::current_path() / arg[1];
     if (!exists(new_directory)) {
         std::filesystem::create_directories(new_directory);
         return 0;

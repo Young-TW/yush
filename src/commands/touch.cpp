@@ -1,4 +1,3 @@
-#include <string>
 #include <filesystem>
 #include <fstream>
 
@@ -12,7 +11,7 @@ int cmd::touch(const std::vector<std::string>& arg, StreamManager& stream_manage
         return 1;
     }
 
-    auto new_file = std::filesystem::path(variable_manager.get("PWD")) / arg[1];
+    auto new_file = std::filesystem::current_path() / arg[1];
     if (std::filesystem::exists(new_file)) {
         stream_manager.err() << "File already exists.\n";
         return 1;

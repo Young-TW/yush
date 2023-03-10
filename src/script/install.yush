@@ -1,15 +1,21 @@
-# Yush – Young's Shell
+# yush – Young's Shell
 
 # build
 
 echo "start Build"
 
-clang++ src/main.cpp -o yush -std=c++23
+mkdir build
+
+cd build
+
+cmake ..
+
+make
 
 # add to path
 
-echo "set yush binary file to PATH"
+echo "install yush binary to $PATH"
 
-cp yush /usr/local/bin/
+make install
 
 echo "All tasks done"
