@@ -22,6 +22,11 @@ A simple shell.
 - [x] touch
 - [x] whoami
 
+## yush Commands
+
+- [x] set
+- [ ] function
+
 ### Other commands
 
 - [ ] finger

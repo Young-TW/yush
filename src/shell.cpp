@@ -78,6 +78,7 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
         {"cp", cp},
         {"date", date},
         {"echo", echo},
+        {"function", function},
         {"help", help},
         {"la", la},
         {"ls", ls},
@@ -101,6 +102,6 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
         return command_it->second(arg, stream_manager, variable_manager);
     }
 
-    stream_manager.err() << "command `" << arg[0] << "` not found.";
+    stream_manager.err() << "command `" << arg[0] << "` not found.\n";
     return 127;
 }
