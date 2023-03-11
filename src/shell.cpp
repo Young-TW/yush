@@ -49,6 +49,7 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
 
         runtime_status = run_command(parse_command(input), stream_manager);
     }
+
     return runtime_status;
 }
 
@@ -62,6 +63,7 @@ std::vector<std::string> Shell::parse_command(std::string_view input) {
         arg.emplace_back(input.substr(i, space-i));
         i = space + 1;
     }
+
     return arg;
 }
 

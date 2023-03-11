@@ -20,8 +20,6 @@ public:
 private:
     static std::vector<std::string> parse_command(std::string_view input);
 
-    int init();
-
     int run_command(const std::vector<std::string>& arg, StreamManager& stream_manager);
 
     bool exit_check;
