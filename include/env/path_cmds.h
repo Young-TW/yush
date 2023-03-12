@@ -3,14 +3,22 @@
 
 #include <string>
 
-#ifdef _WIN32
+std::string env_path_get() {
+    #ifdef _WIN32
 
-#elif __linux__
+    #elif __linux__
 
+    #include <cstdlib>
 
+    std::string env_path = std::getenv("PATH");
 
-#elif __APPLE__
+    #elif __APPLE__
 
-#endif
+    #endif
+
+    // string_parser(env_path, ':')
+
+    return env_path;
+}
 
 #endif

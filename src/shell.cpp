@@ -8,6 +8,7 @@
 #include "cmds.h"
 #include "env/user.h"
 #include "env/home_dir.h"
+#include "env/path_cmds.h"
 #include "feature/path_str_gen.h"
 #include "feature/theme.h"
 
@@ -23,7 +24,8 @@ Shell::Shell()
                     .set("COLOR_WARN", theme_default.at("warn"))
                     .set("COLOR_SAVE", theme_default.at("save"))
                     .set("COLOR_RESET", theme_default.at("reset"))
-                    .set("SYSTEM", sys);
+                    .set("SYSTEM", sys)
+                    .set("PATH", env_path_get());
 }
 
 int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool output) {
