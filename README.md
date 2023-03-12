@@ -27,14 +27,6 @@ A simple shell.
 - [x] set
 - [ ] function
 
-### Other commands
-
-- [ ] finger
-- [ ] man
-- [ ] whatis
-- [ ] which
-- [ ] whereis
-
 ## Feature
 
 - [x] varibles
@@ -45,7 +37,7 @@ A simple shell.
 - [x] color theme
 - [ ] load commands from env var
     - [ ] Windows
-    - [ ] Linux & MacOS
+    - [x] Linux & MacOS
 - [x] run `.yush` script file
 - [ ] tab auto fill command
 
@@ -54,9 +46,9 @@ A simple shell.
 - [x] Linux
     - [x] Ubuntu 22.04
 - [x] MacOS
-- [x] Windows
-    - [x] 10
-    - [x] 11
+- [ ] Windows
+    - [ ] 10
+    - [ ] 11
 
 ## Usage
 
