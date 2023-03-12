@@ -11,6 +11,7 @@
 #include "env/path_cmds.h"
 #include "feature/path_str_gen.h"
 #include "feature/theme.h"
+#include "feature/string_parser.h"
 
 Shell::Shell()
     : exit_check(false)
@@ -49,28 +50,16 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
         std::string input;
         std::getline(stream_manager.in(), input);
 
-        runtime_status = run_command(parse_command(input), stream_manager);
+        runtime_status = run_command(input, stream_manager);
     }
 
     return runtime_status;
 }
 
-std::vector<std::string> Shell::parse_command(std::string_view input) {
-    std::vector<std::string> arg;
-    for (std::size_t i = 0; i < input.size();) {
-        std::size_t space = input.find(' ', i);
-        if (space == std::string::npos) {
-            space = input.size();
-        }
-        arg.emplace_back(input.substr(i, space-i));
-        i = space + 1;
-    }
+int Shell::run_command(const std::string current_command, StreamManager& stream_manager) {
+    using namespace cmds;
 
-    return arg;
-}
-
-int Shell::run_command(const std::vector<std::string>& arg, StreamManager& stream_manager) {
-    using namespace cmd;
+    const std::vector<std::string>& arg = string_parser(current_command, ' ');
 
     static const std::unordered_map<std::string, decltype(&alias)> command_map = {
         {"alias", alias},
@@ -102,6 +91,17 @@ int Shell::run_command(const std::vector<std::string>& arg, StreamManager& strea
     auto command_it = command_map.find(arg[0]);
     if (command_it != command_map.cend()) {
         return command_it->second(arg, stream_manager, variable_manager);
+    }
+
+    // check cmds from system $PATH
+    std::vector<std::string> cmd_paths = string_parser(variable_manager.get("PATH"), ':');
+    for (auto cmd : cmd_paths) {
+        std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
+        bool cmd_exists = false;
+        if(std::filesystem::exists(cmd_path) && std::filesystem::is_regular_file(cmd_path)) {
+            cmd_exists = true;
+            return std::system(arg[0].c_str());
+        }
     }
 
     stream_manager.err() << "command `" << arg[0] << "` not found.\n";

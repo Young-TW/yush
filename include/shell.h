@@ -18,9 +18,7 @@ public:
     int run(std::istream& in, std::ostream& out, std::ostream& err, bool);
 
 private:
-    static std::vector<std::string> parse_command(std::string_view input);
-
-    int run_command(const std::vector<std::string>& arg, StreamManager& stream_manager);
+    int run_command(std::string current_command, StreamManager& stream_manager);
 
     bool exit_check;
     VariableManager variable_manager;

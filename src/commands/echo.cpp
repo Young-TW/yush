@@ -5,7 +5,7 @@
 #include "variable_manager.h"
 #include "cmds.h"
 
-int cmd::echo(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::echo(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (arg[1][0] == '$') {
         if (variable_manager.exist(arg[1].substr(1, arg[1].size()-1))) {
             stream_manager.out() << variable_manager.get(arg[1].substr(1, arg[1].size()-1)) << "\n";

@@ -23,7 +23,7 @@ static int cd_single(StreamManager& stream_manager, std::string_view path, std::
     return 0;
 }
 
-int cmd::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (arg.size() != 2) {
         return 1;
     }

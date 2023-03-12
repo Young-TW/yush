@@ -10,7 +10,7 @@
 #include "stream_manager.hpp"
 #include "variable_manager.h"
 
-namespace cmd {
+namespace cmds {
     int alias(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int cat(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);
     int cd(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager);

@@ -4,7 +4,7 @@
 #include "variable_manager.h"
 #include "cmds.h"
 
-int cmd::ls(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::ls(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
         stream_manager.err() << "This directory is not exists.\n";
         return 1;
@@ -26,7 +26,7 @@ int cmd::ls(const std::vector<std::string>& arg, StreamManager& stream_manager, 
     return 0;
 }
 
-int cmd::la(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::la(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
         return 1;
     }

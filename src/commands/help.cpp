@@ -24,7 +24,7 @@ static const std::map<std::string, std::string> commands = {
     {"yush"   , "open new yush or run yush script file"},
 };
 
-int cmd::help(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::help(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     for (const auto& c : commands) {
         stream_manager.out() << "\n" << c.first << "\t : " << c.second;
     }
