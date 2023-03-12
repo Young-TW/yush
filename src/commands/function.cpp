@@ -1,11 +1,12 @@
 #include <vector>
 #include <string_view>
+#include <unordered_map>
 
 #include "stream_manager.hpp"
 #include "variable_manager.h"
 #include "cmds.h"
 
-std::vector<std::vector<std::string>> functions;
+std::unordered_map<std::string, std::vector<std::string>> functions;
 
 std::vector<std::string> parse(std::string_view input){
     std::vector<std::string> arg;
@@ -20,8 +21,6 @@ std::vector<std::string> parse(std::string_view input){
     return arg;
 }
 
-std::vector<std::string> func_temp;
-
 int cmd::function(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     if (arg.size() != 2 && arg.size() != 3) {
         stream_manager.err() << "Argument size error.\n";
@@ -30,19 +29,24 @@ int cmd::function(const std::vector<std::string>& arg, StreamManager& stream_man
 
     if (arg.size() == 2) {
         // run function
+        // auto func = functions.find(arg[1]);
+        // while (str_temp.back() == '\\') {
+
+        // }
+
         return 0;
     }
 
+    std::vector<std::string> func_temp;
     std::string str_temp;
     func_temp.clear();
-    func_temp.push_back(arg[1]);
     str_temp = arg.back();
     while (str_temp.back() == '\\') { // record function
         getline(stream_manager.in(), str_temp);
         func_temp.push_back(str_temp);
     }
 
-    functions.push_back(func_temp);
+    functions.insert(std::pair(arg[1], func_temp));
 
     return 0;
 }
