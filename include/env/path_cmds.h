@@ -8,11 +8,11 @@ std::string env_path_get() {
 
     #elif __linux__
 
-    #include <cstdlib>
-
     std::string env_path = std::getenv("PATH");
 
     #elif __APPLE__
+
+    std::string env_path = std::getenv("PATH");
 
     #endif
 

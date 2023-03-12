@@ -26,7 +26,8 @@ Shell::Shell()
                     .set("COLOR_SAVE", theme_default.at("save"))
                     .set("COLOR_RESET", theme_default.at("reset"))
                     .set("SYSTEM", sys)
-                    .set("PATH", env_path_get());
+                    .set("PATH", env_path_get())
+                    .set("0", "yush");
 }
 
 int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool output) {
@@ -100,7 +101,7 @@ int Shell::run_command(const std::string current_command, StreamManager& stream_
         bool cmd_exists = false;
         if(std::filesystem::exists(cmd_path) && std::filesystem::is_regular_file(cmd_path)) {
             cmd_exists = true;
-            return std::system(arg[0].c_str());
+            return std::system(current_command.c_str());
         }
     }
 
