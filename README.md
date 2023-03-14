@@ -21,6 +21,7 @@ A simple shell.
 - [x] rm
 - [x] touch
 - [x] whoami
+- [x] yush
 
 ## yush Commands
 
@@ -29,42 +30,26 @@ A simple shell.
 
 ## Feature
 
-- [x] varibles
-    - [x] `$system`
-    - [x] `$theme`
+- [x] varible_manager
 - [ ] user system
 - [x] home path print as `~` and root as `/`
 - [x] color theme
-- [ ] load commands from env var
-    - [ ] Windows
+- [x] load commands from env var
+    - [x] Windows
     - [x] Linux & MacOS
 - [x] run `.yush` script file
 - [ ] tab auto fill command
+- [x] run `~/.yushrc` when yush launch
 
 ## System support
 
 - [x] Linux
     - [x] Ubuntu 22.04
 - [x] MacOS
-- [ ] Windows
-    - [ ] 10
-    - [ ] 11
+- [x] Windows
+    - [x] 10
+    - [x] 11
 
-## Usage
+## Installation
 
-clone the repository
-
-```sh
-git clone https://github.com/Young-TW/yush.git
-
-cd yush
-```
-
-### install
-
-```sh
-cmake . -B build
-cd build
-make
-make install
-```
+Please read [this page](./docs/tutorial.md) to install yush.
