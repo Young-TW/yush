@@ -13,15 +13,17 @@
 
 class Shell {
 public:
-    Shell();
+    Shell(std::istream& in, std::ostream& out, std::ostream& err);
 
-    int run(std::istream& in, std::ostream& out, std::ostream& err, bool);
+    int init();
+    int run(bool);
 
 private:
     int run_command(std::string current_command, StreamManager& stream_manager);
 
     bool exit_check;
     VariableManager variable_manager;
+    StreamManager stream_manager;
 };
 
 #endif

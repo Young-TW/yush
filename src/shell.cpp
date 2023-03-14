@@ -13,8 +13,9 @@
 #include "feature/theme.h"
 #include "feature/string_parser.h"
 
-Shell::Shell()
-    : exit_check(false)
+Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
+    : exit_check(false),
+    stream_manager(in, out, err)
 {
     variable_manager.set("USER", user_name)
                     .set("HOME_DIR", home_dir)
@@ -30,9 +31,16 @@ Shell::Shell()
                     .set("0", "yush");
 }
 
-int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool output) {
-    StreamManager stream_manager(in, out, err);
+int Shell::init() {
+    const std::vector<std::string>& arg = {
+        std::filesystem::current_path(),
+        variable_manager.get("HOME_DIR") / std::filesystem::path(".yushrc")
+    };
 
+    return cmds::yush(arg, stream_manager, variable_manager);
+}
+
+int Shell::run(bool output) {
     int runtime_status = 0;
     while (!exit_check && !stream_manager.in().eof()) {
         if (output) {
@@ -59,6 +67,10 @@ int Shell::run(std::istream& in, std::ostream& out, std::ostream& err, bool outp
 
 int Shell::run_command(const std::string current_command, StreamManager& stream_manager) {
     using namespace cmds;
+
+    if (current_command == "") {
+        return 0;
+    }
 
     const std::vector<std::string>& arg = string_parser(current_command, ' ');
 
