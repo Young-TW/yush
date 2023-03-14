@@ -107,6 +107,7 @@
         "__availability": "cpp",
         "__verbose_abort": "cpp",
         "unordered_set": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "xhash": "cpp"
     }
 }

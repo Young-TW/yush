@@ -12,10 +12,10 @@ const std::string sys =
     "Windows"
 #elif defined(__APPLE__)
     "MacOS"
-#elif defined(__unix__)
-    "Unix"
 #elif defined(__linux__)
     "Linux"
+#elif defined(__unix__)
+    "Unix"
 #else
     "Unknown"
 #endif

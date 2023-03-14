@@ -33,8 +33,8 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
 
 int Shell::init() {
     const std::vector<std::string>& arg = {
-        std::filesystem::current_path(),
-        variable_manager.get("HOME_DIR") / std::filesystem::path(".yushrc")
+        std::filesystem::current_path().string(),
+        std::string(variable_manager.get("HOME_DIR")) + ".yushrc"
     };
 
     return cmds::yush(arg, stream_manager, variable_manager);
@@ -107,12 +107,27 @@ int Shell::run_command(const std::string current_command, StreamManager& stream_
     }
 
     // check cmds from system $PATH
-    std::vector<std::string> cmd_paths = string_parser(variable_manager.get("PATH"), ':');
+    char env_path_flag = ':';
+    if (variable_manager.get("SYSTEM") == "Windows") {
+        env_path_flag = ';';
+    }
+
+    std::vector<std::string> cmd_paths = string_parser(variable_manager.get("PATH"), env_path_flag);
     for (auto cmd : cmd_paths) {
         std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
-        bool cmd_exists = false;
+        if (variable_manager.get("SYSTEM") == "Windows") {
+            cmd_path = cmd / std::filesystem::path(arg[0] + ".exe");
+        }
+
         if(std::filesystem::exists(cmd_path) && std::filesystem::is_regular_file(cmd_path)) {
-            cmd_exists = true;
+            if (variable_manager.get("SYSTEM") == "Windows") {
+                std::string cmd_args = "";
+                for (int i=1;i<arg.size();i++) {
+                    cmd_args = cmd_args + ' ' + arg[i];
+                }
+                return std::system((arg[0] + ".exe" + ' ' + cmd_args).c_str());
+            }
+
             return std::system(current_command.c_str());
         }
     }

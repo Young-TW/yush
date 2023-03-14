@@ -6,6 +6,8 @@
 std::string env_path_get() {
     #ifdef _WIN32
 
+    std::string env_path = std::getenv("Path");
+
     #elif __linux__
 
     std::string env_path = std::getenv("PATH");
@@ -15,8 +17,6 @@ std::string env_path_get() {
     std::string env_path = std::getenv("PATH");
 
     #endif
-
-    // string_parser(env_path, ':')
 
     return env_path;
 }
