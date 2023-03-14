@@ -9,6 +9,7 @@
 #include "env/user.h"
 #include "env/home_dir.h"
 #include "env/path_cmds.h"
+#include "env/path_cmds_call.h"
 #include "feature/path_str_gen.h"
 #include "feature/theme.h"
 #include "feature/string_parser.h"
@@ -72,7 +73,7 @@ int Shell::run_command(const std::string current_command, StreamManager& stream_
         return 0;
     }
 
-    const std::vector<std::string>& arg = string_parser(current_command, ' ');
+    std::vector<std::string> arg = string_parser(current_command, ' ');
 
     static const std::unordered_map<std::string, decltype(&alias)> command_map = {
         {"alias", alias},
@@ -106,32 +107,6 @@ int Shell::run_command(const std::string current_command, StreamManager& stream_
         return command_it->second(arg, stream_manager, variable_manager);
     }
 
-    // check cmds from system $PATH
-    char env_path_flag = ':';
-    if (variable_manager.get("SYSTEM") == "Windows") {
-        env_path_flag = ';';
-    }
-
-    std::vector<std::string> cmd_paths = string_parser(variable_manager.get("PATH"), env_path_flag);
-    for (auto cmd : cmd_paths) {
-        std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
-        if (variable_manager.get("SYSTEM") == "Windows") {
-            cmd_path = cmd / std::filesystem::path(arg[0] + ".exe");
-        }
-
-        if(std::filesystem::exists(cmd_path) && std::filesystem::is_regular_file(cmd_path)) {
-            if (variable_manager.get("SYSTEM") == "Windows") {
-                std::string cmd_args = "";
-                for (int i=1;i<arg.size();i++) {
-                    cmd_args = cmd_args + ' ' + arg[i];
-                }
-                return std::system((arg[0] + ".exe" + ' ' + cmd_args).c_str());
-            }
-
-            return std::system(current_command.c_str());
-        }
-    }
-
-    stream_manager.err() << "command `" << arg[0] << "` not found.\n";
+    return cmd_call(arg, stream_manager, variable_manager);
     return 127;
 }
