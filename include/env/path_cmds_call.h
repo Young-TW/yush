@@ -33,6 +33,10 @@ int cmd_call(std::vector<std::string>& arg, StreamManager& stream_manager, Varia
 // check cmds from system $PATH
 int cmd_call(std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     std::vector<std::string> cmd_paths = string_parser(variable_manager.get("PATH"), ':');
+    std::string current_command = "";
+    for (int i=0;i<arg.size();i++) {
+        current_command = current_command + ' ' + arg[i];
+    }
     for (auto cmd : cmd_paths) {
         std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
 
@@ -49,6 +53,10 @@ int cmd_call(std::vector<std::string>& arg, StreamManager& stream_manager, Varia
 // check cmds from system $PATH
 int cmd_call(std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
     std::vector<std::string> cmd_paths = string_parser(variable_manager.get("PATH"), ':');
+    std::string current_command = "";
+    for (int i=0;i<arg.size();i++) {
+        current_command = current_command + ' ' + arg[i];
+    }
     for (auto cmd : cmd_paths) {
         std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
 
