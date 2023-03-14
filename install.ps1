@@ -1,4 +1,4 @@
-# Yush – Young's Shell
+# yush - Young's Shell
 
 # build
 
