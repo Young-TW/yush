@@ -19,7 +19,8 @@ public:
     int run(bool);
 
 private:
-    int run_command(std::string current_command, StreamManager& stream_manager);
+    int run_command(std::string current_command);
+    int cmd_call(std::vector<std::string>& arg);
 
     bool exit_check;
     VariableManager variable_manager;

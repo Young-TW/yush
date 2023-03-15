@@ -9,7 +9,6 @@
 #include "env/user.h"
 #include "env/home_dir.h"
 #include "env/path_cmds.h"
-#include "env/path_cmds_call.h"
 #include "feature/path_str_gen.h"
 #include "feature/theme.h"
 #include "feature/string_parser.h"
@@ -60,13 +59,30 @@ int Shell::run(bool output) {
         std::string input;
         std::getline(stream_manager.in(), input);
 
-        runtime_status = run_command(input, stream_manager);
+        runtime_status = run_command(input);
     }
 
     return runtime_status;
 }
 
-int Shell::run_command(const std::string current_command, StreamManager& stream_manager) {
+int Shell::cmd_call(std::vector<std::string>& arg) {
+    std::vector<std::string> cmd_paths = string_parser(variable_manager.get("PATH"), ':');
+    std::string current_command = "";
+    for (int i=0;i<arg.size();i++) {
+        current_command = current_command + ' ' + arg[i];
+    }
+    for (auto cmd : cmd_paths) {
+        std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
+
+        if(std::filesystem::exists(cmd_path) && std::filesystem::is_regular_file(cmd_path)) {
+            return std::system(current_command.c_str());
+        }
+    }
+    stream_manager.err() << "command `" << arg[0] << "` not found.\n";
+    return 127;
+}
+
+int Shell::run_command(const std::string current_command) {
     using namespace cmds;
 
     if (current_command == "") {
@@ -107,6 +123,6 @@ int Shell::run_command(const std::string current_command, StreamManager& stream_
         return command_it->second(arg, stream_manager, variable_manager);
     }
 
-    return cmd_call(arg, stream_manager, variable_manager);
+    return cmd_call(arg);
     return 127;
 }
