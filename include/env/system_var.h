@@ -4,13 +4,7 @@
 #include <string>
 
 const std::string sys =
-#ifdef __WINDOWS__
-    "Windows"
-#elif defined(_WIN32)
-    "Windows"
-#elif defined(__WIN64)
-    "Windows"
-#elif defined(__APPLE__)
+#ifdef __APPLE__
     "MacOS"
 #elif defined(__linux__)
     "Linux"

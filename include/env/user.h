@@ -3,18 +3,6 @@
 
 #include <string>
 
-const std::string user_name =
-#ifdef _WIN32
-    std::getenv("USERNAME")
-#elif __APPLE__
-    std::getenv("USER")
-#elif __unix__
-    std::getenv("USER")
-#elif __linux__
-    std::getenv("USER")
-#else
-    "unknown"
-#endif
-;
+const std::string user_name = std::getenv("USER");
 
 #endif
