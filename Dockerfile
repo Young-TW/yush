@@ -8,8 +8,8 @@ RUN \
     apt update && \
     apt install -y build-essential git cmake
 
-RUN git clone https://github.com/Young-TW/yush.git .
-RUN mkdir build && cd build && cmake .. && make
+COPY . .
+RUN mkdir build && cmake -B build && cmake --build build -j $(nproc)
 
 FROM ubuntu:rolling
 
