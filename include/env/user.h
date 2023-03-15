@@ -4,20 +4,16 @@
 #include <string>
 
 const std::string user_name =
-#ifdef __WINDOWS__
-    "Young"
-#elif defined(_WIN32)
-    "Young"
-#elif defined(__WIN64)
-    "Young"
-#elif defined(__APPLE__)
-    "young"
-#elif defined(__unix__)
-    "young"
-#elif defined(__linux__)
-    "young"
+#ifdef _WIN32
+    std::getenv("USERNAME")
+#elif __APPLE__
+    std::getenv("USER")
+#elif __unix__
+    std::getenv("USER")
+#elif __linux__
+    std::getenv("USER")
 #else
-    "young"
+    "unknown"
 #endif
 ;
 

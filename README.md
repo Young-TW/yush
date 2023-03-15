@@ -31,7 +31,7 @@ A simple shell.
 ## Feature
 
 - [x] varible_manager
-- [ ] user system
+- [x] get user name
 - [x] home path print as `~` and root as `/`
 - [x] color theme
 - [x] load commands from env var
