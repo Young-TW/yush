@@ -1,0 +1,5 @@
+/build/*
+/test
+*.DS_Store
+/.vscode/*
+/.idea
