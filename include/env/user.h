@@ -13,7 +13,7 @@ const std::string user_name =
 #elif __linux__
     std::getenv("USER")
 #else
-    "unknown"
+    #error Unsupported platform.
 #endif
 ;
 
