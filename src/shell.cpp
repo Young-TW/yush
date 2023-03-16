@@ -3,12 +3,12 @@
 #include <fstream>
 #include <unordered_map>
 
+#include <pwd.h>
+#include <unistd.h>
+
 #include "stream_manager.hpp"
 #include "shell.h"
 #include "cmds.h"
-#include "env/user.h"
-#include "env/home_dir.h"
-#include "env/path_cmds.h"
 #include "feature/path_str_gen.h"
 #include "feature/theme.h"
 #include "feature/string_parser.h"
@@ -17,8 +17,8 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
     : exit_check(false),
     stream_manager(in, out, err)
 {
-    variable_manager.set("USER", user_name)
-                    .set("HOME_DIR", home_dir)
+    variable_manager.set("USER", std::getenv("USER"))
+                    .set("HOME_DIR", getpwuid(getuid())->pw_dir)
                     .set("COLOR_THEME", theme_default.at("theme_name"))
                     .set("COLOR_NAME", theme_default.at("name"))
                     .set("COLOR_PATH", theme_default.at("path"))
@@ -27,7 +27,7 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
                     .set("COLOR_SAVE", theme_default.at("save"))
                     .set("COLOR_RESET", theme_default.at("reset"))
                     .set("SYSTEM", sys)
-                    .set("PATH", env_path_get())
+                    .set("PATH", std::getenv("PATH"))
                     .set("0", "yush");
 
     const std::vector<std::string>& arg = {
