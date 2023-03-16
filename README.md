@@ -46,9 +46,6 @@ A simple shell.
 - [x] Linux
     - [x] Ubuntu 22.04
 - [x] MacOS
-- [x] Windows
-    - [x] 10
-    - [x] 11
 
 ## Installation
 
