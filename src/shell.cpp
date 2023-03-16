@@ -29,15 +29,13 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
                     .set("SYSTEM", sys)
                     .set("PATH", env_path_get())
                     .set("0", "yush");
-}
 
-int Shell::init() {
     const std::vector<std::string>& arg = {
         std::filesystem::current_path().string(),
         std::string(variable_manager.get("HOME_DIR")) + ".yushrc"
     };
 
-    return cmds::yush(arg, stream_manager, variable_manager);
+    cmds::yush(arg, stream_manager, variable_manager);
 }
 
 int Shell::run(bool output) {

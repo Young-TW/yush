@@ -5,9 +5,7 @@
 
 int main(int argc, char *argv[]) {
     if (argc == 1) {
-        Shell shell(std::cin, std::cout, std::cerr);
-        shell.init();
-        return shell.run(true);
+        return Shell(std::cin, std::cout, std::cerr).run(true);
     }
 
     if (argc >= 2) {

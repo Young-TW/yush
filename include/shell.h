@@ -15,7 +15,6 @@ class Shell {
 public:
     Shell(std::istream& in, std::ostream& out, std::ostream& err);
 
-    int init();
     int run(bool);
 
 private:
