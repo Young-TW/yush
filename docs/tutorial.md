@@ -12,7 +12,7 @@ Young's shell (`yush`) is a project that built by [Young](https://github.com/You
 
 - please install yush building dependencies before build.
 1. cmake
-2. C++ compiler (clang++/g++/visual studio build tools)
+2. C++ compiler (clang++/g++)
 3. build tools (makefile/ninja)
 4. git (to clone the repo)
 
@@ -30,14 +30,13 @@ cmake . -B build
 cmake --build build --config RELEASE
 ```
 
-install (makefile)  
+install  
 
 ```sh
-cd build
-make install
+cmake --install build
 ```
 
-open `yush`
+open `yush`  
 
 ```sh
 yush

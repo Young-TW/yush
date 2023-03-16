@@ -1,6 +1,6 @@
 # Commands
 
-`yush` provides it's own command and local commands.  
+`yush` provides it's builtin commanda and normal commands(executable file in $PATH).  
 
 ## Builtin commands
 
@@ -25,7 +25,7 @@
 17. whoami
 18. yush
 
-## Common commands
+## Normal commands
 
 `yush` can read environment variables too.  
 So it can run commands installed in system.  
