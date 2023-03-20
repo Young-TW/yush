@@ -35,7 +35,7 @@ A simple shell.
 - [x] home path print as `~` and root as `/`
 - [x] color theme
 - [x] load commands from env var
-    - [x] Windows
+    - [x] Windows (old version)
     - [x] Linux & MacOS
 - [x] run `.yush` script file
 - [ ] tab auto fill command
