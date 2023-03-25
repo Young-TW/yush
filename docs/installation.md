@@ -1,47 +1,15 @@
 # Installation
 
-yush have two different ways to install.
-1. use precompiled executable
-2. build & compile with cmake
+## Pre-built binary
 
-you have to choose one to install yush.
+You can download pre-built binary from [GitHub Release](https://github.com/Young-TW/yush/releases).
 
-## Precompiled executable
+## Build from source
 
-1. open [github release page]()
-2. download yush executable file
-3. put `yush` into $PATH dir
-
-## Build & compile with cmake
-
-- please install yush building dependencies before build.
-1. cmake
-2. C++ compiler (clang++/g++)
-3. build tools (makefile/ninja)
-4. git (to clone the repo)
-
-clone the project  
-
-```sh
-git clone https://github.com/Young-TW/yush.git
-cd yush
-```
-
-build  
+To build from source, please ensure CMake installed;
+then, run the following commands in the directory after cloning this repository.
 
 ```sh
 cmake . -B build
-cmake --build build --config RELEASE
-```
-
-install  
-
-```sh
-sudo cmake --install build
-```
-
-open `yush`  
-
-```sh
-yush
+cmake --build build
 ```
