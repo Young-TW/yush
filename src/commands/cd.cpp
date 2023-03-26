@@ -32,7 +32,7 @@ int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream_manager,
     std::string_view path = arg[1];
 
     if(path[0] == '/'){
-        current_path = current_path.root_directory();
+        current_path = current_path.root_path();
     }
 
     for (size_t i = 0; i < path.size();) {
