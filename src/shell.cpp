@@ -116,5 +116,4 @@ int Shell::run_command(const std::string& current_command) {
     }
 
     return cmd_call(arg);
-    return 127;
 }
