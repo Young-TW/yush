@@ -18,7 +18,7 @@ public:
     int run(bool);
 
 private:
-    int run_command(std::string current_command);
+    int run_command(const std::string& current_command);
     int cmd_call(std::vector<std::string>& arg);
 
     bool exit_check;
