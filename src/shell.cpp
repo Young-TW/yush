@@ -3,16 +3,13 @@
 #include <pwd.h>
 #include <unistd.h>
 
-#include <fstream>
 #include <iostream>
 #include <string_view>
 #include <unordered_map>
 
-#include "cmds.h"
 #include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
 #include "feature/theme.h"
-#include "stream_manager.hpp"
 
 Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
     : exit_check(false), stream_manager(in, out, err)
