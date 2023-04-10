@@ -12,7 +12,7 @@
 #include "feature/theme.h"
 
 Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
-    : exit_check(false), stream_manager(in, out, err)
+    : stream_manager(in, out, err)
 {
     variable_manager
         .set("USER", std::getenv("USER"))
@@ -36,9 +36,11 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
     cmds::yush(arg, stream_manager, variable_manager);
 }
 
+Shell::~Shell(){};
+
 int Shell::run(bool output) {
     int runtime_status = 0;
-    while (!exit_check && !stream_manager.in().eof()) {
+    while (!stream_manager.in().eof()) {
         if (output) {
             stream_manager.out()
                 << "\n"
@@ -57,6 +59,11 @@ int Shell::run(bool output) {
 
         std::string input;
         std::getline(stream_manager.in(), input);
+
+        if (input == "exit") {
+            this -> ~Shell();
+            return 0;
+        }
 
         runtime_status = run_command(input);
     }
@@ -104,11 +111,6 @@ int Shell::run_command(const std::string& current_command) {
         {"touch", touch}, {"whoami", whoami},
         {"yush", yush},
     };
-
-    if (arg[0] == "exit") {
-        exit_check = true;
-        return 0;
-    }
 
     auto command_it = command_map.find(arg[0]);
     if (command_it != command_map.cend()) {
