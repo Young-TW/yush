@@ -36,39 +36,36 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
     cmds::yush(arg, stream_manager, variable_manager);
 }
 
-Shell::~Shell(){};
-
 int Shell::run(bool output) {
-    int runtime_status = 0;
-    while (!stream_manager.in().eof()) {
+    std::string input;
+    do {
         if (output) {
-            stream_manager.out()
-                << "\n"
-                << variable_manager.get("COLOR_NAME")
-                << variable_manager.get("USER")
-                << variable_manager.get("COLOR_RESET") << ' '
-                << variable_manager.get("COLOR_PATH")
-                << path_str_gen(variable_manager.get("HOME_DIR"))
-                << variable_manager.get("COLOR_RESET") << '\n';
-            if (runtime_status != 0) {
-                stream_manager.out() << variable_manager.get("COLOR_WARN");
-            }
-            // stream_manager.out() << runtime_status; // when debug
-            stream_manager.out() << "> " << variable_manager.get("COLOR_RESET");
+            this->output();
         }
 
-        std::string input;
         std::getline(stream_manager.in(), input);
 
-        if (input == "exit") {
-            this -> ~Shell();
-            return 0;
-        }
-
         runtime_status = run_command(input);
-    }
+    } while (!stream_manager.in().eof() && !exit_flag);
 
     return runtime_status;
+}
+
+int Shell::output() {
+    stream_manager.out()
+        << "\n"
+        << variable_manager.get("COLOR_NAME")
+        << variable_manager.get("USER")
+        << variable_manager.get("COLOR_RESET") << ' '
+        << variable_manager.get("COLOR_PATH")
+        << path_str_gen(variable_manager.get("HOME_DIR"))
+        << variable_manager.get("COLOR_RESET") << '\n';
+    if (runtime_status != 0) {
+        stream_manager.out() << variable_manager.get("COLOR_WARN");
+    }
+    // stream_manager.out() << runtime_status; // when debug
+    stream_manager.out() << "> " << variable_manager.get("COLOR_RESET");
+    return 0;
 }
 
 int Shell::cmd_call(std::vector<std::string>& arg) {
@@ -91,14 +88,21 @@ int Shell::cmd_call(std::vector<std::string>& arg) {
 }
 
 int Shell::run_command(const std::string& current_command) {
-    using namespace cmds;
-
     if (current_command.empty()) {
         return 0;
     }
 
     std::vector<std::string> arg = string_parser(current_command, ' ');
 
+    if (arg[0] == "exit") {
+        exit_flag = true;
+        if (arg.size() > 1) {
+            return atoi(arg[1].c_str());
+        }
+        return 0;
+    }
+
+    using namespace cmds;
     static const std::unordered_map<std::string, decltype(&alias)> command_map{
         {"alias", alias}, {"cat", cat},
         {"cd", cd},       {"clear", clear},

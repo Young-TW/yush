@@ -14,13 +14,15 @@
 class Shell {
    public:
     Shell(std::istream& in, std::ostream& out, std::ostream& err);
-    ~Shell();
     int run(bool);
 
    private:
+    int output();
     int run_command(const std::string& current_command);
     int cmd_call(std::vector<std::string>& arg);
 
+    int runtime_status;
+    bool exit_flag = 0;
     VariableManager variable_manager;
     StreamManager stream_manager;
 };
