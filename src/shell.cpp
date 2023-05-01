@@ -10,6 +10,7 @@
 #include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
 #include "feature/theme.h"
+#include "feature/exec.h"
 
 Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
     : stream_manager(in, out, err)
@@ -45,7 +46,17 @@ int Shell::run(bool output) {
 
         std::getline(stream_manager.in(), input);
 
-        runtime_status = run_command(input);
+        std::vector<std::string> arg = string_parser(input, ' ');
+
+        if (arg[0] == "exit") {
+            exit_flag = true;
+            if (arg.size() > 1) {
+                return atoi(arg[1].c_str());
+            }
+            return 0;
+        }
+
+        runtime_status = exec_cmd(input, arg, stream_manager, variable_manager);
     } while (!stream_manager.in().eof() && !exit_flag);
 
     return runtime_status;
@@ -66,60 +77,4 @@ int Shell::output() {
     // stream_manager.out() << runtime_status; // when debug
     stream_manager.out() << "> " << variable_manager.get("COLOR_RESET");
     return 0;
-}
-
-int Shell::cmd_call(std::vector<std::string>& arg) {
-    std::vector<std::string> cmd_paths =
-        string_parser(variable_manager.get("PATH"), ':');
-    std::string current_command;
-    for (const auto& x : arg) {
-        current_command += ' ' + x;
-    }
-    for (const auto& cmd : cmd_paths) {
-        std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
-
-        if (std::filesystem::exists(cmd_path) &&
-            std::filesystem::is_regular_file(cmd_path)) {
-            return std::system(current_command.c_str());
-        }
-    }
-    stream_manager.err() << "command `" << arg[0] << "` not found.\n";
-    return 127;
-}
-
-int Shell::run_command(const std::string& current_command) {
-    if (current_command.empty()) {
-        return 0;
-    }
-
-    std::vector<std::string> arg = string_parser(current_command, ' ');
-
-    if (arg[0] == "exit") {
-        exit_flag = true;
-        if (arg.size() > 1) {
-            return atoi(arg[1].c_str());
-        }
-        return 0;
-    }
-
-    using namespace cmds;
-    static const std::unordered_map<std::string, decltype(&alias)> command_map{
-        {"alias", alias}, {"cat", cat},
-        {"cd", cd},       {"clear", clear},
-        {"cp", cp},       {"date", date},
-        {"echo", echo},   {"function", function},
-        {"help", help},   {"la", la},
-        {"ls", ls},       {"mkdir", mkdir},
-        {"mv", mv},       {"pwd", pwd},
-        {"rm", rm},       {"set", set},
-        {"touch", touch}, {"whoami", whoami},
-        {"yush", yush},
-    };
-
-    auto command_it = command_map.find(arg[0]);
-    if (command_it != command_map.cend()) {
-        return command_it->second(arg, stream_manager, variable_manager);
-    }
-
-    return cmd_call(arg);
 }

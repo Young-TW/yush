@@ -18,8 +18,6 @@ class Shell {
 
    private:
     int output();
-    int run_command(const std::string& current_command);
-    int cmd_call(std::vector<std::string>& arg);
 
     int runtime_status;
     bool exit_flag = 0;
