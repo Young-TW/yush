@@ -36,8 +36,6 @@ int exec_cmd(const std::string current_command, const std::vector<std::string>& 
         return 0;
     }
 
-    // std::vector<std::string> arg = string_parser(current_command, ' ');
-
     int shell_builtin_ans = exec_shell_builtin(arg, stream_manager, variable_manager);
 
     if (shell_builtin_ans != 127) {

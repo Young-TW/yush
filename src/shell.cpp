@@ -49,15 +49,14 @@ int Shell::run(bool output) {
         std::vector<std::string> arg = string_parser(input, ' ');
 
         if (arg[0] == "exit") {
-            exit_flag = true;
             if (arg.size() > 1) {
                 return atoi(arg[1].c_str());
             }
-            return 0;
+            break;
         }
 
         runtime_status = exec_cmd(input, arg, stream_manager, variable_manager);
-    } while (!stream_manager.in().eof() && !exit_flag);
+    } while (!stream_manager.in().eof());
 
     return runtime_status;
 }

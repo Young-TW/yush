@@ -20,7 +20,6 @@ class Shell {
     int output();
 
     int runtime_status;
-    bool exit_flag = 0;
     VariableManager variable_manager;
     StreamManager stream_manager;
 };
