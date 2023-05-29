@@ -1,6 +1,8 @@
 # yush
 
-A simple shell.  
+![yush](./public/yush_logo.png)
+
+A simple shell built by Young.
 
 ## Commands
 
