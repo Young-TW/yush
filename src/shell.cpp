@@ -12,12 +12,12 @@
 #include "feature/theme.h"
 #include "feature/exec.h"
 
+extern char **environ;
+
 Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
     : stream_manager(in, out, err)
 {
     variable_manager
-        .set("USER", std::getenv("USER"))
-        .set("HOME_DIR", getpwuid(getuid())->pw_dir)
         .set("COLOR_THEME", theme_default.at("theme_name"))
         .set("COLOR_NAME", theme_default.at("name"))
         .set("COLOR_PATH", theme_default.at("path"))
@@ -26,8 +26,14 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
         .set("COLOR_SAVE", theme_default.at("save"))
         .set("COLOR_RESET", theme_default.at("reset"))
         .set("SYSTEM", sys)
-        .set("PATH", std::getenv("PATH"))
-        .set("0", "yush");
+        .set("SHELL", "yush");
+
+    for(char **current = environ; *current; current++) {
+        std::string current_str(*current);
+        std::string key(current_str.c_str(), current_str.find('='));
+        std::string value(current_str.c_str() + current_str.find('=') + 1);
+        variable_manager.set(key, value);
+    }
 
     const std::vector<std::string>& arg{
         std::filesystem::current_path().string(),
@@ -66,9 +72,11 @@ int Shell::output() {
         << "\n"
         << variable_manager.get("COLOR_NAME")
         << variable_manager.get("USER")
+        << "@"
+        << variable_manager.get("NAME")
         << variable_manager.get("COLOR_RESET") << ' '
         << variable_manager.get("COLOR_PATH")
-        << path_str_gen(variable_manager.get("HOME_DIR"))
+        << path_str_gen(variable_manager.get("HOME"))
         << variable_manager.get("COLOR_RESET") << '\n';
     if (runtime_status != 0) {
         stream_manager.out() << variable_manager.get("COLOR_WARN");
