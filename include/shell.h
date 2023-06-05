@@ -18,7 +18,7 @@ class Shell {
    private:
     int output();
 
-    int runtime_status;
+    int runtime_status = 0;
     VariableManager variable_manager;
     StreamManager stream_manager;
 };
