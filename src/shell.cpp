@@ -2,12 +2,13 @@
 
 #include <iostream>
 #include <string_view>
-#include <unistd.h>
 #include "feature/exec.h"
 #include "feature/path_str_gen.h"
 #include "feature/preprocess_cmd.h"
 #include "feature/string_parser.h"
 #include "feature/theme.h"
+
+extern char** environ;
 
 Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
     : stream_manager(in, out, err) {
