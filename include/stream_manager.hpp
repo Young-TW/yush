@@ -4,27 +4,18 @@
 #include <iostream>
 
 class StreamManager {
-public:
+   public:
     StreamManager(std::istream& in, std::ostream& out, std::ostream& err)
-        : in_(in)
-        , out_(out)
-        , err_(err)
-    {}
+        : in_(in), out_(out), err_(err) {}
 
     StreamManager(const StreamManager&) = delete;
     StreamManager& operator=(const StreamManager&) = delete;
 
-    inline std::istream& in() {
-        return in_;
-    }
+    inline std::istream& in() { return in_; }
 
-    inline std::ostream& out() {
-        return out_;
-    }
+    inline std::ostream& out() { return out_; }
 
-    inline std::ostream& err() {
-        return err_;
-    }
+    inline std::ostream& err() { return err_; }
 
     inline StreamManager redirect_in(std::istream& target) {
         return StreamManager(target, out_, err_);
@@ -38,7 +29,7 @@ public:
         return StreamManager(in_, out_, target);
     }
 
-private:
+   private:
     std::istream& in_;
     std::ostream& out_;
     std::ostream& err_;

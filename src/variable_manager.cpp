@@ -2,7 +2,8 @@
 
 VariableManager::VariableManager() = default;
 
-VariableManager& VariableManager::set(const std::string& name, std::string_view value) {
+VariableManager& VariableManager::set(const std::string& name,
+                                      std::string_view value) {
     variables[name] = std::string(value);
     return *this;
 };

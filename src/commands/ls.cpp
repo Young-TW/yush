@@ -1,10 +1,11 @@
 #include <filesystem>
 
+#include "cmds.h"
 #include "stream_manager.hpp"
 #include "variable_manager.h"
-#include "cmds.h"
 
-int cmds::ls(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::ls(const std::vector<std::string>& arg, StreamManager& stream_manager,
+             VariableManager& variable_manager) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
         stream_manager.err() << "This directory is not exists.\n";
         return 1;
@@ -14,7 +15,10 @@ int cmds::ls(const std::vector<std::string>& arg, StreamManager& stream_manager,
     for (auto& it : list) {
         if (it.path().filename().string()[0] != '.') {
             if (it.is_directory()) {
-                stream_manager.out() << variable_manager.get("COLOR_DIR") << it.path().filename().string() << variable_manager.get("COLOR_RESET") << '/';
+                stream_manager.out()
+                    << variable_manager.get("COLOR_DIR")
+                    << it.path().filename().string()
+                    << variable_manager.get("COLOR_RESET") << '/';
             } else {
                 stream_manager.out() << it.path().filename().string();
             }
@@ -26,7 +30,8 @@ int cmds::ls(const std::vector<std::string>& arg, StreamManager& stream_manager,
     return 0;
 }
 
-int cmds::la(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::la(const std::vector<std::string>& arg, StreamManager& stream_manager,
+             VariableManager& variable_manager) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
         return 1;
     }
@@ -34,7 +39,9 @@ int cmds::la(const std::vector<std::string>& arg, StreamManager& stream_manager,
     std::filesystem::directory_iterator list(std::filesystem::current_path());
     for (auto& it : list) {
         if (it.is_directory()) {
-            stream_manager.out() << variable_manager.get("COLOR_DIR") << it.path().filename().string() << variable_manager.get("COLOR_RESET") << '/';
+            stream_manager.out() << variable_manager.get("COLOR_DIR")
+                                 << it.path().filename().string()
+                                 << variable_manager.get("COLOR_RESET") << '/';
         } else {
             stream_manager.out() << it.path().filename().string();
         }

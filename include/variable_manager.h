@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 class VariableManager {
-public:
+   public:
     VariableManager();
 
     VariableManager& set(const std::string& name, std::string_view value);
@@ -15,7 +15,7 @@ public:
 
     bool exist(const std::string& name);
 
-private:
+   private:
     std::unordered_map<std::string, std::string> variables;
 };
 
