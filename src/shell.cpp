@@ -11,6 +11,7 @@
 #include "feature/string_parser.h"
 #include "feature/theme.h"
 #include "feature/exec.h"
+#include "feature/preprocess_cmd.h"
 
 extern char **environ;
 
@@ -52,6 +53,7 @@ int Shell::run(bool output) {
 
         std::getline(stream_manager.in(), input);
 
+        input = preprocess_cmd(input);
         std::vector<std::string> arg = string_parser(input, ' ');
 
         if (arg[0] == "exit") {
