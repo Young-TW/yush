@@ -6,7 +6,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-
 #include "stream_manager.hpp"
 #include "variable_manager.h"
 

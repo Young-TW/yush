@@ -1,9 +1,7 @@
+#include "cmds.h"
+
 #include <string_view>
 #include <vector>
-
-#include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
 
 int cmds::echo(const std::vector<std::string>& arg,
                StreamManager& stream_manager,

@@ -1,9 +1,7 @@
+#include "cmds.h"
+
 #include <filesystem>
 #include <string>
-
-#include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
 
 static int cd_single(StreamManager& stream_manager, std::string_view path,
                      std::filesystem::path& current_path,

@@ -1,8 +1,6 @@
-#include <string_view>
-
 #include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
+
+#include <string_view>
 
 int cmds::whoami(const std::vector<std::string>& arg,
                  StreamManager& stream_manager,

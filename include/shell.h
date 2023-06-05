@@ -5,7 +5,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-
 #include "cmds.h"
 #include "env/system_var.h"
 #include "stream_manager.hpp"

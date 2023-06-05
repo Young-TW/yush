@@ -1,9 +1,7 @@
+#include "cmds.h"
+
 #include <filesystem>
 #include <fstream>
-
-#include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
 
 int cmds::touch(const std::vector<std::string>& arg,
                 StreamManager& stream_manager,

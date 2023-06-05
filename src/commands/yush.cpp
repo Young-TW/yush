@@ -1,11 +1,9 @@
+#include "cmds.h"
+
 #include <filesystem>
 #include <fstream>
 #include <string>
-
-#include "cmds.h"
 #include "shell.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
 
 int cmds::yush(const std::vector<std::string>& arg,
                StreamManager& stream_manager,

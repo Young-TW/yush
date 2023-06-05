@@ -1,8 +1,6 @@
-#include <filesystem>
-
 #include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
+
+#include <filesystem>
 
 int cmds::pwd(const std::vector<std::string>& arg,
               StreamManager& stream_manager,

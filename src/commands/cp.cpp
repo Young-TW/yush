@@ -1,9 +1,7 @@
+#include "cmds.h"
+
 #include <filesystem>
 #include <string>
-
-#include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
 
 int cmds::cp(const std::vector<std::string>& arg, StreamManager& stream_manager,
              VariableManager& variable_manager) {

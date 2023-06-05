@@ -1,10 +1,7 @@
-#include <chrono>
-#include <iomanip>
-#include <iostream>
-
 #include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
+
+#include <chrono>
+#include <iostream>
 
 int cmds::date(const std::vector<std::string>& arg,
                StreamManager& stream_manager,

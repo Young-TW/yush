@@ -1,10 +1,8 @@
+#include "cmds.h"
+
 #include <string_view>
 #include <unordered_map>
 #include <vector>
-
-#include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
 
 std::unordered_map<std::string, std::vector<std::string>> functions;
 

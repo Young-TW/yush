@@ -1,10 +1,8 @@
+#include "cmds.h"
+
 #include <filesystem>
 #include <fstream>
 #include <string>
-
-#include "cmds.h"
-#include "stream_manager.hpp"
-#include "variable_manager.h"
 
 int cmds::cat(const std::vector<std::string>& arg,
               StreamManager& stream_manager,

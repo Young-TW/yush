@@ -1,11 +1,7 @@
 #include "shell.h"
 
-#include <pwd.h>
-#include <unistd.h>
-
 #include <iostream>
 #include <string_view>
-#include <unordered_map>
 
 #include "feature/exec.h"
 #include "feature/path_str_gen.h"
