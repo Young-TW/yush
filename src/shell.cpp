@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <string_view>
-
 #include "feature/exec.h"
 #include "feature/path_str_gen.h"
 #include "feature/preprocess_cmd.h"
@@ -25,8 +24,12 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
 
     for (char** current = environ; *current; current++) {
         std::string current_str(*current);
-        std::string key(current_str.c_str(), current_str.find('='));
-        std::string value(current_str.c_str() + current_str.find('=') + 1);
+        auto delimiter = current_str.find('=');
+        std::string key(current_str.substr(0, delimiter));
+        std::string value(
+            delimiter != std::string::npos ?
+            current_str.substr(delimiter + 1) :
+            "");
         variable_manager.set(key, value);
     }
 
