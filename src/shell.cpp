@@ -1,25 +1,19 @@
 #include "shell.h"
 
-#include <pwd.h>
-#include <unistd.h>
-
 #include <iostream>
 #include <string_view>
-#include <unordered_map>
 
+#include "feature/exec.h"
 #include "feature/path_str_gen.h"
+#include "feature/preprocess_cmd.h"
 #include "feature/string_parser.h"
 #include "feature/theme.h"
-#include "feature/exec.h"
-#include "feature/preprocess_cmd.h"
 
-extern char **environ;
+extern char** environ;
 
 Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
-    : stream_manager(in, out, err)
-{
-    variable_manager
-        .set("COLOR_THEME", theme_default.at("theme_name"))
+    : stream_manager(in, out, err) {
+    variable_manager.set("COLOR_THEME", theme_default.at("theme_name"))
         .set("COLOR_NAME", theme_default.at("name"))
         .set("COLOR_PATH", theme_default.at("path"))
         .set("COLOR_DIR", theme_default.at("dir"))
@@ -29,7 +23,7 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
         .set("SYSTEM", sys)
         .set("SHELL", "yush");
 
-    for(char **current = environ; *current; current++) {
+    for (char** current = environ; *current; current++) {
         std::string current_str(*current);
         std::string key(current_str.c_str(), current_str.find('='));
         std::string value(current_str.c_str() + current_str.find('=') + 1);
@@ -38,8 +32,7 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
 
     const std::vector<std::string>& arg{
         std::filesystem::current_path().string(),
-        std::string(variable_manager.get("HOME_DIR")) + ".yushrc"
-    };
+        std::string(variable_manager.get("HOME_DIR")) + ".yushrc"};
 
     cmds::yush(arg, stream_manager, variable_manager);
 }
@@ -70,16 +63,14 @@ int Shell::run(bool output) {
 }
 
 int Shell::output() {
-    stream_manager.out()
-        << "\n"
-        << variable_manager.get("COLOR_NAME")
-        << variable_manager.get("USER")
-        << "@"
-        << variable_manager.get("NAME")
-        << variable_manager.get("COLOR_RESET") << ' '
-        << variable_manager.get("COLOR_PATH")
-        << path_str_gen(variable_manager.get("HOME"))
-        << variable_manager.get("COLOR_RESET") << '\n';
+    stream_manager.out() << "\n"
+                         << variable_manager.get("COLOR_NAME")
+                         << variable_manager.get("USER") << "@"
+                         << variable_manager.get("NAME")
+                         << variable_manager.get("COLOR_RESET") << ' '
+                         << variable_manager.get("COLOR_PATH")
+                         << path_str_gen(variable_manager.get("HOME"))
+                         << variable_manager.get("COLOR_RESET") << '\n';
     if (runtime_status != 0) {
         stream_manager.out() << variable_manager.get("COLOR_WARN");
     }

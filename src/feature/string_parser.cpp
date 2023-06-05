@@ -1,7 +1,7 @@
+#include "feature/string_parser.h"
+
 #include <string>
 #include <vector>
-
-#include "feature/string_parser.h"
 
 std::vector<std::string> string_parser(std::string_view input, char flag) {
     std::vector<std::string> arg;

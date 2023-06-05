@@ -1,14 +1,18 @@
-#include <unistd.h>
-#include <vector>
-#include <string>
-
-#include "variable_manager.h"
-#include "stream_manager.hpp"
-#include "cmds.h"
 #include "feature/exec.h"
-#include "feature/string_parser.h"
 
-int exec_shell_builtin(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+#include <unistd.h>
+
+#include <string>
+#include <vector>
+
+#include "cmds.h"
+#include "feature/string_parser.h"
+#include "stream_manager.hpp"
+#include "variable_manager.h"
+
+int exec_shell_builtin(const std::vector<std::string>& arg,
+                       StreamManager& stream_manager,
+                       VariableManager& variable_manager) {
     using namespace cmds;
     static const std::unordered_map<std::string, decltype(&alias)> command_map{
         {"alias", alias}, {"cat", cat},
@@ -31,12 +35,15 @@ int exec_shell_builtin(const std::vector<std::string>& arg, StreamManager& strea
     return 127;
 }
 
-int exec_cmd(const std::string current_command, const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int exec_cmd(const std::string current_command,
+             const std::vector<std::string>& arg, StreamManager& stream_manager,
+             VariableManager& variable_manager) {
     if (current_command.empty()) {
         return 0;
     }
 
-    int shell_builtin_ans = exec_shell_builtin(arg, stream_manager, variable_manager);
+    int shell_builtin_ans =
+        exec_shell_builtin(arg, stream_manager, variable_manager);
 
     if (shell_builtin_ans != 127) {
         return shell_builtin_ans;

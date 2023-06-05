@@ -1,11 +1,11 @@
+#include "cmds.h"
+
 #include <filesystem>
 #include <fstream>
 
-#include "stream_manager.hpp"
-#include "variable_manager.h"
-#include "cmds.h"
-
-int cmds::touch(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::touch(const std::vector<std::string>& arg,
+                StreamManager& stream_manager,
+                VariableManager& variable_manager) {
     if (arg.size() != 2) {
         stream_manager.err() << "Argument size error.\n";
         return 1;

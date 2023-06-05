@@ -1,11 +1,11 @@
-#include <string>
-#include <filesystem>
-
-#include "stream_manager.hpp"
-#include "variable_manager.h"
 #include "cmds.h"
 
-static int cd_single(StreamManager& stream_manager, std::string_view path, std::filesystem::path& current_path, VariableManager& variable_manager) {
+#include <filesystem>
+#include <string>
+
+static int cd_single(StreamManager& stream_manager, std::string_view path,
+                     std::filesystem::path& current_path,
+                     VariableManager& variable_manager) {
     if (path == ".") {
         return 0;
     } else if (path == "..") {
@@ -23,7 +23,8 @@ static int cd_single(StreamManager& stream_manager, std::string_view path, std::
     return 0;
 }
 
-int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream_manager, VariableManager& variable_manager) {
+int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream_manager,
+             VariableManager& variable_manager) {
     if (arg.size() != 2) {
         return 1;
     }
@@ -31,7 +32,7 @@ int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream_manager,
     std::filesystem::path current_path(std::filesystem::current_path());
     std::string_view path = arg[1];
 
-    if(path[0] == '/'){
+    if (path[0] == '/') {
         current_path = current_path.root_path();
     }
 
@@ -40,7 +41,8 @@ int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream_manager,
         if (slash == std::string::npos) {
             slash = path.size();
         }
-        if (cd_single(stream_manager, path.substr(i, slash-i), current_path, variable_manager)) {
+        if (cd_single(stream_manager, path.substr(i, slash - i), current_path,
+                      variable_manager)) {
             return 1;
         }
         i = slash + 1;
