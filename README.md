@@ -4,6 +4,9 @@
 
 A simple shell built by Young.
 
+## Installation
+
+Please read [this page](./docs/tutorial.md) to install yush.
 ## Commands
 
 - [ ] alias
@@ -33,7 +36,7 @@ A simple shell built by Young.
 ## Feature
 
 - [x] varible_manager
-- [x] get user name
+- [x] get all env var
 - [x] home path print as `~` and root as `/`
 - [x] color theme
 - [x] load commands from env var
@@ -48,7 +51,6 @@ A simple shell built by Young.
 - [x] Linux
     - [x] Ubuntu 22.04
 - [x] MacOS
-
-## Installation
-
-Please read [this page](./docs/tutorial.md) to install yush.
+- [x] Windows [old version](https://github.com/Young-TW/yush/releases/tag/windows-latest)
+    - [x] Windows 10
+    - [x] Windows 11
