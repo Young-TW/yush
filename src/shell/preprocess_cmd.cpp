@@ -1,6 +1,8 @@
 #include <string>
 
-std::string preprocess_cmd(const std::string& cmd) {
+#include "shell.h"
+
+std::string Shell::preprocess_cmd(const std::string& cmd) {
     if (cmd.empty()) {
         return "";
     }

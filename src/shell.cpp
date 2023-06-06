@@ -2,11 +2,13 @@
 
 #include <iostream>
 #include <string_view>
-#include "feature/exec.h"
+// #include <thread>
+// #include <stdlib.h>
+// #include <signal.h>
 #include "feature/path_str_gen.h"
-#include "feature/preprocess_cmd.h"
 #include "feature/string_parser.h"
 #include "feature/theme.h"
+// #include "feature/signal_handler.h"
 
 extern char** environ;
 
@@ -42,6 +44,11 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
 
 int Shell::run(bool output) {
     std::string input;
+
+    // if (signal(SIGINT, signal_handler) == SIG_ERR) {
+    //     stream_manager.err() << "Error: signal handler failed\n";
+    // }
+
     do {
         if (output) {
             this->output();
@@ -59,7 +66,14 @@ int Shell::run(bool output) {
             break;
         }
 
-        runtime_status = exec_cmd(input, arg, stream_manager, variable_manager);
+        // std::thread exec(exec_cmd(input, arg));
+
+        // if (signal(SIGINT, signal_handler) == SIG_ERR) {
+        //     stream_manager.err() << "Error: signal handler failed\n";
+        // }
+
+        // exec.join();
+        runtime_status = exec_cmd(input, arg);
     } while (!stream_manager.in().eof());
 
     return runtime_status;
