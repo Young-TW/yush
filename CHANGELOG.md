@@ -28,7 +28,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
-[0.3]: https://github.com/Young-TW/yush/releases/tag/v0.3
-[0.2]: https://github.com/Young-TW/yush/releases/tag/v0.2
+[0.3.0]: https://github.com/Young-TW/yush/releases/tag/v0.3
+[0.2.0]: https://github.com/Young-TW/yush/releases/tag/v0.2
 [last windows version]: https://github.com/Young-TW/yush/releases/tag/windows-latest
-[0.1]: https://github.com/Young-TW/yush/releases/tag/v0.1
+[0.1.0]: https://github.com/Young-TW/yush/releases/tag/v0.1
