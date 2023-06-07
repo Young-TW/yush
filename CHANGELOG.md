@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2023-06-08
+### Added
+- `cxxopts` to parse command line arguments (not done yet)
+
 ## [0.3.0] - 2023-06-07
 ### Added
 - execve() to execute local commands
@@ -28,7 +32,8 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
-[0.3.0]: https://github.com/Young-TW/yush/releases/tag/v0.3
+[0.3.1]: https://github.com/Young-TW/yush/releases/tag/v0.3.1
+[0.3.0]: https://github.com/Young-TW/yush/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Young-TW/yush/releases/tag/v0.2
 [last windows version]: https://github.com/Young-TW/yush/releases/tag/windows-latest
 [0.1.0]: https://github.com/Young-TW/yush/releases/tag/v0.1

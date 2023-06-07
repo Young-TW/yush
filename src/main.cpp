@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <cxxopts.hpp>
 #include "shell.h"
 
 int main(int argc, char *argv[]) {
