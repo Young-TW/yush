@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string_view>
+#include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
 #include "feature/path_str_gen.h"
