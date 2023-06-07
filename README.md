@@ -33,19 +33,6 @@ Please read [this page](./docs/tutorial.md) to install yush.
 - [x] set
 - [ ] function
 
-## Feature
-
-- [x] varible_manager
-- [x] get all env var
-- [x] home path print as `~` and root as `/`
-- [x] color theme
-- [x] load commands from env var
-    - [x] Windows (old version)
-    - [x] Linux & MacOS
-- [x] run `.yush` script file
-- [ ] tab auto fill command
-- [x] run `~/.yushrc` when yush launch
-
 ## System support
 
 - [x] Linux
