@@ -135,7 +135,7 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
 }
 
 int Shell::exec_cmd(const std::string current_command,
-             const std::vector<std::string>& arg) {
+             std::vector<std::string>& arg) {
     if (current_command.empty()) {
         return 0;
     }
@@ -155,7 +155,14 @@ int Shell::exec_cmd(const std::string current_command,
 
         if (std::filesystem::exists(cmd_path) &&
             std::filesystem::is_regular_file(cmd_path)) {
-            return std::system(current_command.c_str());
+            std::unique_ptr<char *[]> argv = std::make_unique<char *[]>(arg.size() + 1);
+            std::string cmd_path_str = cmd_path.lexically_normal().string();
+            argv[0] = cmd_path_str.data();
+            for (size_t i = 1; i < arg.size(); i++) {
+                argv[i] = arg[i].data();
+            }
+
+            return execve(argv[0], argv.get(), environ);
         }
     }
 
