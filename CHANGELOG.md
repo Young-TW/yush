@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.2] - 2023-06-08
+### Fixed
+- Fix Github Actions workflow
+
 ## [0.3.1] - 2023-06-08
 ### Added
 - `cxxopts` to parse command line arguments (not done yet)
@@ -32,6 +36,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.3.2]: https://github.com/Young-TW/yush/releases/tag/v0.3.2
 [0.3.1]: https://github.com/Young-TW/yush/releases/tag/v0.3.1
 [0.3.0]: https://github.com/Young-TW/yush/releases/tag/v0.3.0
 [0.2.0]: https://github.com/Young-TW/yush/releases/tag/v0.2
