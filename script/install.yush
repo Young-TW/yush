@@ -4,18 +4,10 @@
 
 echo "start Build"
 
-mkdir build
+cmake . -B build
 
-cd build
+cmake --build build --config RELEASE
 
-cmake ..
+# install
 
-make
-
-# add to path
-
-echo "install yush binary to $PATH"
-
-make install
-
-echo "All tasks done"
+cmake --install build

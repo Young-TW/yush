@@ -3,28 +3,28 @@
 #include <filesystem>
 #include <string>
 
-static int cd_single(StreamManager& stream_manager, std::string_view path,
+static int cd_single(StreamManager& stream, std::string_view path,
                      std::filesystem::path& current_path,
-                     VariableManager& variable_manager) {
+                     VariableManager& vars) {
     if (path == ".") {
         return 0;
     } else if (path == "..") {
         current_path = current_path.parent_path();
         return 0;
     } else if (path == "~") {
-        current_path = variable_manager.get("HOME_DIR");
+        current_path = vars.get("HOME_DIR");
         return 0;
     } else if (std::filesystem::is_directory(current_path.append(path))) {
         return 0;
     } else {
-        stream_manager.err() << '`' << path << "` is not a directory.\n";
+        stream.err() << '`' << path << "` is not a directory.\n";
         return 1;
     }
     return 0;
 }
 
-int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream_manager,
-             VariableManager& variable_manager) {
+int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream,
+             VariableManager& vars) {
     if (arg.size() != 2) {
         return 1;
     }
@@ -41,8 +41,7 @@ int cmds::cd(const std::vector<std::string>& arg, StreamManager& stream_manager,
         if (slash == std::string::npos) {
             slash = path.size();
         }
-        if (cd_single(stream_manager, path.substr(i, slash - i), current_path,
-                      variable_manager)) {
+        if (cd_single(stream, path.substr(i, slash - i), current_path, vars)) {
             return 1;
         }
         i = slash + 1;

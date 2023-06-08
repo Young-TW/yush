@@ -1,10 +1,10 @@
 # Commands
 
-`yush` provides it's builtin commanda and normal commands(executable file in $PATH).  
+`yush` provides it's builtin commanda and normal commands(executable file in $PATH).
 
 ## Builtin commands
 
-`yush` have some builtin commands like:  
+`yush` have some builtin commands like:
 
 1. alias
 2. cat
@@ -27,6 +27,6 @@
 
 ## Normal commands
 
-`yush` can read environment variables too.  
-So it can run commands installed in system.  
-like `neofetch`, `git`, `tmux` etc.  
+`yush` can read environment variables too.
+So it can run commands installed in system.
+like `neofetch`, `git`, `tmux` etc.

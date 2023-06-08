@@ -17,14 +17,15 @@ class Shell {
 
    private:
     int output();
+    // int exec_script(const std::filesystem::path& script_path);
     int exec_cmd(const std::string current_command,
                  std::vector<std::string>& arg);
     int exec_shell_builtin(const std::vector<std::string>& arg);
     std::string preprocess_cmd(const std::string& cmd);
 
     int runtime_status = 0;
-    VariableManager variable_manager;
-    StreamManager stream_manager;
+    VariableManager vars;
+    StreamManager stream;
 };
 
 #endif

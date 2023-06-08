@@ -3,10 +3,10 @@
 #include <filesystem>
 
 int cmds::mkdir(const std::vector<std::string>& arg,
-                StreamManager& stream_manager,
-                VariableManager& variable_manager) {
+                StreamManager& stream,
+                VariableManager& vars) {
     if (arg.size() != 2) {
-        stream_manager.err() << "Argument size error.\n";
+        stream.err() << "Argument size error.\n";
         return 1;
     }
 
@@ -15,7 +15,7 @@ int cmds::mkdir(const std::vector<std::string>& arg,
         std::filesystem::create_directories(new_directory);
         return 0;
     } else {
-        stream_manager.err() << "Directory already exists.\n";
+        stream.err() << "Directory already exists.\n";
         return 1;
     }
 }

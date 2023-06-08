@@ -10,44 +10,40 @@
 #include "variable_manager.h"
 
 namespace cmds {
-int alias(const std::vector<std::string>& arg, StreamManager& stream_manager,
-          VariableManager& variable_manager);
-int cat(const std::vector<std::string>& arg, StreamManager& stream_manager,
-        VariableManager& variable_manager);
-int cd(const std::vector<std::string>& arg, StreamManager& stream_manager,
-       VariableManager& variable_manager);
-int clear(const std::vector<std::string>& arg, StreamManager& stream_manager,
-          VariableManager& variable_manager);
-int cp(const std::vector<std::string>& arg, StreamManager& stream_manager,
-       VariableManager& variable_manager);
-int date(const std::vector<std::string>& arg, StreamManager& stream_manager,
-         VariableManager& variable_manager);
-int echo(const std::vector<std::string>& arg, StreamManager& stream_manager,
-         VariableManager& variable_manager);
-int function(const std::vector<std::string>& arg, StreamManager& stream_manager,
-             VariableManager& variable_manager);
-int help(const std::vector<std::string>& arg, StreamManager& stream_manager,
-         VariableManager& variable_manager);
-int ls(const std::vector<std::string>& arg, StreamManager& stream_manager,
-       VariableManager& variable_manager);
-int la(const std::vector<std::string>& arg, StreamManager& stream_manager,
-       VariableManager& variable_manager);
-int mkdir(const std::vector<std::string>& arg, StreamManager& stream_manager,
-          VariableManager& variable_manager);
-int mv(const std::vector<std::string>& arg, StreamManager& stream_manager,
-       VariableManager& variable_manager);
-int pwd(const std::vector<std::string>& arg, StreamManager& stream_manager,
-        VariableManager& variable_manager);
-int rm(const std::vector<std::string>& arg, StreamManager& stream_manager,
-       VariableManager& variable_manager);
-int set(const std::vector<std::string>& arg, StreamManager& stream_manager,
-        VariableManager& variable_manager);
-int touch(const std::vector<std::string>& arg, StreamManager& stream_manager,
-          VariableManager& variable_manager);
-int whoami(const std::vector<std::string>& arg, StreamManager& stream_manager,
-           VariableManager& variable_manager);
-int yush(const std::vector<std::string>& arg, StreamManager& stream_manager,
-         VariableManager& variable_manager);
+int alias(const std::vector<std::string>& arg, StreamManager& stream,
+          VariableManager& vars);
+int cat(const std::vector<std::string>& arg, StreamManager& stream,
+        VariableManager& vars);
+int cd(const std::vector<std::string>& arg, StreamManager& stream,
+       VariableManager& vars);
+int clear(const std::vector<std::string>& arg, StreamManager& stream,
+          VariableManager& vars);
+int cp(const std::vector<std::string>& arg, StreamManager& stream,
+       VariableManager& vars);
+int date(const std::vector<std::string>& arg, StreamManager& stream,
+         VariableManager& vars);
+int echo(const std::vector<std::string>& arg, StreamManager& stream,
+         VariableManager& vars);
+int function(const std::vector<std::string>& arg, StreamManager& stream,
+             VariableManager& vars);
+int ls(const std::vector<std::string>& arg, StreamManager& stream,
+       VariableManager& vars);
+int la(const std::vector<std::string>& arg, StreamManager& stream,
+       VariableManager& vars);
+int mkdir(const std::vector<std::string>& arg, StreamManager& stream,
+          VariableManager& vars);
+int mv(const std::vector<std::string>& arg, StreamManager& stream,
+       VariableManager& vars);
+int pwd(const std::vector<std::string>& arg, StreamManager& stream,
+        VariableManager& vars);
+int rm(const std::vector<std::string>& arg, StreamManager& stream,
+       VariableManager& vars);
+int set(const std::vector<std::string>& arg, StreamManager& stream,
+        VariableManager& vars);
+int touch(const std::vector<std::string>& arg, StreamManager& stream,
+          VariableManager& vars);
+int whoami(const std::vector<std::string>& arg, StreamManager& stream,
+           VariableManager& vars);
 }  // namespace cmds
 
 #endif
