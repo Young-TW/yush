@@ -20,10 +20,10 @@ std::vector<std::string> parse(std::string_view input) {
 }
 
 int cmds::function(const std::vector<std::string>& arg,
-                   StreamManager& stream_manager,
-                   VariableManager& variable_manager) {
+                   StreamManager& stream,
+                   VariableManager& vars) {
     if (arg.size() != 2 && arg.size() != 3) {
-        stream_manager.err() << "Argument size error.\n";
+        stream.err() << "Argument size error.\n";
         return 1;
     }
 
@@ -42,7 +42,7 @@ int cmds::function(const std::vector<std::string>& arg,
     func_temp.clear();
     str_temp = arg.back();
     while (str_temp.back() == '\\') {  // record function
-        getline(stream_manager.in(), str_temp);
+        getline(stream.in(), str_temp);
         func_temp.push_back(str_temp);
     }
 

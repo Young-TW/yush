@@ -13,8 +13,8 @@
 extern char** environ;
 
 Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
-    : stream_manager(in, out, err) {
-    variable_manager.set("COLOR_THEME", theme_default.at("theme_name"))
+    : stream(in, out, err) {
+    vars.set("COLOR_THEME", theme_default.at("theme_name"))
         .set("COLOR_NAME", theme_default.at("name"))
         .set("COLOR_PATH", theme_default.at("path"))
         .set("COLOR_DIR", theme_default.at("dir"))
@@ -32,14 +32,14 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
             delimiter != std::string::npos ?
             current_str.substr(delimiter + 1) :
             "");
-        variable_manager.set(key, value);
+        vars.set(key, value);
     }
 
     // const std::vector<std::string>& arg{
     //     std::filesystem::current_path().string(),
-    //     std::string(variable_manager.get("HOME_DIR")) + ".yushrc"};
+    //     std::string(vars.get("HOME_DIR")) + ".yushrc"};
 
-    // Shell yushrc(stream_manager.in(), stream_manager.out(), stream_manager.err());
+    // Shell yushrc(stream.in(), stream.out(), stream.err());
     // yushrc.run(false);
 }
 
@@ -52,10 +52,10 @@ int Shell::run(bool output) {
         }
 
         if (signal(SIGINT, signal_handler) == SIG_ERR) {
-            stream_manager.err() << "Error: signal handler failed\n";
+            stream.err() << "Error: signal handler failed\n";
         }
 
-        std::getline(stream_manager.in(), input);
+        std::getline(stream.in(), input);
 
         input = preprocess_cmd(input);
         std::vector<std::string> arg = string_parser(input, ' ');
@@ -68,7 +68,7 @@ int Shell::run(bool output) {
         }
 
         runtime_status = exec_cmd(input, arg);
-    } while (!stream_manager.in().eof());
+    } while (!stream.in().eof());
 
     return runtime_status;
 }
@@ -78,19 +78,19 @@ int Shell::run(bool output) {
 // }
 
 int Shell::output() {
-    stream_manager.out() << "\n"
-                         << variable_manager.get("COLOR_NAME")
-                         << variable_manager.get("USER") << "@"
-                         << variable_manager.get("NAME")
-                         << variable_manager.get("COLOR_RESET") << ' '
-                         << variable_manager.get("COLOR_PATH")
-                         << path_str_gen(variable_manager.get("HOME"))
-                         << variable_manager.get("COLOR_RESET") << '\n';
+    stream.out() << "\n"
+                         << vars.get("COLOR_NAME")
+                         << vars.get("USER") << "@"
+                         << vars.get("NAME")
+                         << vars.get("COLOR_RESET") << ' '
+                         << vars.get("COLOR_PATH")
+                         << path_str_gen(vars.get("HOME"))
+                         << vars.get("COLOR_RESET") << '\n';
     if (runtime_status != 0) {
-        stream_manager.out() << variable_manager.get("COLOR_WARN");
+        stream.out() << vars.get("COLOR_WARN");
     }
-    // stream_manager.out() << runtime_status; // when debug
-    stream_manager.out() << "> " << variable_manager.get("COLOR_RESET");
+    // stream.out() << runtime_status; // when debug
+    stream.out() << "> " << vars.get("COLOR_RESET");
     return 0;
 }
 
@@ -124,16 +124,16 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         {"cd", cd},       {"clear", clear},
         {"cp", cp},       {"date", date},
         {"echo", echo},   {"function", function},
-        {"help", help},   {"la", la},
-        {"ls", ls},       {"mkdir", mkdir},
-        {"mv", mv},       {"pwd", pwd},
-        {"rm", rm},       {"set", set},
-        {"touch", touch}, {"whoami", whoami},
+        {"la", la},       {"ls", ls},
+        {"mkdir", mkdir}, {"mv", mv},
+        {"pwd", pwd},     {"rm", rm},
+        {"set", set},     {"touch", touch},
+        {"whoami", whoami},
     };
 
     auto command_it = command_map.find(arg[0]);
     if (command_it != command_map.cend()) {
-        return command_it->second(arg, stream_manager, variable_manager);
+        return command_it->second(arg, stream, vars);
     }
 
     return 127;
@@ -153,7 +153,7 @@ int Shell::exec_cmd(const std::string current_command,
     }
 
     std::vector<std::string> cmd_paths =
-        string_parser(variable_manager.get("PATH"), ':');
+        string_parser(vars.get("PATH"), ':');
 
     for (const auto& cmd : cmd_paths) {
         std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
@@ -171,7 +171,7 @@ int Shell::exec_cmd(const std::string current_command,
         }
     }
 
-    stream_manager.err() << "command `" << arg[0] << "` not found.\n";
+    stream.err() << "command `" << arg[0] << "` not found.\n";
 
     return 127;
 }

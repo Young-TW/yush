@@ -24,8 +24,8 @@ class Shell {
     std::string preprocess_cmd(const std::string& cmd);
 
     int runtime_status = 0;
-    VariableManager variable_manager;
-    StreamManager stream_manager;
+    VariableManager vars;
+    StreamManager stream;
 };
 
 #endif
