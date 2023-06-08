@@ -20,12 +20,10 @@ int main(int argc, char *argv[]) {
 
     if (result.count("help")) {
         std::cout << options.help() << std::endl;
-        return 0;
     }
 
     if (result.count("version")) {
         std::cout << "yush, version 0.3.3" << std::endl;
-        return 0;
     }
 
     if (result.count("debug-output")) {
@@ -35,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     if (result.count("script")) {
         std::ifstream fin(result["script"].as<std::filesystem::path>());
-        return Shell(fin, std::cout, std::cerr).run(false);
+        return Shell(fin, std::cout, std::cerr).run(true);
     }
 
     return Shell(std::cin, std::cout, std::cerr).run(true /*result.count("interactive")*/);

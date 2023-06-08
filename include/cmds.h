@@ -46,8 +46,6 @@ int touch(const std::vector<std::string>& arg, StreamManager& stream_manager,
           VariableManager& variable_manager);
 int whoami(const std::vector<std::string>& arg, StreamManager& stream_manager,
            VariableManager& variable_manager);
-int yush(const std::vector<std::string>& arg, StreamManager& stream_manager,
-         VariableManager& variable_manager);
 }  // namespace cmds
 
 #endif

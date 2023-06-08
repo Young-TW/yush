@@ -35,11 +35,12 @@ Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
         variable_manager.set(key, value);
     }
 
-    const std::vector<std::string>& arg{
-        std::filesystem::current_path().string(),
-        std::string(variable_manager.get("HOME_DIR")) + ".yushrc"};
+    // const std::vector<std::string>& arg{
+    //     std::filesystem::current_path().string(),
+    //     std::string(variable_manager.get("HOME_DIR")) + ".yushrc"};
 
-    cmds::yush(arg, stream_manager, variable_manager);
+    // Shell yushrc(stream_manager.in(), stream_manager.out(), stream_manager.err());
+    // yushrc.run(false);
 }
 
 int Shell::run(bool output) {
@@ -71,6 +72,10 @@ int Shell::run(bool output) {
 
     return runtime_status;
 }
+
+// int Shell::exec_script(const std::filesystem::path& script_path) {
+//     return 0;
+// }
 
 int Shell::output() {
     stream_manager.out() << "\n"
@@ -124,7 +129,6 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         {"mv", mv},       {"pwd", pwd},
         {"rm", rm},       {"set", set},
         {"touch", touch}, {"whoami", whoami},
-        {"yush", yush},
     };
 
     auto command_it = command_map.find(arg[0]);
