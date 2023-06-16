@@ -12,7 +12,7 @@ static int cd_single(StreamManager& stream, std::string_view path,
         current_path = current_path.parent_path();
         return 0;
     } else if (path == "~") {
-        current_path = vars.get("HOME_DIR");
+        current_path = vars.get("HOME");
         return 0;
     } else if (std::filesystem::is_directory(current_path.append(path))) {
         return 0;
