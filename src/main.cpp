@@ -5,7 +5,7 @@
 #include "shell.h"
 
 int main(int argc, char *argv[]) {
-    cxxopts::Options options("shell", "Young's shell");
+    cxxopts::Options options("yush", "Young's shell");
 
     options.add_options()
         ("script"        , "input script file"                    , cxxopts::value<std::filesystem::path>())
@@ -20,10 +20,12 @@ int main(int argc, char *argv[]) {
 
     if (result.count("help")) {
         std::cout << options.help() << std::endl;
+        return 0;
     }
 
     if (result.count("version")) {
         std::cout << "yush, version 0.3.3" << std::endl;
+        return 0;
     }
 
     if (result.count("debug-output")) {
@@ -36,5 +38,5 @@ int main(int argc, char *argv[]) {
         return Shell(fin, std::cout, std::cerr).run(true);
     }
 
-    return Shell(std::cin, std::cout, std::cerr).run(true /*result.count("interactive")*/);
+    return Shell(std::cin, std::cout, std::cerr).run(true);
 }
