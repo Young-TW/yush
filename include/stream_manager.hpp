@@ -1,7 +1,7 @@
 #ifndef STD_STREAM_H
 #define STD_STREAM_H
 
-#include <iostream>
+#include <format>
 
 class StreamManager {
    public:

@@ -3,36 +3,14 @@
 
 #include <map>
 
-#include "feature/color_text.h"
+#include <fmt/color.h>
 
-const std::map<std::string, std::string> theme_default = {
-    {"theme_name", "theme_default"},
-    {"name", yellow},
-    {"path", magenta},
-    {"dir", cyan},
-    {"warn", red},
-    {"save", green},
-    {"reset", reset},
-};
-
-const std::map<std::string, std::string> theme_one_color = {
-    {"theme_name", "theme_one_color"},
-    {"name", reset},
-    {"path", reset},
-    {"dir", reset},
-    {"warn", reset},
-    {"save", reset},
-    {"reset", reset},
-};
-
-const std::map<std::string, std::string> theme_lightmode = {
-    {"theme_name", "theme_lightmode"},
-    {"name", white_back},
-    {"path", white_back},
-    {"dir", white_back},
-    {"warn", white_back},
-    {"save", white_back},
-    {"reset", reset},
+const std::map<std::string, fmt::v10::color> theme_default = {
+    {"name", fmt::color::orange},
+    {"path", fmt::color::purple},
+    {"dir", fmt::color::cyan},
+    {"warn", fmt::color::red},
+    {"save", fmt::color::green},
 };
 
 #endif

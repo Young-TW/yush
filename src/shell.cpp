@@ -1,7 +1,7 @@
 #include "shell.h"
 
-#include <iostream>
 #include <string_view>
+#include <format>
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -14,14 +14,7 @@ extern char** environ;
 
 Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
     : stream(in, out, err) {
-    vars.set("COLOR_THEME", theme_default.at("theme_name"))
-        .set("COLOR_NAME", theme_default.at("name"))
-        .set("COLOR_PATH", theme_default.at("path"))
-        .set("COLOR_DIR", theme_default.at("dir"))
-        .set("COLOR_WARN", theme_default.at("warn"))
-        .set("COLOR_SAVE", theme_default.at("save"))
-        .set("COLOR_RESET", theme_default.at("reset"))
-        .set("SYSTEM", sys)
+    vars.set("SYSTEM", sys)
         .set("SHELL", "yush");
 
     for (char** current = environ; *current; current++) {
@@ -73,24 +66,13 @@ int Shell::run(bool output) {
     return runtime_status;
 }
 
-// int Shell::exec_script(const std::filesystem::path& script_path) {
-//     return 0;
-// }
-
 int Shell::output() {
     stream.out() << "\n"
-                         << vars.get("COLOR_NAME")
-                         << vars.get("USER") << "@"
-                         << vars.get("NAME")
-                         << vars.get("COLOR_RESET") << ' '
-                         << vars.get("COLOR_PATH")
-                         << path_str_gen(vars.get("HOME"))
-                         << vars.get("COLOR_RESET") << '\n';
-    if (runtime_status != 0) {
-        stream.out() << vars.get("COLOR_WARN");
-    }
+                 << vars.get("USER") << "@"
+                 << vars.get("NAME") << ' '
+                 << path_str_gen(vars.get("HOME")) << '\n';
     // stream.out() << runtime_status; // when debug
-    stream.out() << "> " << vars.get("COLOR_RESET");
+    stream.out() << "> ";
     return 0;
 }
 

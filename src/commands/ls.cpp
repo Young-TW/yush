@@ -13,10 +13,7 @@ int cmds::ls(const std::vector<std::string>& arg, StreamManager& stream,
     for (auto& it : list) {
         if (it.path().filename().string()[0] != '.') {
             if (it.is_directory()) {
-                stream.out()
-                    << vars.get("COLOR_DIR")
-                    << it.path().filename().string()
-                    << vars.get("COLOR_RESET") << '/';
+                stream.out() << it.path().filename().string() << '/';
             } else {
                 stream.out() << it.path().filename().string();
             }
@@ -37,9 +34,7 @@ int cmds::la(const std::vector<std::string>& arg, StreamManager& stream,
     std::filesystem::directory_iterator list(std::filesystem::current_path());
     for (auto& it : list) {
         if (it.is_directory()) {
-            stream.out() << vars.get("COLOR_DIR")
-                                 << it.path().filename().string()
-                                 << vars.get("COLOR_RESET") << '/';
+            stream.out() << it.path().filename().string() << '/';
         } else {
             stream.out() << it.path().filename().string();
         }
