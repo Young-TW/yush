@@ -1,7 +1,6 @@
 #include "shell.h"
 
 #include <string_view>
-#include <format>
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
