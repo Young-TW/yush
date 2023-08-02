@@ -5,6 +5,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+
+#include <fmt/format.h>
+
 #include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
 #include "feature/theme.h"
@@ -12,16 +15,8 @@
 
 extern char** environ;
 
-Shell::Shell(std::istream& in, std::ostream& out, std::ostream& err)
-    : stream(in, out, err) {
-    vars.set("COLOR_THEME", theme_default.at("theme_name"))
-        .set("COLOR_NAME", theme_default.at("name"))
-        .set("COLOR_PATH", theme_default.at("path"))
-        .set("COLOR_DIR", theme_default.at("dir"))
-        .set("COLOR_WARN", theme_default.at("warn"))
-        .set("COLOR_SAVE", theme_default.at("save"))
-        .set("COLOR_RESET", theme_default.at("reset"))
-        .set("SYSTEM", sys)
+Shell::Shell() {
+    vars.set("SYSTEM", sys)
         .set("SHELL", "yush");
 
     for (char** current = environ; *current; current++) {
@@ -52,10 +47,10 @@ int Shell::run(bool output) {
         }
 
         if (signal(SIGINT, signal_handler) == SIG_ERR) {
-            stream.err() << "Error: signal handler failed\n";
+            // stream.err() << "Error: signal handler failed\n";
         }
 
-        std::getline(stream.in(), input);
+        getline(std::cin, input);
 
         input = preprocess_cmd(input);
         std::vector<std::string> arg = string_parser(input, ' ');
@@ -68,29 +63,15 @@ int Shell::run(bool output) {
         }
 
         runtime_status = exec_cmd(input, arg);
-    } while (!stream.in().eof());
+    } while (!std::cin.eof());
 
     return runtime_status;
 }
 
-// int Shell::exec_script(const std::filesystem::path& script_path) {
-//     return 0;
-// }
-
 int Shell::output() {
-    stream.out() << "\n"
-                         << vars.get("COLOR_NAME")
-                         << vars.get("USER") << "@"
-                         << vars.get("NAME")
-                         << vars.get("COLOR_RESET") << ' '
-                         << vars.get("COLOR_PATH")
-                         << path_str_gen(vars.get("HOME"))
-                         << vars.get("COLOR_RESET") << '\n';
-    if (runtime_status != 0) {
-        stream.out() << vars.get("COLOR_WARN");
-    }
+    fmt::print("\n{}@{}{}\n", vars.get("USER"), vars.get("NAME"), path_str_gen(vars.get("HOME")));
     // stream.out() << runtime_status; // when debug
-    stream.out() << "> " << vars.get("COLOR_RESET");
+    fmt::print("> ");
     return 0;
 }
 
@@ -120,20 +101,15 @@ std::string Shell::preprocess_cmd(const std::string& cmd) {
 int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
     using namespace cmds;
     static const std::unordered_map<std::string, decltype(&alias)> command_map{
-        {"alias", alias}, {"cat", cat},
-        {"cd", cd},       {"clear", clear},
-        {"cp", cp},       {"date", date},
-        {"echo", echo},   {"function", function},
-        {"la", la},       {"ls", ls},
-        {"mkdir", mkdir}, {"mv", mv},
-        {"pwd", pwd},     {"rm", rm},
-        {"set", set},     {"touch", touch},
-        {"whoami", whoami},
+        {"alias", alias},       {"cd", cd},
+        {"clear", clear},       {"echo", echo},
+        {"function", function}, {"ls", ls},
+        {"pwd", pwd},           {"set", set},
     };
 
     auto command_it = command_map.find(arg[0]);
     if (command_it != command_map.cend()) {
-        return command_it->second(arg, stream, vars);
+        return command_it->second(arg, vars);
     }
 
     return 127;
@@ -171,7 +147,7 @@ int Shell::exec_cmd(const std::string current_command,
         }
     }
 
-    stream.err() << "command `" << arg[0] << "` not found.\n";
+    // stream.err() << "command `" << arg[0] << "` not found.\n";
 
     return 127;
 }

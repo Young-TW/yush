@@ -1,11 +1,13 @@
 #include <fstream>
-#include <iostream>
 #include <filesystem>
 #include <cxxopts.hpp>
+
+#include <fmt/format.h>
+
 #include "shell.h"
 
 int main(int argc, char *argv[]) {
-    cxxopts::Options options("shell", "Young's shell");
+    cxxopts::Options options("yush", "Young's shell");
 
     options.add_options()
         ("script"        , "input script file"                    , cxxopts::value<std::filesystem::path>())
@@ -19,22 +21,24 @@ int main(int argc, char *argv[]) {
     auto result = options.parse(argc, argv);
 
     if (result.count("help")) {
-        std::cout << options.help() << std::endl;
+        fmt::print("{}", options.help());
+        return 0;
     }
 
     if (result.count("version")) {
-        std::cout << "yush, version 0.3.3" << std::endl;
+        fmt::print("yush, version 0.3.3\n");
+        return 0;
     }
 
-    if (result.count("debug-output")) {
-        std::ofstream fout(result["debug-output"].as<std::filesystem::path>());
-        return Shell(std::cin, std::cout, fout).run(false);
-    }
+    // if (result.count("debug-output")) {
+    //     std::ofstream fout(result["debug-output"].as<std::filesystem::path>());
+    //     return Shell().run(false);
+    // }
 
     if (result.count("script")) {
         std::ifstream fin(result["script"].as<std::filesystem::path>());
-        return Shell(fin, std::cout, std::cerr).run(true);
+        return Shell().run(true);
     }
 
-    return Shell(std::cin, std::cout, std::cerr).run(true /*result.count("interactive")*/);
+    return Shell().run(true);
 }
