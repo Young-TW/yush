@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2023-08-03
+### Deleted
+- `stream_manager`
+- Unnessary bulitin commands
+
+### Added
+- fmt to format output
+
 ## [0.3.3] - 2023-06-08
 ### Added
 - `main.cpp` cxxopts support
@@ -40,6 +48,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.4.0]: https://github.com/Young-TW/yush/releases/tag/v0.4.0
 [0.3.3]: https://github.com/Young-TW/yush/releases/tag/v0.3.3
 [0.3.2]: https://github.com/Young-TW/yush/releases/tag/v0.3.2
 [0.3.1]: https://github.com/Young-TW/yush/releases/tag/v0.3.1

@@ -2,10 +2,11 @@
 
 #include <filesystem>
 
-int cmds::ls(const std::vector<std::string>& arg, StreamManager& stream,
-             VariableManager& vars) {
+#include <fmt/format.h>
+
+int cmds::ls(const std::vector<std::string>& arg, VariableManager& vars) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
-        stream.err() << "This directory is not exists.\n";
+        // stream.err() << "This directory is not exists.\n";
         return 1;
     }
 
@@ -13,34 +14,14 @@ int cmds::ls(const std::vector<std::string>& arg, StreamManager& stream,
     for (auto& it : list) {
         if (it.path().filename().string()[0] != '.') {
             if (it.is_directory()) {
-                stream.out() << it.path().filename().string() << '/';
+                fmt::print("{}/", it.path().filename().string());
             } else {
-                stream.out() << it.path().filename().string();
+                fmt::print("{}", it.path().filename().string());
             }
-            stream.out() << "\t";
+            fmt::print("\t");
         }
     }
 
-    stream.out() << "\n";
-    return 0;
-}
-
-int cmds::la(const std::vector<std::string>& arg, StreamManager& stream,
-             VariableManager& vars) {
-    if (!std::filesystem::exists(std::filesystem::current_path())) {
-        return 1;
-    }
-
-    std::filesystem::directory_iterator list(std::filesystem::current_path());
-    for (auto& it : list) {
-        if (it.is_directory()) {
-            stream.out() << it.path().filename().string() << '/';
-        } else {
-            stream.out() << it.path().filename().string();
-        }
-        stream.out() << "\t";
-    }
-
-    stream.out() << "\n";
+    fmt::print("\n");
     return 0;
 }

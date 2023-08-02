@@ -2,9 +2,9 @@
 
 #include <filesystem>
 
-int cmds::pwd(const std::vector<std::string>& arg,
-              StreamManager& stream,
-              VariableManager& vars) {
-    stream.out() << std::filesystem::current_path() << "\n";
+#include <fmt/format.h>
+
+int cmds::pwd(const std::vector<std::string>& arg, VariableManager& vars) {
+    fmt::print("{}\n", std::filesystem::current_path().string());
     return 0;
 }

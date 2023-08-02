@@ -3,11 +3,11 @@
 #include <filesystem>
 #include <string>
 
-int cmds::set(const std::vector<std::string>& arg,
-              StreamManager& stream,
-              VariableManager& vars) {
+#include <fmt/format.h>
+
+int cmds::set(const std::vector<std::string>& arg, VariableManager& vars) {
     if (arg.size() != 3) {
-        stream.err() << "Argument size error.\n";
+        // stream.err() << "Argument size error.\n";
         return 1;
     }
 

@@ -7,12 +7,11 @@
 #include <vector>
 #include "cmds.h"
 #include "env/system_var.h"
-#include "stream_manager.hpp"
 #include "variable_manager.h"
 
 class Shell {
    public:
-    Shell(std::istream& in, std::ostream& out, std::ostream& err);
+    Shell();
     int run(bool);
 
    private:
@@ -24,7 +23,6 @@ class Shell {
 
     int runtime_status = 0;
     VariableManager vars;
-    StreamManager stream;
 };
 
 #endif
