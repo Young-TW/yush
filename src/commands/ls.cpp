@@ -1,5 +1,6 @@
 #include "cmds.h"
 
+#include <iostream>
 #include <filesystem>
 
 #include <fmt/format.h>
@@ -7,7 +8,7 @@
 
 int cmds::ls(const std::vector<std::string>& arg, VariableManager& vars) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
-        // stream.err() << "This directory is not exists.\n";
+        std::cerr << "This directory is not exists.\n";
         return 1;
     }
 

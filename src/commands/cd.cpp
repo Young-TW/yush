@@ -1,5 +1,6 @@
 #include "cmds.h"
 
+#include <iostream>
 #include <filesystem>
 #include <string>
 
@@ -19,7 +20,7 @@ static int cd_single(std::string_view path,
     } else if (std::filesystem::is_directory(current_path.append(path))) {
         return 0;
     } else {
-        // stream.err() << '`' << path << "` is not a directory.\n";
+        std::cerr << '`' << path << "` is not a directory.\n";
         return 1;
     }
     return 0;

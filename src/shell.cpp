@@ -58,7 +58,7 @@ int Shell::run(bool output) {
         }
 
         if (signal(SIGINT, signal_handler) == SIG_ERR) {
-            // stream.err() << "Error: signal handler failed\n";
+            std::cerr << "Error: signal handler failed\n";
         }
 
         getline(std::cin, input);
@@ -173,7 +173,7 @@ int Shell::exec_cmd(const std::string current_command, std::vector<std::string>&
         }
     }
 
-    // stream.err() << "command `" << arg[0] << "` not found.\n";
+    std::cerr << "command `" << arg[0] << "` not found.\n";
 
     return 127;
 }
