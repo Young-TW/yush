@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.1] -2023-08-04
+### Fixed
+- execute `~/.yushrc` file when yush launch
+
 ## [0.4.0] - 2023-08-03
 ### Deleted
 - `stream_manager`
@@ -48,6 +52,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.4.1]: https://github.com/Young-TW/yush/releases/tag/v0.4.1
 [0.4.0]: https://github.com/Young-TW/yush/releases/tag/v0.4.0
 [0.3.3]: https://github.com/Young-TW/yush/releases/tag/v0.3.3
 [0.3.2]: https://github.com/Young-TW/yush/releases/tag/v0.3.2
