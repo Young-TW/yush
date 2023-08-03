@@ -10,8 +10,8 @@ Young's shell (`yush`) is a project that built by [Young](https://github.com/You
 
 ## Start using yush
 
-Please checkout [this file](./installation.md).
+Please checkout [installation](./installation.md).
 
 ## Use commands
 
-Please checkout [this file](./commands.md).
+Please checkout [commands](./commands.md).

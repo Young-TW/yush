@@ -7,31 +7,19 @@ A simple shell built by Young.
 ## Installation
 
 Please read [this page](./docs/tutorial.md) to install yush.
-## Commands
-
-- [ ] alias
-- [x] cat
-- [x] cd
-- [x] clear
-- [x] cp
-- [x] date
-- [x] echo
-- [x] exit
-- [x] help
-- [x] la
-- [x] ls
-- [x] mkdir
-- [x] mv
-- [x] pwd
-- [x] rm
-- [x] touch
-- [x] whoami
-- [x] yush
 
 ## yush Commands
 
-- [x] set
+- [ ] alias
+- [x] cd
+- [x] clear
+- [x] echo
+- [x] exit
 - [ ] function
+- [ ] help
+- [x] ls
+- [x] pwd
+- [x] set
 
 ## System support
 
