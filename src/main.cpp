@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (result.count("version")) {
-        fmt::print("yush, version 0.4.1\n");
+        fmt::print("yush, version 0.4.2\n");
         return 0;
     }
 

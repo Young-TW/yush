@@ -1,5 +1,6 @@
 #include "cmds.h"
 
+#include <iostream>
 #include <filesystem>
 #include <string>
 
@@ -7,7 +8,7 @@
 
 int cmds::set(const std::vector<std::string>& arg, VariableManager& vars) {
     if (arg.size() != 3) {
-        // stream.err() << "Argument size error.\n";
+        std::cerr << "Argument size error.\n";
         return 1;
     }
 

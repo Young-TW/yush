@@ -1,5 +1,6 @@
 #include "cmds.h"
 
+#include <iostream>
 #include <string_view>
 #include <vector>
 
@@ -11,7 +12,7 @@ int cmds::echo(const std::vector<std::string>& arg, VariableManager& vars) {
             fmt::print("{}\n", vars.get(arg[1].substr(1, arg[1].size() - 1)));
             return 0;
         }
-        // stream.err() << "Variable not found\n";
+        std::cerr << "Variable not found\n";
         return 1;
     }
 

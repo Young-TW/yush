@@ -58,12 +58,17 @@ int Shell::run(bool output) {
         }
 
         if (signal(SIGINT, signal_handler) == SIG_ERR) {
-            // stream.err() << "Error: signal handler failed\n";
+            std::cerr << "Error: signal handler failed\n";
         }
 
         getline(std::cin, input);
 
         input = preprocess_cmd(input);
+
+        if (input.empty()) {
+            continue;
+        }
+
         std::vector<std::string> arg = string_parser(input, ' ');
 
         if (arg[0] == "exit") {
@@ -80,8 +85,16 @@ int Shell::run(bool output) {
 }
 
 int Shell::output() {
-    fmt::print("\n{}@{} {}\n", vars.get("USER"), vars.get("NAME"), path_str_gen(vars.get("HOME")));
-    // fmt::print("{}", runtime_status); // when debugging
+    fmt::print(fg(fmt::color::orange) | fmt::emphasis::blink,"\n{}", vars.get("USER"));
+    fmt::print("@");
+    fmt::print(fg(fmt::color::cyan) | fmt::emphasis::blink,"{} ", vars.get("NAME"));
+    fmt::print(fg(fmt::color::purple) | fmt::emphasis::blink,"{}\n", path_str_gen(vars.get("HOME")));
+
+    if (runtime_status != 0) {
+        fmt::print(fg(fmt::color::red) | fmt::emphasis::blink,"{} > ", runtime_status);
+        return 0;
+    }
+
     fmt::print("> ");
     return 0;
 }
@@ -94,6 +107,9 @@ std::string Shell::preprocess_cmd(const std::string& cmd) {
     size_t flag = 0;
     while (cmd[flag] == ' ') {
         flag++;
+        if (flag == cmd.size()) {
+            return "";
+        }
     }
 
     std::string ans;
@@ -127,7 +143,7 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
 }
 
 int Shell::exec_cmd(const std::string current_command, std::vector<std::string>& arg) {
-    if (current_command.empty()) {
+    if (current_command.empty() || arg.empty()) {
         return 0;
     }
 
@@ -157,7 +173,7 @@ int Shell::exec_cmd(const std::string current_command, std::vector<std::string>&
         }
     }
 
-    // stream.err() << "command `" << arg[0] << "` not found.\n";
+    std::cerr << "command `" << arg[0] << "` not found.\n";
 
     return 127;
 }

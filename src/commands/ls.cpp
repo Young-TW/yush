@@ -1,12 +1,14 @@
 #include "cmds.h"
 
+#include <iostream>
 #include <filesystem>
 
 #include <fmt/format.h>
+#include <fmt/color.h>
 
 int cmds::ls(const std::vector<std::string>& arg, VariableManager& vars) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
-        // stream.err() << "This directory is not exists.\n";
+        std::cerr << "This directory is not exists.\n";
         return 1;
     }
 
@@ -14,9 +16,10 @@ int cmds::ls(const std::vector<std::string>& arg, VariableManager& vars) {
     for (auto& it : list) {
         if (it.path().filename().string()[0] != '.') {
             if (it.is_directory()) {
-                fmt::print("{}/", it.path().filename().string());
+                fmt::print(fg(fmt::color::cyan) | fmt::emphasis::blink, "{}", it.path().filename().string());
+                fmt::print("/");
             } else {
-                fmt::print("{}", it.path().filename().string());
+                fmt::print(fg(fmt::color::white) | fmt::emphasis::blink, "{}", it.path().filename().string());
             }
             fmt::print("\t");
         }

@@ -1,9 +1,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.1] -2023-08-04
+## [0.4.2] - 2023-08-04
+### Added
+- Colors in interactive mode and `ls` command
+- `std::cerr`
+
 ### Fixed
-- execute `~/.yushrc` file when yush launch
+- sigsegv from parsing command line arguments
+
+## [0.4.1] - 2023-08-04
+### Fixed
+- Execute `~/.yushrc` file when yush launch
 
 ## [0.4.0] - 2023-08-03
 ### Deleted
