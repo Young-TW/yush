@@ -64,6 +64,11 @@ int Shell::run(bool output) {
         getline(std::cin, input);
 
         input = preprocess_cmd(input);
+
+        if (input.empty()) {
+            continue;
+        }
+
         std::vector<std::string> arg = string_parser(input, ' ');
 
         if (arg[0] == "exit") {
@@ -102,6 +107,9 @@ std::string Shell::preprocess_cmd(const std::string& cmd) {
     size_t flag = 0;
     while (cmd[flag] == ' ') {
         flag++;
+        if (flag == cmd.size()) {
+            return "";
+        }
     }
 
     std::string ans;
@@ -135,7 +143,7 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
 }
 
 int Shell::exec_cmd(const std::string current_command, std::vector<std::string>& arg) {
-    if (current_command.empty()) {
+    if (current_command.empty() || arg.empty()) {
         return 0;
     }
 
