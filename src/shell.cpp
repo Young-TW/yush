@@ -80,8 +80,16 @@ int Shell::run(bool output) {
 }
 
 int Shell::output() {
-    fmt::print("\n{}@{} {}\n", vars.get("USER"), vars.get("NAME"), path_str_gen(vars.get("HOME")));
-    // fmt::print("{}", runtime_status); // when debugging
+    fmt::print(fg(fmt::color::orange) | fmt::emphasis::blink,"\n{}", vars.get("USER"));
+    fmt::print("@");
+    fmt::print(fg(fmt::color::cyan) | fmt::emphasis::blink,"{} ", vars.get("NAME"));
+    fmt::print(fg(fmt::color::purple) | fmt::emphasis::blink,"{}\n", path_str_gen(vars.get("HOME")));
+
+    if (runtime_status != 0) {
+        fmt::print(fg(fmt::color::red) | fmt::emphasis::blink,"{} > ", runtime_status);
+        return 0;
+    }
+
     fmt::print("> ");
     return 0;
 }
