@@ -1,6 +1,7 @@
 #include "shell.h"
 
 #include <iostream>
+#include <fstream>
 #include <string_view>
 #include <unistd.h>
 #include <stdlib.h>
@@ -30,12 +31,22 @@ Shell::Shell() {
         vars.set(key, value);
     }
 
-    // const std::vector<std::string>& arg{
-    //     std::filesystem::current_path().string(),
-    //     std::string(vars.get("HOME_DIR")) + ".yushrc"};
+    const std::vector<std::string>& arg{
+        std::filesystem::current_path().string(),
+        std::string(vars.get("HOME")) + "/.yushrc"};
 
-    // Shell yushrc(stream.in(), stream.out(), stream.err());
-    // yushrc.run(false);
+    std::ifstream fin;
+    fin.open(arg[1]);
+    while (!fin.eof()) {
+        std::string input;
+        getline(fin, input);
+        input = preprocess_cmd(input);
+        std::vector<std::string> arg = string_parser(input, ' ');
+        exec_cmd(input, arg);
+    }
+    fin.close();
+
+    std::filesystem::current_path(arg[0]);
 }
 
 int Shell::run(bool output) {
@@ -69,8 +80,8 @@ int Shell::run(bool output) {
 }
 
 int Shell::output() {
-    fmt::print("\n{}@{}{}\n", vars.get("USER"), vars.get("NAME"), path_str_gen(vars.get("HOME")));
-    // stream.out() << runtime_status; // when debug
+    fmt::print("\n{}@{} {}\n", vars.get("USER"), vars.get("NAME"), path_str_gen(vars.get("HOME")));
+    // fmt::print("{}", runtime_status); // when debugging
     fmt::print("> ");
     return 0;
 }
@@ -115,8 +126,7 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
     return 127;
 }
 
-int Shell::exec_cmd(const std::string current_command,
-             std::vector<std::string>& arg) {
+int Shell::exec_cmd(const std::string current_command, std::vector<std::string>& arg) {
     if (current_command.empty()) {
         return 0;
     }
