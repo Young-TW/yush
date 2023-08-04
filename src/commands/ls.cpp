@@ -16,11 +16,12 @@ int cmds::ls(const std::vector<std::string>& arg, VariableManager& vars) {
     for (auto& it : list) {
         if (it.path().filename().string()[0] != '.') {
             if (it.is_directory()) {
-                fmt::print(fg(fmt::color::cyan) | fmt::emphasis::blink, "{}", it.path().filename().string());
+                fmt::print(fg(fmt::color::cyan), "{}", it.path().filename().string());
                 fmt::print("/");
             } else {
-                fmt::print(fg(fmt::color::white) | fmt::emphasis::blink, "{}", it.path().filename().string());
+                fmt::print(fg(fmt::color::white), "{}", it.path().filename().string());
             }
+
             fmt::print("\t");
         }
     }
