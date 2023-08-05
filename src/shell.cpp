@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <signal.h>
 
+#include <cxxopts.hpp>
+
 #include <fmt/format.h>
 
 #include "feature/path_str_gen.h"
@@ -49,23 +51,33 @@ Shell::Shell() {
     std::filesystem::current_path(arg[0]);
 }
 
-int Shell::run(bool output) {
+int Shell::run(cxxopts::ParseResult& result) {
     std::string input;
 
+    if (result.count("command")) {
+        std::string input = result["command"].as<std::string>();
+        input = preprocess_cmd(input);
+        std::vector<std::string> arg = string_parser(input, ' ');
+        return exec_cmd(input, arg);
+    }
+
     do {
-        if (output) {
+        if (result["interactive"].as<bool>()) {
             this->output();
+            getline(std::cin, input);
+            if (signal(SIGINT, signal_handler) == SIG_ERR) {
+                std::cerr << "Error: signal handler failed\n";
+            }
         }
 
-        if (signal(SIGINT, signal_handler) == SIG_ERR) {
-            std::cerr << "Error: signal handler failed\n";
+        if (result.count("script")) {
+            std::ifstream fin(result["script"].as<std::filesystem::path>());
+            getline(fin, input);
         }
-
-        getline(std::cin, input);
 
         input = preprocess_cmd(input);
 
-        if (input.empty()) {
+        if (input.empty() || input[0] == '#') {
             continue;
         }
 
@@ -85,13 +97,13 @@ int Shell::run(bool output) {
 }
 
 int Shell::output() {
-    fmt::print(fg(fmt::color::orange) | fmt::emphasis::blink,"\n{}", vars.get("USER"));
+    fmt::print(fg(fmt::color::orange),"\n{}", vars.get("USER"));
     fmt::print("@");
-    fmt::print(fg(fmt::color::cyan) | fmt::emphasis::blink,"{} ", vars.get("NAME"));
-    fmt::print(fg(fmt::color::purple) | fmt::emphasis::blink,"{}\n", path_str_gen(vars.get("HOME")));
+    fmt::print(fg(fmt::color::cyan),"{} ", vars.get("NAME"));
+    fmt::print(fg(fmt::color::purple),"{}\n", path_str_gen(vars.get("HOME")));
 
     if (runtime_status != 0) {
-        fmt::print(fg(fmt::color::red) | fmt::emphasis::blink,"{} > ", runtime_status);
+        fmt::print(fg(fmt::color::red),"{} > ", runtime_status);
         return 0;
     }
 

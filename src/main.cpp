@@ -1,5 +1,6 @@
 #include <fstream>
 #include <filesystem>
+
 #include <cxxopts.hpp>
 
 #include <fmt/format.h>
@@ -10,11 +11,11 @@ int main(int argc, char *argv[]) {
     cxxopts::Options options("yush", "Young's shell");
 
     options.add_options()
-        ("script"        , "input script file"                    , cxxopts::value<std::filesystem::path>())
+        ("script"        , "Input script file"                    , cxxopts::value<std::filesystem::path>())
         ("o,debug-output", "Enable debug message output to a file", cxxopts::value<std::filesystem::path>())
         ("h,help"        , "Print help message and exit"          , cxxopts::value<bool>()->default_value("false"))
         ("c,command"     , "Execute single command"               , cxxopts::value<std::string>())
-        // ("i,interactive" , "Is interactive mode"                  , cxxopts::value<bool>()->default_value("true"))
+        ("i,interactive" , "Is interactive mode"                  , cxxopts::value<bool>()->default_value("true"))
         ("v,version"     , "Print version and exit"               , cxxopts::value<bool>()->default_value("false"))
         ;
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (result.count("version")) {
-        fmt::print("yush, version 0.4.2\n");
+        fmt::print("yush, version 0.4.3\n");
         return 0;
     }
 
@@ -35,10 +36,5 @@ int main(int argc, char *argv[]) {
     //     return Shell().run(false);
     // }
 
-    if (result.count("script")) {
-        std::ifstream fin(result["script"].as<std::filesystem::path>());
-        return Shell().run(true);
-    }
-
-    return Shell().run(true);
+    return Shell().run(result);
 }

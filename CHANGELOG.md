@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.3] - 2023-08-06
+### Added
+- `-i` `--interactive` for interactive mode
+- `-c` `--command` for execute single command and exit
+- `#` for comment
+
+### Fixed
+- remove fmt color flashing
+- interactive mode not running by default
+
 ## [0.4.2] - 2023-08-04
 ### Added
 - Colors in interactive mode and `ls` command
@@ -60,6 +70,8 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.4.3]: https://github.com/Young-TW/yush/releases/tag/v0.4.3
+[0.4.2]: https://github.com/Young-TW/yush/releases/tag/v0.4.2
 [0.4.1]: https://github.com/Young-TW/yush/releases/tag/v0.4.1
 [0.4.0]: https://github.com/Young-TW/yush/releases/tag/v0.4.0
 [0.3.3]: https://github.com/Young-TW/yush/releases/tag/v0.3.3
