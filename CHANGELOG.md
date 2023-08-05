@@ -1,7 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.3] - 2023-08-04
+## [0.4.3] - 2023-08-06
+### Added
+- `-i` `--interactive` for interactive mode
+- `-c` `--command` for execute single command and exit
+- `#` for comment
+
+### Fixed
+- remove fmt color flashing
+- interactive mode not running by default
 
 ## [0.4.2] - 2023-08-04
 ### Added
