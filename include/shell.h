@@ -5,6 +5,9 @@
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include <cxxopts.hpp>
+
 #include "cmds.h"
 #include "env/system_var.h"
 #include "variable_manager.h"
@@ -12,7 +15,7 @@
 class Shell {
    public:
     Shell();
-    int run(bool);
+    int run(cxxopts::ParseResult& result);
 
    private:
     int output();
