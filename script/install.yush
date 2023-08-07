@@ -11,3 +11,5 @@ cmake --build build --config RELEASE
 # install
 
 cmake --install build
+
+echo "yush installed successfully"
