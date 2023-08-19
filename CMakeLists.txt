@@ -14,4 +14,6 @@ add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} cxxopts)
 target_link_libraries(${PROJECT_NAME} fmt::fmt)
 
+target_compile_definitions(${PROJECT_NAME} PRIVATE YUSH_VERSION="${PROJECT_VERSION}")
+
 install(TARGETS ${PROJECT_NAME})

@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <termios.h>
 
 #include <cxxopts.hpp>
 
