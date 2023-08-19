@@ -37,15 +37,19 @@ Shell::Shell() {
         std::filesystem::current_path().string(),
         std::string(vars.get("HOME")) + "/.yushrc"};
 
-    std::ifstream fin;
-    fin.open(arg[1]);
+    std::ifstream fin(arg[1]);
     while (!fin.eof()) {
         std::string input;
         getline(fin, input);
         input = preprocess_cmd(input);
+        if (input.empty()) {
+            continue;
+        }
+
         std::vector<std::string> arg = string_parser(input, ' ');
-        exec_cmd(input, arg);
+        runtime_status = exec_cmd(input, arg);
     }
+
     fin.close();
 
     std::filesystem::current_path(arg[0]);
@@ -61,6 +65,28 @@ int Shell::run(cxxopts::ParseResult& result) {
         return exec_cmd(input, arg);
     }
 
+    if (result.count("script")) {
+        if (result["script"].as<std::filesystem::path>().empty()) {
+            std::cerr << "Error: script and interactive cannot be used at the same time\n";
+            return 1;
+        }
+
+        std::ifstream fin(result["script"].as<std::filesystem::path>());
+        while (!fin.eof()) {
+            getline(fin, input);
+            input = preprocess_cmd(input);
+            if (input.empty()) {
+                continue;
+            }
+
+            std::vector<std::string> arg = string_parser(input, ' ');
+            runtime_status = exec_cmd(input, arg);
+        }
+
+        fin.close();
+        return runtime_status;
+    }
+
     do {
         if (result["interactive"].as<bool>()) {
             this->output();
@@ -70,14 +96,8 @@ int Shell::run(cxxopts::ParseResult& result) {
             }
         }
 
-        if (result.count("script")) {
-            std::ifstream fin(result["script"].as<std::filesystem::path>());
-            getline(fin, input);
-        }
-
         input = preprocess_cmd(input);
-
-        if (input.empty() || input[0] == '#') {
+        if (input.empty()) {
             continue;
         }
 
@@ -112,7 +132,7 @@ int Shell::output() {
 }
 
 std::string Shell::preprocess_cmd(const std::string& cmd) {
-    if (cmd.empty()) {
+    if (cmd.empty() || cmd[0] == '#') {
         return "";
     }
 
