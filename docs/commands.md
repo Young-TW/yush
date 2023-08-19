@@ -1,6 +1,6 @@
 # Commands
 
-`yush` provides it's builtin commanda and normal commands(executable file in $PATH).
+`yush` provides it's builtin commands and normal commands(executable file in $PATH).
 
 ## Builtin commands
 

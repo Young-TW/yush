@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.4] - 2023-08-20
+### Fixed
+- shell broken when .yushrc not exists
+
+### Other
+- sync yush version in CMakeLists.txt and main.cpp
+
 ## [0.4.3] - 2023-08-06
 ### Added
 - `-i` `--interactive` for interactive mode
@@ -70,6 +77,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.4.4]: https://github.com/Young-TW/yush/releases/tag/v0.4.4
 [0.4.3]: https://github.com/Young-TW/yush/releases/tag/v0.4.3
 [0.4.2]: https://github.com/Young-TW/yush/releases/tag/v0.4.2
 [0.4.1]: https://github.com/Young-TW/yush/releases/tag/v0.4.1
