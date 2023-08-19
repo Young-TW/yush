@@ -37,6 +37,11 @@ Shell::Shell() {
         std::filesystem::current_path().string(),
         std::string(vars.get("HOME")) + "/.yushrc"};
 
+    if (arg[1].empty()) {
+        fmt::print(fg(fmt::color::orange), "no rc file\n");
+        return;
+    }
+
     std::ifstream fin(arg[1]);
     while (!fin.eof()) {
         std::string input;
