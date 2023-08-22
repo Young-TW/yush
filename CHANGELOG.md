@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2023-08-23
+### Added
+- fork() to execute external commands
+
+### Fixed
+- signal will be only send to child process now
+- yush will not exit when child process done now
+
 ## [0.4.4] - 2023-08-20
 ### Fixed
 - shell broken when .yushrc not exists
@@ -77,6 +85,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.5.0]: https://github.com/Young-TW/yush/releases/tag/v0.5.0
 [0.4.4]: https://github.com/Young-TW/yush/releases/tag/v0.4.4
 [0.4.3]: https://github.com/Young-TW/yush/releases/tag/v0.4.3
 [0.4.2]: https://github.com/Young-TW/yush/releases/tag/v0.4.2
