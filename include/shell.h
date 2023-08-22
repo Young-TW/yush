@@ -19,8 +19,7 @@ class Shell {
 
    private:
     int output();
-    int exec_cmd(const std::string current_command,
-                 std::vector<std::string>& arg);
+    int exec_cmd(std::vector<std::string>& arg);
     int exec_shell_builtin(const std::vector<std::string>& arg);
     std::string preprocess_cmd(const std::string& cmd);
 
