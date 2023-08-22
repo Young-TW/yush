@@ -8,6 +8,8 @@
 #include <signal.h>
 #include <termios.h>
 
+#include <sys/wait.h>
+
 #include <cxxopts.hpp>
 
 #include <fmt/format.h>
@@ -16,6 +18,7 @@
 #include "feature/string_parser.h"
 #include "feature/theme.h"
 #include "feature/signal_handler.h"
+#include "common.hpp"
 
 extern char** environ;
 
@@ -53,7 +56,7 @@ Shell::Shell() {
         }
 
         std::vector<std::string> arg = string_parser(input, ' ');
-        runtime_status = exec_cmd(input, arg);
+        runtime_status = exec_cmd(arg);
     }
 
     fin.close();
@@ -68,7 +71,7 @@ int Shell::run(cxxopts::ParseResult& result) {
         std::string input = result["command"].as<std::string>();
         input = preprocess_cmd(input);
         std::vector<std::string> arg = string_parser(input, ' ');
-        return exec_cmd(input, arg);
+        return exec_cmd(arg);
     }
 
     if (result.count("script")) {
@@ -86,20 +89,24 @@ int Shell::run(cxxopts::ParseResult& result) {
             }
 
             std::vector<std::string> arg = string_parser(input, ' ');
-            runtime_status = exec_cmd(input, arg);
+            runtime_status = exec_cmd(arg);
         }
 
         fin.close();
         return runtime_status;
     }
 
+    if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
+        std::cerr << "Error: signal handler failed\n";
+        return 1;
+    }
+
     do {
         if (result["interactive"].as<bool>()) {
             this->output();
+
+
             getline(std::cin, input);
-            if (signal(SIGINT, signal_handler) == SIG_ERR) {
-                std::cerr << "Error: signal handler failed\n";
-            }
         }
 
         input = preprocess_cmd(input);
@@ -116,7 +123,7 @@ int Shell::run(cxxopts::ParseResult& result) {
             break;
         }
 
-        runtime_status = exec_cmd(input, arg);
+        runtime_status = exec_cmd(arg);
     } while (!std::cin.eof());
 
     return runtime_status;
@@ -180,8 +187,8 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
     return 127;
 }
 
-int Shell::exec_cmd(const std::string current_command, std::vector<std::string>& arg) {
-    if (current_command.empty() || arg.empty()) {
+int Shell::exec_cmd(std::vector<std::string>& arg) {
+    if (arg.empty()) {
         return 0;
     }
 
@@ -192,26 +199,49 @@ int Shell::exec_cmd(const std::string current_command, std::vector<std::string>&
         return shell_builtin_ans;
     }
 
-    std::vector<std::string> cmd_paths =
-        string_parser(vars.get("PATH"), ':');
+    std::unique_ptr<char *[]> argv = std::make_unique<char *[]>(arg.size() + 1);
+    for (size_t i = 0; i < arg.size(); i++) {
+        argv[i] = arg[i].data();
+    }
 
-    for (const auto& cmd : cmd_paths) {
-        std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
+    std::string cmd_path_str;
 
-        if (std::filesystem::exists(cmd_path) &&
-            std::filesystem::is_regular_file(cmd_path)) {
-            std::unique_ptr<char *[]> argv = std::make_unique<char *[]>(arg.size() + 1);
-            std::string cmd_path_str = cmd_path.lexically_normal().string();
-            argv[0] = cmd_path_str.data();
-            for (size_t i = 1; i < arg.size(); i++) {
-                argv[i] = arg[i].data();
+    if (std::filesystem::exists(arg[0]) && std::filesystem::is_regular_file(arg[0])) {
+        cmd_path_str = arg[0];
+    } else {
+        std::vector<std::string> cmd_paths =
+            string_parser(vars.get("PATH"), ':');
+
+        for (const auto& cmd : cmd_paths) {
+            std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
+
+            if (std::filesystem::exists(cmd_path) &&
+                std::filesystem::is_regular_file(cmd_path)) {
+                cmd_path_str = cmd_path.lexically_normal().string();
+                break;
             }
-
-            return execve(argv[0], argv.get(), environ);
         }
     }
 
-    std::cerr << "command `" << arg[0] << "` not found.\n";
+    if (cmd_path_str.empty()) {
+        std::cerr << "command `" << arg[0] << "` not found.\n";
+        return 127;
+    }
 
-    return 127;
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        return -1;
+    }
+
+    if (pid > 0) {
+        int status;
+        waitpid(pid, &status, 0);
+        return status;
+    }
+
+    signal(SIGINT, SIG_DFL);
+
+    execve(cmd_path_str.c_str(), argv.get(), environ);
+    unreachable();
 }
