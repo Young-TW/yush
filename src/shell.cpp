@@ -95,13 +95,17 @@ int Shell::run(cxxopts::ParseResult& result) {
         return runtime_status;
     }
 
+    if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
+        std::cerr << "Error: signal handler failed\n";
+        return 1;
+    }
+
     do {
         if (result["interactive"].as<bool>()) {
             this->output();
+
+
             getline(std::cin, input);
-            if (signal(SIGINT, signal_handler) == SIG_ERR) {
-                std::cerr << "Error: signal handler failed\n";
-            }
         }
 
         input = preprocess_cmd(input);
@@ -199,24 +203,43 @@ int Shell::exec_cmd(std::vector<std::string>& arg) {
         argv[i] = arg[i].data();
     }
 
+    std::string cmd_path_str;
+
     if (std::filesystem::exists(arg[0]) && std::filesystem::is_regular_file(arg[0])) {
-        return execve(argv[0], argv.get(), environ);
-    }
+        cmd_path_str = arg[0];
+    } else {
+        std::vector<std::string> cmd_paths =
+            string_parser(vars.get("PATH"), ':');
 
-    std::vector<std::string> cmd_paths =
-        string_parser(vars.get("PATH"), ':');
+        for (const auto& cmd : cmd_paths) {
+            std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
 
-    for (const auto& cmd : cmd_paths) {
-        std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
-
-        if (std::filesystem::exists(cmd_path) &&
-            std::filesystem::is_regular_file(cmd_path)) {
-            std::string cmd_path_str = cmd_path.lexically_normal().string();
-            return execve(cmd_path_str.data(), argv.get(), environ);
+            if (std::filesystem::exists(cmd_path) &&
+                std::filesystem::is_regular_file(cmd_path)) {
+                cmd_path_str = cmd_path.lexically_normal().string();
+                break;
+            }
         }
     }
 
-    std::cerr << "command `" << arg[0] << "` not found.\n";
+    if (cmd_path_str.empty()) {
+        std::cerr << "command `" << arg[0] << "` not found.\n";
+        return 127;
+    }
 
-    return 127;
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        return -1;
+    }
+
+    if (pid > 0) {
+        int status;
+        waitpid(pid, &status, 0);
+        return status;
+    }
+
+    signal(SIGINT, SIG_DFL);
+
+    execve(cmd_path_str.c_str(), argv.get(), environ);
 }
