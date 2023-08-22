@@ -18,6 +18,7 @@
 #include "feature/string_parser.h"
 #include "feature/theme.h"
 #include "feature/signal_handler.h"
+#include "common.hpp"
 
 extern char** environ;
 
@@ -242,4 +243,5 @@ int Shell::exec_cmd(std::vector<std::string>& arg) {
     signal(SIGINT, SIG_DFL);
 
     execve(cmd_path_str.c_str(), argv.get(), environ);
+    unreachable();
 }
