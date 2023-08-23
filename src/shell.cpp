@@ -47,20 +47,15 @@ Shell::Shell() {
     }
 
     std::ifstream fin(arg[1]);
-    while (!fin.eof()) {
-        std::string input;
-        getline(fin, input);
-        input = preprocess_cmd(input);
-        if (input.empty()) {
-            continue;
-        }
 
-        std::vector<std::string> arg = string_parser(input, ' ');
+    std::string input;
+    while (!fin.eof()) {
+        getline(fin, input);
+        std::vector<std::string> arg = process_cmd(input);
         runtime_status = exec_cmd(arg);
     }
 
     fin.close();
-
     std::filesystem::current_path(arg[0]);
 }
 
@@ -69,8 +64,7 @@ int Shell::run(cxxopts::ParseResult& result) {
 
     if (result.count("command")) {
         std::string input = result["command"].as<std::string>();
-        input = preprocess_cmd(input);
-        std::vector<std::string> arg = string_parser(input, ' ');
+        std::vector<std::string> arg = process_cmd(input);
         return exec_cmd(arg);
     }
 
@@ -83,12 +77,7 @@ int Shell::run(cxxopts::ParseResult& result) {
         std::ifstream fin(result["script"].as<std::filesystem::path>());
         while (!fin.eof()) {
             getline(fin, input);
-            input = preprocess_cmd(input);
-            if (input.empty()) {
-                continue;
-            }
-
-            std::vector<std::string> arg = string_parser(input, ' ');
+            std::vector<std::string> arg = process_cmd(input);
             runtime_status = exec_cmd(arg);
         }
 
@@ -109,12 +98,7 @@ int Shell::run(cxxopts::ParseResult& result) {
             getline(std::cin, input);
         }
 
-        input = preprocess_cmd(input);
-        if (input.empty()) {
-            continue;
-        }
-
-        std::vector<std::string> arg = string_parser(input, ' ');
+        std::vector<std::string> arg = process_cmd(input);
 
         if (arg[0] == "exit") {
             if (arg.size() > 1) {
@@ -144,16 +128,16 @@ int Shell::output() {
     return 0;
 }
 
-std::string Shell::preprocess_cmd(const std::string& cmd) {
+std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
     if (cmd.empty() || cmd[0] == '#') {
-        return "";
+        return {};
     }
 
     size_t flag = 0;
     while (cmd[flag] == ' ') {
         flag++;
         if (flag == cmd.size()) {
-            return "";
+            return {};
         }
     }
 
@@ -167,7 +151,7 @@ std::string Shell::preprocess_cmd(const std::string& cmd) {
         ans += cmd[i];
     }
 
-    return ans;
+    return string_parser(cmd, ' ');
 }
 
 int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
