@@ -69,7 +69,7 @@ int Shell::run(cxxopts::ParseResult& result) {
 
     if (result.count("script")) {
         if (result["script"].as<std::filesystem::path>().empty()) {
-            std::cerr << "Error: script and interactive cannot be used at the same time\n";
+            fmt::print(stderr, "Error: script file path is empty\n");
             return 1;
         }
 
@@ -85,7 +85,7 @@ int Shell::run(cxxopts::ParseResult& result) {
     }
 
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
-        std::cerr << "Error: signal handler failed\n";
+        fmt::print(stderr, "Error: signal handler failed\n");
         return 1;
     }
 
@@ -213,7 +213,7 @@ int Shell::exec_cmd(std::vector<std::string>& arg) {
     }
 
     if (cmd_path_str.empty()) {
-        std::cerr << "command `" << arg[0] << "` not found.\n";
+        fmt::print(stderr, "Error: command `{}` not found.\n", arg[0]);
         return 127;
     }
 

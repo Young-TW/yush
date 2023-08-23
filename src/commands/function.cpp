@@ -24,7 +24,7 @@ std::vector<std::string> parse(std::string_view input) {
 
 int cmds::function(const std::vector<std::string>& arg, VariableManager& vars) {
     if (arg.size() != 2 && arg.size() != 3) {
-        std::cerr << "Argument size error.\n";
+        fmt::print(stderr, "Argument size error.\n");
         return 1;
     }
 

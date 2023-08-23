@@ -20,7 +20,7 @@ static int cd_single(std::string_view path,
     } else if (std::filesystem::is_directory(current_path.append(path))) {
         return 0;
     } else {
-        std::cerr << '`' << path << "` is not a directory.\n";
+        fmt::print(stderr, "cd: {} is not a directory.\n", path);
         return 1;
     }
     return 0;

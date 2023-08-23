@@ -8,7 +8,7 @@
 
 int cmds::set(const std::vector<std::string>& arg, VariableManager& vars) {
     if (arg.size() != 3) {
-        std::cerr << "Argument size error.\n";
+        fmt::print(stderr, "Argument size error.\n");
         return 1;
     }
 

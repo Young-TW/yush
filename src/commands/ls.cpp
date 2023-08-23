@@ -8,7 +8,7 @@
 
 int cmds::ls(const std::vector<std::string>& arg, VariableManager& vars) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
-        std::cerr << "This directory is not exists.\n";
+        fmt::print(stderr, "This directory is not exists.\n");
         return 1;
     }
 
