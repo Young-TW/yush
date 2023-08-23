@@ -17,7 +17,6 @@
 #include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
 #include "feature/theme.h"
-#include "feature/signal_handler.h"
 #include "common.hpp"
 
 extern char** environ;
@@ -93,12 +92,14 @@ int Shell::run(cxxopts::ParseResult& result) {
     do {
         if (result["interactive"].as<bool>()) {
             this->output();
-
-
             getline(std::cin, input);
         }
 
         std::vector<std::string> arg = process_cmd(input);
+
+        if (arg.empty()) {
+            continue;
+        }
 
         if (arg[0] == "exit") {
             if (arg.size() > 1) {
@@ -129,29 +130,33 @@ int Shell::output() {
 }
 
 std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
-    if (cmd.empty() || cmd[0] == '#') {
-        return {};
-    }
+    std::vector<std::string> result;
+    std::size_t begin = std::string::npos;
 
-    size_t flag = 0;
-    while (cmd[flag] == ' ') {
-        flag++;
-        if (flag == cmd.size()) {
-            return {};
-        }
-    }
-
-    std::string ans;
-    for (size_t i = flag; i < cmd.size(); i++) {
+    for (std::size_t i = 0; i < cmd.size(); i++) {
         if (cmd[i] == ' ') {
-            if (i + 1 < cmd.size() && cmd[i + 1] == ' ') {
-                continue;
+            if (begin != std::string::npos) {
+                result.push_back(cmd.substr(begin, i - begin));
+                begin = std::string::npos;
             }
+
+            continue;
         }
-        ans += cmd[i];
+
+        if (cmd[i] == '#') {
+            break;
+        }
+
+        if (begin == std::string::npos) {
+            begin = i;
+        }
     }
 
-    return string_parser(cmd, ' ');
+    if (begin != std::string::npos) {
+        result.push_back(cmd.substr(begin));
+    }
+
+    return result;
 }
 
 int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
