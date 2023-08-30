@@ -204,12 +204,11 @@ std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
 }
 
 int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
-    using namespace cmds;
-    static const std::unordered_map<std::string, decltype(&alias)> command_map{
-        {"alias", alias},       {"cd", cd},
-        {"clear", clear},       {"echo", echo},
-        {"function", function}, {"ls", ls},
-        {"pwd", pwd},           {"set", set},
+    static const std::unordered_map<std::string, decltype(&cmd_alias)> command_map{
+        {"alias", cmd_alias},       {"cd", cmd_cd},
+        {"clear", cmd_clear},       {"echo", cmd_echo},
+        {"function", cmd_function}, {"ls", cmd_ls},
+        {"pwd", cmd_pwd},           {"set", cmd_set},
     };
 
     auto command_it = command_map.find(arg[0]);

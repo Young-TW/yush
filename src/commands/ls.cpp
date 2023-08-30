@@ -1,4 +1,4 @@
-#include "cmds.h"
+#include "shell.h"
 
 #include <iostream>
 #include <filesystem>
@@ -6,7 +6,7 @@
 #include <fmt/format.h>
 #include <fmt/color.h>
 
-int cmds::ls(const std::vector<std::string>& arg, VariableManager& vars) {
+int Shell::cmd_ls(const std::vector<std::string>& arg, VariableManager& vars) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
         fmt::print(stderr, "This directory is not exists.\n");
         return 1;

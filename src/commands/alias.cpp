@@ -1,8 +1,8 @@
-#include "cmds.h"
+#include "shell.h"
 
 #include <string>
 
-int cmds::alias(const std::vector<std::string>& arg, VariableManager& vars) {
+int Shell::cmd_alias(const std::vector<std::string>& arg, VariableManager& vars) {
     // add command
     size_t found = arg.at(1).find("=");
     std::string cmd_name = arg.at(1).substr(0, found);
