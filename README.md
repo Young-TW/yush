@@ -16,7 +16,6 @@ Please read [this page](./docs/tutorial.md) to install yush.
 - [x] echo
 - [x] exit
 - [ ] function
-- [ ] help
 - [x] ls
 - [x] pwd
 - [x] set

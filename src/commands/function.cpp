@@ -1,4 +1,4 @@
-#include "cmds.h"
+#include "shell.h"
 
 #include <iostream>
 #include <string_view>
@@ -22,9 +22,9 @@ std::vector<std::string> parse(std::string_view input) {
     return arg;
 }
 
-int cmds::function(const std::vector<std::string>& arg, VariableManager& vars) {
+int Shell::cmd_function(const std::vector<std::string>& arg) {
     if (arg.size() != 2 && arg.size() != 3) {
-        std::cerr << "Argument size error.\n";
+        fmt::print(stderr, "Argument size error.\n");
         return 1;
     }
 

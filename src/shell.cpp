@@ -13,11 +13,10 @@
 #include <cxxopts.hpp>
 
 #include <fmt/format.h>
+#include <fmt/color.h>
 
 #include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
-#include "feature/theme.h"
-#include "feature/signal_handler.h"
 #include "common.hpp"
 
 extern char** environ;
@@ -47,20 +46,15 @@ Shell::Shell() {
     }
 
     std::ifstream fin(arg[1]);
-    while (!fin.eof()) {
-        std::string input;
-        getline(fin, input);
-        input = preprocess_cmd(input);
-        if (input.empty()) {
-            continue;
-        }
 
-        std::vector<std::string> arg = string_parser(input, ' ');
+    std::string input;
+    while (!fin.eof()) {
+        getline(fin, input);
+        std::vector<std::string> arg = process_cmd(input);
         runtime_status = exec_cmd(arg);
     }
 
     fin.close();
-
     std::filesystem::current_path(arg[0]);
 }
 
@@ -69,26 +63,20 @@ int Shell::run(cxxopts::ParseResult& result) {
 
     if (result.count("command")) {
         std::string input = result["command"].as<std::string>();
-        input = preprocess_cmd(input);
-        std::vector<std::string> arg = string_parser(input, ' ');
+        std::vector<std::string> arg = process_cmd(input);
         return exec_cmd(arg);
     }
 
     if (result.count("script")) {
         if (result["script"].as<std::filesystem::path>().empty()) {
-            std::cerr << "Error: script and interactive cannot be used at the same time\n";
+            fmt::print(stderr, "Error: script file path is empty\n");
             return 1;
         }
 
         std::ifstream fin(result["script"].as<std::filesystem::path>());
         while (!fin.eof()) {
             getline(fin, input);
-            input = preprocess_cmd(input);
-            if (input.empty()) {
-                continue;
-            }
-
-            std::vector<std::string> arg = string_parser(input, ' ');
+            std::vector<std::string> arg = process_cmd(input);
             runtime_status = exec_cmd(arg);
         }
 
@@ -97,24 +85,21 @@ int Shell::run(cxxopts::ParseResult& result) {
     }
 
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
-        std::cerr << "Error: signal handler failed\n";
+        fmt::print(stderr, "Error: signal handler failed\n");
         return 1;
     }
 
     do {
         if (result["interactive"].as<bool>()) {
             this->output();
-
-
             getline(std::cin, input);
         }
 
-        input = preprocess_cmd(input);
-        if (input.empty()) {
+        std::vector<std::string> arg = process_cmd(input);
+
+        if (arg.empty()) {
             continue;
         }
-
-        std::vector<std::string> arg = string_parser(input, ' ');
 
         if (arg[0] == "exit") {
             if (arg.size() > 1) {
@@ -144,44 +129,119 @@ int Shell::output() {
     return 0;
 }
 
-std::string Shell::preprocess_cmd(const std::string& cmd) {
-    if (cmd.empty() || cmd[0] == '#') {
-        return "";
-    }
+std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
+    std::vector<std::string> result;
+    std::size_t begin = std::string::npos;
 
-    size_t flag = 0;
-    while (cmd[flag] == ' ') {
-        flag++;
-        if (flag == cmd.size()) {
-            return "";
-        }
-    }
-
-    std::string ans;
-    for (size_t i = flag; i < cmd.size(); i++) {
+    for (std::size_t i = 0; i < cmd.size(); i++) {
         if (cmd[i] == ' ') {
-            if (i + 1 < cmd.size() && cmd[i + 1] == ' ') {
+            if (begin != std::string::npos) {
+                result.push_back(cmd.substr(begin, i - begin));
+                begin = std::string::npos;
+            }
+
+            continue;
+        }
+
+        if (cmd[i] == '$') {
+            if (begin != std::string::npos) {
+                result.push_back(cmd.substr(begin, i - begin));
+                begin = std::string::npos;
+            }
+
+            std::size_t end = cmd.find_first_not_of(
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_",
+                i + 1);
+
+            if (end == std::string::npos) {
+                end = cmd.size();
+            }
+
+            std::string var_name = cmd.substr(i + 1, end - i - 1);
+            result.emplace_back(vars.get(var_name));
+            i = end - 1;
+            continue;
+        }
+
+        if (cmd[i] == '"') {
+            if (begin == std::string::npos || begin == i - 1) {
                 continue;
             }
+
+            if (begin != std::string::npos) {
+                result.push_back(cmd.substr(begin, i - begin));
+                begin = std::string::npos;
+            }
+
+            std::size_t end = cmd.find_first_of('"', i + 1);
+
+            if (end == std::string::npos) {
+                end = cmd.size();
+            }
+
+            result.emplace_back(cmd.substr(i + 1, end - i - 1));
+            i = end;
+
+            continue;
         }
-        ans += cmd[i];
+
+        if (cmd[i] == '\'') {
+            if (begin == std::string::npos || begin == i - 1) {
+                std::size_t end = cmd.find_first_of('\'', i + 1);
+
+                if (end == std::string::npos) {
+                    end = cmd.size();
+                }
+
+                result.emplace_back(cmd.substr(i + 1, end - i - 1));
+                i = end;
+
+                continue;
+            }
+
+            if (begin != std::string::npos) {
+                result.push_back(cmd.substr(begin, i - begin));
+                begin = std::string::npos;
+            }
+        }
+
+        if (cmd[i] == '#') {
+            break;
+        }
+
+        if (begin == std::string::npos) {
+            begin = i;
+        }
     }
 
-    return ans;
+    if (begin != std::string::npos) {
+        result.push_back(cmd.substr(begin));
+    }
+
+    if (alias_map.find(cmd) != alias_map.end()) {
+        return process_cmd(alias_map[cmd]);
+    }
+
+    return result;
 }
 
 int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
-    using namespace cmds;
-    static const std::unordered_map<std::string, decltype(&alias)> command_map{
-        {"alias", alias},       {"cd", cd},
-        {"clear", clear},       {"echo", echo},
-        {"function", function}, {"ls", ls},
-        {"pwd", pwd},           {"set", set},
+    using CommandType = int (Shell::*)(const std::vector<std::string>&);
+
+    static const std::unordered_map<std::string, CommandType> command_map{
+        {"alias", &Shell::cmd_alias},
+        {"cd", &Shell::cmd_cd},
+        {"clear", &Shell::cmd_clear},
+        {"echo", &Shell::cmd_echo},
+        {"function", &Shell::cmd_function},
+        {"ls", &Shell::cmd_ls},
+        {"pwd", &Shell::cmd_pwd},
+        {"set", &Shell::cmd_set},
     };
 
     auto command_it = command_map.find(arg[0]);
     if (command_it != command_map.cend()) {
-        return command_it->second(arg, vars);
+        return (this->*(command_it->second))(arg);
     }
 
     return 127;
@@ -224,7 +284,7 @@ int Shell::exec_cmd(std::vector<std::string>& arg) {
     }
 
     if (cmd_path_str.empty()) {
-        std::cerr << "command `" << arg[0] << "` not found.\n";
+        fmt::print(stderr, "Error: command `{}` not found.\n", arg[0]);
         return 127;
     }
 

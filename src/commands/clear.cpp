@@ -1,8 +1,8 @@
-#include "cmds.h"
+#include "shell.h"
 
 #include <string_view>
 
-int cmds::clear(const std::vector<std::string>& arg, VariableManager& vars) {
+int Shell::cmd_clear(const std::vector<std::string>& arg) {
     std::string_view sys = vars.get("SYSTEM");
     if (sys != "Linux" && sys != "MacOS" && sys != "Unix") {
         system("CLS");

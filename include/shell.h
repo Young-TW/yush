@@ -8,23 +8,33 @@
 
 #include <cxxopts.hpp>
 
-#include "cmds.h"
 #include "env/system_var.h"
 #include "variable_manager.h"
 
 class Shell {
-   public:
-    Shell();
-    int run(cxxopts::ParseResult& result);
+    public:
+        Shell();
+        int run(cxxopts::ParseResult& result);
 
-   private:
-    int output();
-    int exec_cmd(std::vector<std::string>& arg);
-    int exec_shell_builtin(const std::vector<std::string>& arg);
-    std::string preprocess_cmd(const std::string& cmd);
+    private:
+        int output();
+        int exec_cmd(std::vector<std::string>& arg);
+        int exec_shell_builtin(const std::vector<std::string>& arg);
+        std::vector<std::string> process_cmd(const std::string& cmd);
 
-    int runtime_status = 0;
-    VariableManager vars;
+        std::unordered_map<std::string, std::string> alias_map;
+        int runtime_status = 0;
+        VariableManager vars;
+
+        int cmd_alias(const std::vector<std::string>& arg);
+        int cmd_cd(const std::vector<std::string>& arg);
+        int cmd_clear(const std::vector<std::string>& arg);
+        int cmd_echo(const std::vector<std::string>& arg);
+        int cmd_function(const std::vector<std::string>& arg);
+        int cmd_ls(const std::vector<std::string>& arg);
+        int cmd_pwd(const std::vector<std::string>& arg);
+        int cmd_set(const std::vector<std::string>& arg);
+
 };
 
 #endif

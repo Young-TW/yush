@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2023-08-31
+### Added
+- `alias` command
+- parse ' and " in command line arguments
+- $ to use vars in command line arguments
+
 ## [0.5.0] - 2023-08-23
 ### Added
 - fork() to execute external commands
@@ -85,6 +91,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.5.1]: https://github.com/Young-TW/yush/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Young-TW/yush/releases/tag/v0.5.0
 [0.4.4]: https://github.com/Young-TW/yush/releases/tag/v0.4.4
 [0.4.3]: https://github.com/Young-TW/yush/releases/tag/v0.4.3

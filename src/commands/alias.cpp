@@ -1,12 +1,15 @@
-#include "cmds.h"
+#include "shell.h"
 
 #include <string>
 
-int cmds::alias(const std::vector<std::string>& arg, VariableManager& vars) {
-    // add command
-    size_t found = arg.at(1).find("=");
-    std::string cmd_name = arg.at(1).substr(0, found);
-    std::string cmd_content = arg.at(1).substr(found + 1, arg.at(1).size() - 1);
-    // alias_map.insert(cmd_name, cmd_content);
+#include <fmt/format.h>
+
+int Shell::cmd_alias(const std::vector<std::string>& arg) {
+    if (arg.size() != 3) {
+        fmt::print(stderr, "Argument size error.\n");
+        return 1;
+    }
+
+    this->alias_map.emplace(arg[1], arg[2]);
     return 0;
 }
