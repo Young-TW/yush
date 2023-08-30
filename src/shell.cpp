@@ -185,7 +185,25 @@ std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
             continue;
         }
 
-        // TODO: support '
+        if (cmd[i] == '\'') {
+            if (begin == std::string::npos || begin == i - 1) {
+                std::size_t end = cmd.find_first_of('\'', i + 1);
+
+                if (end == std::string::npos) {
+                    end = cmd.size();
+                }
+
+                result.emplace_back(cmd.substr(i + 1, end - i - 1));
+                i = end;
+
+                continue;
+            }
+
+            if (begin != std::string::npos) {
+                result.push_back(cmd.substr(begin, i - begin));
+                begin = std::string::npos;
+            }
+        }
 
         if (cmd[i] == '#') {
             break;
