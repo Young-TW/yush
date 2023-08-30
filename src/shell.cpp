@@ -13,10 +13,10 @@
 #include <cxxopts.hpp>
 
 #include <fmt/format.h>
+#include <fmt/color.h>
 
 #include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
-#include "feature/theme.h"
 #include "common.hpp"
 
 extern char** environ;
