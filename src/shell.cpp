@@ -208,7 +208,7 @@ std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
 }
 
 int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
-    using CommandType = int (Shell::*)(const std::vector<std::string>&, VariableManager&);
+    using CommandType = int (Shell::*)(const std::vector<std::string>&);
 
     static const std::unordered_map<std::string, CommandType> command_map{
         {"alias", &Shell::cmd_alias},
@@ -223,7 +223,7 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
 
     auto command_it = command_map.find(arg[0]);
     if (command_it != command_map.cend()) {
-        return (this->*(command_it->second))(arg, vars);
+        return (this->*(command_it->second))(arg);
     }
 
     return 127;

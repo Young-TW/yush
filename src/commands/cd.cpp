@@ -26,7 +26,7 @@ static int cd_single(std::string_view path,
     return 0;
 }
 
-int Shell::cmd_cd(const std::vector<std::string>& arg, VariableManager& vars) {
+int Shell::cmd_cd(const std::vector<std::string>& arg) {
     if (arg.size() != 2) {
         return 1;
     }

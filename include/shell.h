@@ -26,14 +26,14 @@ class Shell {
         int runtime_status = 0;
         VariableManager vars;
 
-        int cmd_alias(const std::vector<std::string>& arg,VariableManager& vars);
-        int cmd_cd(const std::vector<std::string>& arg,VariableManager& vars);
-        int cmd_clear(const std::vector<std::string>& arg,VariableManager& vars);
-        int cmd_echo(const std::vector<std::string>& arg,VariableManager& vars);
-        int cmd_function(const std::vector<std::string>& arg,VariableManager& vars);
-        int cmd_ls(const std::vector<std::string>& arg,VariableManager& vars);
-        int cmd_pwd(const std::vector<std::string>& arg,VariableManager& vars);
-        int cmd_set(const std::vector<std::string>& arg,VariableManager& vars);
+        int cmd_alias(const std::vector<std::string>& arg);
+        int cmd_cd(const std::vector<std::string>& arg);
+        int cmd_clear(const std::vector<std::string>& arg);
+        int cmd_echo(const std::vector<std::string>& arg);
+        int cmd_function(const std::vector<std::string>& arg);
+        int cmd_ls(const std::vector<std::string>& arg);
+        int cmd_pwd(const std::vector<std::string>& arg);
+        int cmd_set(const std::vector<std::string>& arg);
 
 };
 

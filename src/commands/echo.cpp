@@ -6,7 +6,7 @@
 
 #include <fmt/format.h>
 
-int Shell::cmd_echo(const std::vector<std::string>& arg, VariableManager& vars) {
+int Shell::cmd_echo(const std::vector<std::string>& arg) {
     for (size_t i = 1; i < arg.size(); i++) {
         fmt::print("{} ", arg[i]);
     }
