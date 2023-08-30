@@ -92,7 +92,10 @@ int Shell::run(cxxopts::ParseResult& result) {
     do {
         if (result["interactive"].as<bool>()) {
             this->output();
-            getline(std::cin, input);
+            int current;
+            while((current = std::cin.get()) != '\n' && current != '\\') {
+                input += current;
+            }
         }
 
         std::vector<std::string> arg = process_cmd(input);
