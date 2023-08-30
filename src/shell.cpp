@@ -200,20 +200,30 @@ std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
         result.push_back(cmd.substr(begin));
     }
 
+    if (alias_map.find(cmd) != alias_map.end()) {
+        return process_cmd(alias_map[cmd]);
+    }
+
     return result;
 }
 
 int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
-    static const std::unordered_map<std::string, decltype(&cmd_alias)> command_map{
-        {"alias", cmd_alias},       {"cd", cmd_cd},
-        {"clear", cmd_clear},       {"echo", cmd_echo},
-        {"function", cmd_function}, {"ls", cmd_ls},
-        {"pwd", cmd_pwd},           {"set", cmd_set},
+    using CommandType = int (Shell::*)(const std::vector<std::string>&, VariableManager&);
+
+    static const std::unordered_map<std::string, CommandType> command_map{
+        {"alias", &Shell::cmd_alias},
+        {"cd", &Shell::cmd_cd},
+        {"clear", &Shell::cmd_clear},
+        {"echo", &Shell::cmd_echo},
+        {"function", &Shell::cmd_function},
+        {"ls", &Shell::cmd_ls},
+        {"pwd", &Shell::cmd_pwd},
+        {"set", &Shell::cmd_set},
     };
 
     auto command_it = command_map.find(arg[0]);
     if (command_it != command_map.cend()) {
-        return command_it->second(arg, vars);
+        return (this->*(command_it->second))(arg, vars);
     }
 
     return 127;
