@@ -4,9 +4,11 @@
 
 A simple shell built by Young.
 
-## Installation
+## Documentation
 
-Please read [this page](./docs/tutorial.md) to install yush.
+- [Installation](./docs/installation.md)
+- [Tutorial](./docs/tutorial.md)
+- [Developer Docs](./docs/develop.md)
 
 ## yush Commands
 
@@ -28,3 +30,7 @@ Please read [this page](./docs/tutorial.md) to install yush.
 - [x] Windows [old version](https://github.com/Young-TW/yush/releases/tag/windows-latest)
     - [x] Windows 10
     - [x] Windows 11
+
+## Contributing
+
+Please checkout [CONTRIBUTING.md](./CONTRIBUTING.md).
