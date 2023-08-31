@@ -10,6 +10,6 @@ int Shell::cmd_alias(const std::vector<std::string>& arg) {
         return 1;
     }
 
-    this->alias_map.emplace(arg[1], arg[2]);
+    this->alias.set(arg[1], arg[2]);
     return 0;
 }

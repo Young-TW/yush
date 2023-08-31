@@ -12,12 +12,12 @@ A simple shell built by Young.
 
 ## yush Commands
 
-- [ ] alias
+- [x] alias
 - [x] cd
 - [x] clear
 - [x] echo
 - [x] exit
-- [ ] function
+- [x] function
 - [x] ls
 - [x] pwd
 - [x] set
