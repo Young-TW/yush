@@ -94,7 +94,15 @@ int Shell::run(cxxopts::ParseResult& result) {
         if (result["interactive"].as<bool>()) {
             this->output();
             int current;
-            while ((current = std::cin.get()) != '\n' && current != '\\') {
+            bool is_escaped = false;
+            while ((current = std::cin.get()) != '\n' || is_escaped) {
+                is_escaped = false;
+                if (current == '\n') continue;
+                if (current == '\\') {
+                    is_escaped = true;
+                    continue;
+                }
+
                 input += current;
             }
         }
