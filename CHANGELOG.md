@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.2] - 2023-09-02
+### Added
+- improve `alias`
+- `function` command
+- input escape
+- `getchar` to get input in interactive mode
+
+### Updated
+- cmake minimum version to 3.5.0
+
 ## [0.5.1] - 2023-08-31
 ### Added
 - `alias` command
@@ -91,6 +101,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.5.2]: https://github.com/Young-TW/yush/releases/tag/v0.5.2
 [0.5.1]: https://github.com/Young-TW/yush/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Young-TW/yush/releases/tag/v0.5.0
 [0.4.4]: https://github.com/Young-TW/yush/releases/tag/v0.4.4

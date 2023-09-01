@@ -22,9 +22,10 @@ class Shell {
         int exec_shell_builtin(const std::vector<std::string>& arg);
         std::vector<std::string> process_cmd(const std::string& cmd);
 
-        std::unordered_map<std::string, std::string> alias_map;
         int runtime_status = 0;
         VariableManager vars;
+        VariableManager alias;
+        VariableManager functions;
 
         int cmd_alias(const std::vector<std::string>& arg);
         int cmd_cd(const std::vector<std::string>& arg);

@@ -90,9 +90,21 @@ int Shell::run(cxxopts::ParseResult& result) {
     }
 
     do {
+        input.clear();
         if (result["interactive"].as<bool>()) {
             this->output();
-            getline(std::cin, input);
+            int current;
+            bool is_escaped = false;
+            while ((current = std::cin.get()) != '\n' || is_escaped) {
+                is_escaped = false;
+                if (current == '\n') continue;
+                if (current == '\\') {
+                    is_escaped = true;
+                    continue;
+                }
+
+                input += current;
+            }
         }
 
         std::vector<std::string> arg = process_cmd(input);
@@ -130,6 +142,11 @@ int Shell::output() {
 }
 
 std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
+    if (this->alias.exist(cmd)) {
+        std::string alias_cmd(this->alias.get(cmd));
+        return process_cmd(alias_cmd);
+    }
+
     std::vector<std::string> result;
     std::size_t begin = std::string::npos;
 
@@ -218,10 +235,6 @@ std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
         result.push_back(cmd.substr(begin));
     }
 
-    if (alias_map.find(cmd) != alias_map.end()) {
-        return process_cmd(alias_map[cmd]);
-    }
-
     return result;
 }
 
@@ -250,6 +263,15 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
 int Shell::exec_cmd(std::vector<std::string>& arg) {
     if (arg.empty()) {
         return 0;
+    }
+
+    if (this->functions.exist(arg[0])) {
+        for (const auto& cmd : string_parser(this->functions.get(arg[0]), '\n')) {
+            std::vector<std::string> arg = process_cmd(cmd);
+            runtime_status = exec_cmd(arg);
+        }
+
+        return runtime_status;
     }
 
     int shell_builtin_ans =
