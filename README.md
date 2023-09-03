@@ -14,7 +14,6 @@ A simple shell built by Young.
 
 - [x] alias
 - [x] cd
-- [x] clear
 - [x] echo
 - [x] exit
 - [x] function

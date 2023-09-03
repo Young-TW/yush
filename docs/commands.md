@@ -8,13 +8,12 @@
 
 1. alias
 2. cd
-3. clear
-4. echo
-5. function
-6. help
-7. ls
-8. pwd
-9. set
+3. echo
+4. function
+5. help
+6. ls
+7. pwd
+8. set
 
 ## Normal commands
 
