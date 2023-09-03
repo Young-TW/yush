@@ -31,3 +31,11 @@ function __yush_prompt \
     end \
     echo "$status$__color_reset> " \
 end
+
+alias '/' 'cd /'
+alias '~' 'cd ~'
+alias '..' 'cd ..'
+alias '...' 'cd ../..'
+
+echo "Welcome to yush!"
+echo "edit ~/.yushrc to customize your shell"
