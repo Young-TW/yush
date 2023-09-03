@@ -244,7 +244,6 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
     static const std::unordered_map<std::string, CommandType> command_map{
         {"alias", &Shell::cmd_alias},
         {"cd", &Shell::cmd_cd},
-        {"clear", &Shell::cmd_clear},
         {"echo", &Shell::cmd_echo},
         {"function", &Shell::cmd_function},
         {"ls", &Shell::cmd_ls},
