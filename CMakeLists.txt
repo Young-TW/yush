@@ -8,7 +8,11 @@ include_directories(./include)
 add_subdirectory(cxxopts)
 add_subdirectory(fmt)
 
-file(GLOB_RECURSE SRC_FILES ./src/*.cpp)
+if(WIN32)
+    file(GLOB_RECURSE SRC_FILES ./windows/src/*.cpp)
+else()
+    file(GLOB_RECURSE SRC_FILES ./src/*.cpp)
+endif()
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} cxxopts)
