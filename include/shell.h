@@ -23,12 +23,21 @@ class Shell {
         std::vector<std::string> process_cmd(const std::string& cmd);
 
         int runtime_status = 0;
+        enum return_value {
+            PID_FAILURE = -1,
+            SUCCESS = 0,
+            FAILURE = 1,
+            EXIT = 2,
+            NOT_FOUND = 127,
+        };
+
         VariableManager vars;
         VariableManager alias;
         VariableManager functions;
 
         int cmd_alias(const std::vector<std::string>& arg);
         int cmd_cd(const std::vector<std::string>& arg);
+        int cmd_clear(const std::vector<std::string>& arg);
         int cmd_echo(const std::vector<std::string>& arg);
         int cmd_function(const std::vector<std::string>& arg);
         int cmd_ls(const std::vector<std::string>& arg);

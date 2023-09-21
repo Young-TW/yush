@@ -70,7 +70,7 @@ int Shell::run(cxxopts::ParseResult& result) {
     if (result.count("script")) {
         if (result["script"].as<std::filesystem::path>().empty()) {
             fmt::print(stderr, "Error: script file path is empty\n");
-            return 1;
+            return FAILURE;
         }
 
         std::ifstream fin(result["script"].as<std::filesystem::path>());
@@ -86,7 +86,7 @@ int Shell::run(cxxopts::ParseResult& result) {
 
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
         fmt::print(stderr, "Error: signal handler failed\n");
-        return 1;
+        return FAILURE;
     }
 
     do {
@@ -132,13 +132,13 @@ int Shell::output() {
     fmt::print(fg(fmt::color::cyan),"{} ", vars.get("NAME"));
     fmt::print(fg(fmt::color::purple),"{}\n", path_str_gen(vars.get("HOME")));
 
-    if (runtime_status != 0) {
+    if (runtime_status != SUCCESS) {
         fmt::print(fg(fmt::color::red),"{} > ", runtime_status);
-        return 0;
+        return runtime_status;
     }
 
     fmt::print("> ");
-    return 0;
+    return SUCCESS;
 }
 
 std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
@@ -256,12 +256,12 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         return (this->*(command_it->second))(arg);
     }
 
-    return 127;
+    return NOT_FOUND;
 }
 
 int Shell::exec_cmd(std::vector<std::string>& arg) {
     if (arg.empty()) {
-        return 0;
+        return SUCCESS;
     }
 
     if (this->functions.exist(arg[0])) {
@@ -276,7 +276,7 @@ int Shell::exec_cmd(std::vector<std::string>& arg) {
     int shell_builtin_ans =
         exec_shell_builtin(arg);
 
-    if (shell_builtin_ans != 127) {
+    if (shell_builtin_ans != NOT_FOUND) {
         return shell_builtin_ans;
     }
 
@@ -306,18 +306,18 @@ int Shell::exec_cmd(std::vector<std::string>& arg) {
 
     if (cmd_path_str.empty()) {
         fmt::print(stderr, "Error: command `{}` not found.\n", arg[0]);
-        return 127;
+        return NOT_FOUND;
     }
 
     pid_t pid = fork();
 
-    if (pid == -1) {
-        return -1;
+    if (pid == PID_FAILURE) {
+        return PID_FAILURE;
     }
 
     if (pid > 0) {
         int status;
-        waitpid(pid, &status, 0);
+        waitpid(pid, &status, SUCCESS);
         return status;
     }
 
