@@ -130,7 +130,7 @@ int Shell::output() {
     fmt::print(fg(fmt::color::orange),"\n{}", vars.get("USER"));
     fmt::print("@");
     fmt::print(fg(fmt::color::cyan),"{} ", vars.get("NAME"));
-    fmt::print(fg(fmt::color::purple),"{}\n", path_str_gen(vars.get("HOME")));
+    fmt::print(fg(fmt::color::violet),"{}\n", path_str_gen(vars.get("HOME")));
 
     if (runtime_status != SUCCESS) {
         fmt::print(fg(fmt::color::red),"{} > ", runtime_status);
