@@ -36,6 +36,23 @@ Shell::Shell() {
         vars.set(key, value);
     }
 
+    if (vars.get("HOME").empty()) {
+        fmt::print(stderr, "Error: HOME is not set\n");
+        exit(FAILURE);
+    }
+
+    rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.yushrc");
+    alternitive_rc = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
+    history_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
+    config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
+
+
+    if (!(std::filesystem::exists(this->config_dir) && std::filesystem::is_directory(this->config_dir))) {
+        fmt::print(stderr, "Error: yush config dir path is not exists\n");
+        fmt::print(stdout, "Auto creating config dir\n");
+        std::filesystem::create_directory(config_dir);
+    }
+
     const std::vector<std::string>& arg{
         std::filesystem::current_path().string(),
         std::string(vars.get("HOME")) + "/.yushrc"};
@@ -45,7 +62,7 @@ Shell::Shell() {
         return;
     }
 
-    std::ifstream fin(arg[1]);
+    fin.open(arg[1]);
 
     std::string input;
     while (!fin.eof()) {
@@ -56,6 +73,19 @@ Shell::Shell() {
 
     fin.close();
     std::filesystem::current_path(arg[0]);
+
+    if (this->history_file.empty()) {
+        fmt::print(stderr, "Error: history file path is empty\n");
+        return;
+    } else {
+        fin.open(this->history_file);
+        while (!fin.eof()) {
+            getline(fin, input);
+            this->cmd_history.push(input);
+        }
+
+        fin.close();
+    }
 }
 
 int Shell::run(cxxopts::ParseResult& result) {
@@ -73,7 +103,7 @@ int Shell::run(cxxopts::ParseResult& result) {
             return FAILURE;
         }
 
-        std::ifstream fin(result["script"].as<std::filesystem::path>());
+        fin.open(result["script"].as<std::filesystem::path>());
         while (!fin.eof()) {
             getline(fin, input);
             std::vector<std::string> arg = process_cmd(input);
@@ -88,6 +118,8 @@ int Shell::run(cxxopts::ParseResult& result) {
         fmt::print(stderr, "Error: signal handler failed\n");
         return FAILURE;
     }
+
+    fout.open(this->history_file, std::ios::app);
 
     do {
         input.clear();
@@ -121,6 +153,7 @@ int Shell::run(cxxopts::ParseResult& result) {
         }
 
         runtime_status = exec_cmd(arg);
+        fout << input << '\n';
     } while (!std::cin.eof());
 
     return runtime_status;

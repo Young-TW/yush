@@ -5,6 +5,8 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <stack>
+#include <fstream>
 
 #include <cxxopts.hpp>
 
@@ -17,6 +19,8 @@ class Shell {
         int run(cxxopts::ParseResult& result);
 
     private:
+        std::ifstream fin;
+        std::ofstream fout;
         int output();
         int exec_cmd(std::vector<std::string>& arg);
         int exec_shell_builtin(const std::vector<std::string>& arg);
@@ -31,6 +35,12 @@ class Shell {
             NOT_FOUND = 127,
         };
 
+        std::stack<std::string> cmd_history;
+        std::filesystem::path rc_file;
+        std::filesystem::path alternitive_rc;
+        std::filesystem::path history_file;
+        std::filesystem::path config_dir;
+
         VariableManager vars;
         VariableManager alias;
         VariableManager functions;
@@ -42,7 +52,6 @@ class Shell {
         int cmd_ls(const std::vector<std::string>& arg);
         int cmd_pwd(const std::vector<std::string>& arg);
         int cmd_set(const std::vector<std::string>& arg);
-
 };
 
 #endif
