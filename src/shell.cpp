@@ -54,18 +54,17 @@ Shell::Shell() {
 
     if (!std::filesystem::exists(this->rc_file)) {
         fmt::print(fg(fmt::color::red), "no rc file\n");
-        return;
-    }
+    } else {
+        fin.open(this->rc_file);
+        std::string input;
+        while (!fin.eof()) {
+            getline(fin, input);
+            std::vector<std::string> arg = process_cmd(input);
+            runtime_status = exec_cmd(arg);
+        }
 
-    fin.open(this->rc_file);
-    std::string input;
-    while (!fin.eof()) {
-        getline(fin, input);
-        std::vector<std::string> arg = process_cmd(input);
-        runtime_status = exec_cmd(arg);
+        fin.close();
     }
-
-    fin.close();
 
     if (this->history_file.empty()) {
         fmt::print(stderr, "Error: history file path is empty\n");
