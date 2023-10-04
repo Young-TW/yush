@@ -90,20 +90,23 @@ int Shell::run(cxxopts::ParseResult& result) {
         return exec_cmd(arg);
     }
 
-    if (result.count("script")) {
-        if (result["script"].as<std::filesystem::path>().empty()) {
-            fmt::print(stderr, "Error: script file path is empty\n");
-            return FAILURE;
+    if (result.unmatched().size() >= 1 && !result.unmatched().empty()) {
+        for (auto& script : result.unmatched()) {
+            if (!std::filesystem::exists(script)) {
+                fmt::print(stderr, "Error: script file `{}` not found\n", script);
+                return FAILURE;
+            }
+
+            fin.open(script);
+            while (!fin.eof()) {
+                getline(fin, input);
+                std::vector<std::string> arg = process_cmd(input);
+                runtime_status = exec_cmd(arg);
+            }
+
+            fin.close();
         }
 
-        fin.open(result["script"].as<std::filesystem::path>());
-        while (!fin.eof()) {
-            getline(fin, input);
-            std::vector<std::string> arg = process_cmd(input);
-            runtime_status = exec_cmd(arg);
-        }
-
-        fin.close();
         return runtime_status;
     }
 
