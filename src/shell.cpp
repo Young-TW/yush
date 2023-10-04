@@ -41,11 +41,10 @@ Shell::Shell() {
         exit(FAILURE);
     }
 
-    rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.yushrc");
-    alternitive_rc = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
-    history_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
-    config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
-
+    this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.yushrc");
+    this->alternitive_rc = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
+    this->history_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
+    this->config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
 
     if (!(std::filesystem::exists(this->config_dir) && std::filesystem::is_directory(this->config_dir))) {
         fmt::print(stderr, "Error: yush config dir path is not exists\n");
@@ -53,17 +52,12 @@ Shell::Shell() {
         std::filesystem::create_directory(config_dir);
     }
 
-    const std::vector<std::string>& arg{
-        std::filesystem::current_path().string(),
-        std::string(vars.get("HOME")) + "/.yushrc"};
-
-    if (!std::filesystem::exists(arg[1])) {
+    if (!std::filesystem::exists(this->rc_file)) {
         fmt::print(fg(fmt::color::red), "no rc file\n");
         return;
     }
 
-    fin.open(arg[1]);
-
+    fin.open(this->rc_file);
     std::string input;
     while (!fin.eof()) {
         getline(fin, input);
@@ -72,7 +66,6 @@ Shell::Shell() {
     }
 
     fin.close();
-    std::filesystem::current_path(arg[0]);
 
     if (this->history_file.empty()) {
         fmt::print(stderr, "Error: history file path is empty\n");
