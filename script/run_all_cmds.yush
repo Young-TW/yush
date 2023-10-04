@@ -1,13 +1,12 @@
-alias ll=ls
-ll
+alias hi 'echo hello'
+hi
 
-cd ..
+cd ~
 
 clear
 
 echo hello
-
-help
+echo $PATH
 
 ls
 
