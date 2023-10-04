@@ -71,6 +71,7 @@ Shell::Shell() {
         return;
     } else {
         fin.open(this->history_file);
+        std::string input;
         while (!fin.eof()) {
             getline(fin, input);
             this->cmd_history.push(input);
