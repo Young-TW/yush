@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2023-10-05
+### Added
+- `~/.config/yush/config.yush` file
+- `~/.config/yush/history` file (if not exists, yush will create it)
+- don't need to use `-s` to run script file
+
+### Updated
+- file path color more bright
+- updated old yush script files
+
+### Removed
+- builtin `clear` command
+
 ## [0.5.2] - 2023-09-02
 ### Added
 - improve `alias`
@@ -101,6 +114,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.5.3]: https://github.com/Young-TW/yush/releases/tag/v0.5.3
 [0.5.2]: https://github.com/Young-TW/yush/releases/tag/v0.5.2
 [0.5.1]: https://github.com/Young-TW/yush/releases/tag/v0.5.1
 [0.5.0]: https://github.com/Young-TW/yush/releases/tag/v0.5.0
