@@ -36,26 +36,53 @@ Shell::Shell() {
         vars.set(key, value);
     }
 
-    const std::vector<std::string>& arg{
-        std::filesystem::current_path().string(),
-        std::string(vars.get("HOME")) + "/.yushrc"};
+    if (vars.get("HOME").empty()) {
+        fmt::print(stderr, "Error: HOME is not set\n");
+        exit(FAILURE);
+    }
 
-    if (!std::filesystem::exists(arg[1])) {
+    this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.yushrc");
+    this->alternitive_rc = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
+    this->history_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
+    this->config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
+
+    if (!(std::filesystem::exists(this->config_dir) && std::filesystem::is_directory(this->config_dir))) {
+        fmt::print(stderr, "Error: yush config dir path is not exists\n");
+        fmt::print(stdout, "Auto creating config dir\n");
+        std::filesystem::create_directory(config_dir);
+    }
+
+    if (std::filesystem::exists(this->alternitive_rc) && !this->alternitive_rc.empty()) {
+        this->rc_file = this->alternitive_rc;
+    }
+
+    if (!std::filesystem::exists(this->rc_file)) {
         fmt::print(fg(fmt::color::red), "no rc file\n");
+    } else {
+        fin.open(this->rc_file);
+        std::string input;
+        while (!fin.eof()) {
+            getline(fin, input);
+            std::vector<std::string> arg = process_cmd(input);
+            runtime_status = exec_cmd(arg);
+        }
+
+        fin.close();
+    }
+
+    if (!std::filesystem::exists(this->history_file)) {
+        fmt::print(stderr, "Error: history file path is empty\n");
         return;
+    } else {
+        fin.open(this->history_file);
+        std::string input;
+        while (!fin.eof()) {
+            getline(fin, input);
+            this->cmd_history.push(input);
+        }
+
+        fin.close();
     }
-
-    std::ifstream fin(arg[1]);
-
-    std::string input;
-    while (!fin.eof()) {
-        getline(fin, input);
-        std::vector<std::string> arg = process_cmd(input);
-        runtime_status = exec_cmd(arg);
-    }
-
-    fin.close();
-    std::filesystem::current_path(arg[0]);
 }
 
 int Shell::run(cxxopts::ParseResult& result) {
@@ -67,27 +94,32 @@ int Shell::run(cxxopts::ParseResult& result) {
         return exec_cmd(arg);
     }
 
-    if (result.count("script")) {
-        if (result["script"].as<std::filesystem::path>().empty()) {
-            fmt::print(stderr, "Error: script file path is empty\n");
-            return 1;
+    if (result.unmatched().size() >= 1 && !result.unmatched().empty()) {
+        for (auto& script : result.unmatched()) {
+            if (!std::filesystem::exists(script)) {
+                fmt::print(stderr, "Error: script file `{}` not found\n", script);
+                return FAILURE;
+            }
+
+            fin.open(script);
+            while (!fin.eof()) {
+                getline(fin, input);
+                std::vector<std::string> arg = process_cmd(input);
+                runtime_status = exec_cmd(arg);
+            }
+
+            fin.close();
         }
 
-        std::ifstream fin(result["script"].as<std::filesystem::path>());
-        while (!fin.eof()) {
-            getline(fin, input);
-            std::vector<std::string> arg = process_cmd(input);
-            runtime_status = exec_cmd(arg);
-        }
-
-        fin.close();
         return runtime_status;
     }
 
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
         fmt::print(stderr, "Error: signal handler failed\n");
-        return 1;
+        return FAILURE;
     }
+
+    fout.open(this->history_file, std::ios::app);
 
     do {
         input.clear();
@@ -121,6 +153,7 @@ int Shell::run(cxxopts::ParseResult& result) {
         }
 
         runtime_status = exec_cmd(arg);
+        fout << input << '\n';
     } while (!std::cin.eof());
 
     return runtime_status;
@@ -130,15 +163,15 @@ int Shell::output() {
     fmt::print(fg(fmt::color::orange),"\n{}", vars.get("USER"));
     fmt::print("@");
     fmt::print(fg(fmt::color::cyan),"{} ", vars.get("NAME"));
-    fmt::print(fg(fmt::color::purple),"{}\n", path_str_gen(vars.get("HOME")));
+    fmt::print(fg(fmt::color::violet),"{}\n", path_str_gen(vars.get("HOME")));
 
-    if (runtime_status != 0) {
+    if (runtime_status != SUCCESS) {
         fmt::print(fg(fmt::color::red),"{} > ", runtime_status);
-        return 0;
+        return runtime_status;
     }
 
     fmt::print("> ");
-    return 0;
+    return SUCCESS;
 }
 
 std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
@@ -244,7 +277,6 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
     static const std::unordered_map<std::string, CommandType> command_map{
         {"alias", &Shell::cmd_alias},
         {"cd", &Shell::cmd_cd},
-        {"clear", &Shell::cmd_clear},
         {"echo", &Shell::cmd_echo},
         {"function", &Shell::cmd_function},
         {"ls", &Shell::cmd_ls},
@@ -257,12 +289,12 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         return (this->*(command_it->second))(arg);
     }
 
-    return 127;
+    return NOT_FOUND;
 }
 
 int Shell::exec_cmd(std::vector<std::string>& arg) {
     if (arg.empty()) {
-        return 0;
+        return SUCCESS;
     }
 
     if (this->functions.exist(arg[0])) {
@@ -277,7 +309,7 @@ int Shell::exec_cmd(std::vector<std::string>& arg) {
     int shell_builtin_ans =
         exec_shell_builtin(arg);
 
-    if (shell_builtin_ans != 127) {
+    if (shell_builtin_ans != NOT_FOUND) {
         return shell_builtin_ans;
     }
 
@@ -307,18 +339,18 @@ int Shell::exec_cmd(std::vector<std::string>& arg) {
 
     if (cmd_path_str.empty()) {
         fmt::print(stderr, "Error: command `{}` not found.\n", arg[0]);
-        return 127;
+        return NOT_FOUND;
     }
 
     pid_t pid = fork();
 
-    if (pid == -1) {
-        return -1;
+    if (pid == PID_FAILURE) {
+        return PID_FAILURE;
     }
 
     if (pid > 0) {
         int status;
-        waitpid(pid, &status, 0);
+        waitpid(pid, &status, SUCCESS);
         return status;
     }
 
