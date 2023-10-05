@@ -52,6 +52,10 @@ Shell::Shell() {
         std::filesystem::create_directory(config_dir);
     }
 
+    if (std::filesystem::exists(this->alternitive_rc) && !this->alternitive_rc.empty()) {
+        this->rc_file = this->alternitive_rc;
+    }
+
     if (!std::filesystem::exists(this->rc_file)) {
         fmt::print(fg(fmt::color::red), "no rc file\n");
     } else {
@@ -66,7 +70,7 @@ Shell::Shell() {
         fin.close();
     }
 
-    if (this->history_file.empty()) {
+    if (!std::filesystem::exists(this->history_file)) {
         fmt::print(stderr, "Error: history file path is empty\n");
         return;
     } else {
