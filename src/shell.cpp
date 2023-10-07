@@ -124,19 +124,50 @@ int Shell::run(cxxopts::ParseResult& result) {
     do {
         input.clear();
         if (result["interactive"].as<bool>()) {
-            this->output();
-            int current;
-            bool is_escaped = false;
-            while ((current = std::cin.get()) != '\n' || is_escaped) {
-                is_escaped = false;
-                if (current == '\n') continue;
-                if (current == '\\') {
-                    is_escaped = true;
-                    continue;
-                }
+            struct termios old_termios, new_termios;
+            tcgetattr(STDIN_FILENO, &old_termios);
+            new_termios = old_termios;
+            new_termios.c_lflag &= ~(ICANON | ECHO);
+            tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
 
-                input += current;
+            int current;
+            this->output();
+            while (1) {
+                current = std::cin.get();
+                if (current == 27) {
+                    int key1 = std::cin.get();
+                    int key2 = std::cin.get();
+                    if (key1 == '[') {
+                        switch (key2) {
+                            case 'A':
+                                std::cout << "Up arrow key pressed." << std::endl;
+                                break;
+                            case 'B':
+                                std::cout << "Down arrow key pressed." << std::endl;
+                                break;
+                            case 'C':
+                                fmt::print("\033[C");
+                                break;
+                            case 'D':
+                                fmt::print("\033[D");
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                } else if (!input.empty() && (current == 8 || current == 127)) {
+                    fmt::print("\b \b");
+                    input.pop_back();
+                } else if (current == 10) {
+                    fmt::print("\n");
+                    break;
+                } else {
+                    input += static_cast<char>(current);
+                    fmt::print("{}", static_cast<char>(current));
+                }
             }
+
+            tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
         }
 
         std::vector<std::string> arg = process_cmd(input);
