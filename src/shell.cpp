@@ -122,73 +122,9 @@ int Shell::run(cxxopts::ParseResult& result) {
     fout.open(this->history_file, std::ios::app);
 
     do {
-        input.clear();
         if (result["interactive"].as<bool>()) {
-            struct termios old_termios, new_termios;
-            tcgetattr(STDIN_FILENO, &old_termios);
-            new_termios = old_termios;
-            new_termios.c_lflag &= ~(ICANON | ECHO);
-            tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
-
-            int current;
-            int history_index = 0;
             this->output();
-            while (1) {
-                current = std::cin.get();
-                if (current == 27) {
-                    int key1 = std::cin.get();
-                    int key2 = std::cin.get();
-                    if (key1 == '[') {
-                        switch (key2) {
-                            case 'A':
-                                if (!input.empty() && history_index < this->cmd_history.size()) {
-                                    history_index++;
-                                    // fmt::print("\033[2K\r");
-                                    input = this->cmd_history[history_index];
-                                    fmt::print("> {}", input);
-                                }
-
-                                break;
-                            case 'B':
-                                if (!input.empty() && history_index > 0) {
-                                    // fmt::print("\033[2K\r");
-                                    history_index--;
-                                    if (history_index == 0) {
-                                        input.clear();
-                                    } else {
-                                        input = this->cmd_history[history_index];
-                                    }
-                                    fmt::print("> {}", input);
-                                }
-
-                                break;
-                            case 'C':
-                                fmt::print("\033[C");
-
-                                break;
-                            case 'D':
-                                if (!input.empty()) {
-                                    fmt::print("\033[D");
-                                }
-
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                } else if (!input.empty() && (current == 8 || current == 127)) {
-                    fmt::print("\b \b");
-                    input.pop_back();
-                } else if (current == 10) {
-                    fmt::print("\n");
-                    break;
-                } else {
-                    input += static_cast<char>(current);
-                    fmt::print("{}", static_cast<char>(current));
-                }
-            }
-
-            tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
+            input = this->read();
         }
 
         std::vector<std::string> arg = process_cmd(input);
@@ -224,6 +160,75 @@ int Shell::output() {
 
     fmt::print("> ");
     return SUCCESS;
+}
+
+std::string Shell::read() {
+    std::string input;
+    struct termios old_termios, new_termios;
+    tcgetattr(STDIN_FILENO, &old_termios);
+    new_termios = old_termios;
+    new_termios.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
+
+    int current;
+    int history_index = 0;
+    while (1) {
+        current = std::cin.get();
+        if (current == 27) {
+            int key1 = std::cin.get();
+            int key2 = std::cin.get();
+            if (key1 == '[') {
+                switch (key2) {
+                    case 'A':
+                        if (!input.empty() && history_index < this->cmd_history.size()) {
+                            history_index++;
+                            // fmt::print("\033[2K\r");
+                            input = this->cmd_history[history_index];
+                            fmt::print("> {}", input);
+                        }
+
+                        break;
+                    case 'B':
+                        if (!input.empty() && history_index > 0) {
+                            // fmt::print("\033[2K\r");
+                            history_index--;
+                            if (history_index == 0) {
+                                input.clear();
+                            } else {
+                                input = this->cmd_history[history_index];
+                            }
+                            fmt::print("> {}", input);
+                        }
+
+                        break;
+                    case 'C':
+                        fmt::print("\033[C");
+
+                        break;
+                    case 'D':
+                        if (!input.empty()) {
+                            fmt::print("\033[D");
+                        }
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } else if (!input.empty() && (current == 8 || current == 127)) {
+            fmt::print("\b \b");
+            input.pop_back();
+        } else if (current == 10) {
+            fmt::print("\n");
+            break;
+        } else {
+            input += static_cast<char>(current);
+            fmt::print("{}", static_cast<char>(current));
+        }
+    }
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
+    return input;
 }
 
 std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
