@@ -141,7 +141,10 @@ int Shell::run(cxxopts::ParseResult& result) {
         }
 
         runtime_status = exec_cmd(arg);
-        fout << input << '\n';
+        if (!input.empty()) {
+            fout << input << std::endl;
+        }
+
     } while (!std::cin.eof());
 
     return runtime_status;
@@ -171,7 +174,8 @@ std::string Shell::read() {
     tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
 
     int current;
-    int history_index = 0;
+    int curser_index = 0;
+    int history_index = this->cmd_history.size();
     while (1) {
         current = std::cin.get();
         if (current == 27) {
@@ -180,34 +184,51 @@ std::string Shell::read() {
             if (key1 == '[') {
                 switch (key2) {
                     case 'A':
-                        if (!input.empty() && history_index < this->cmd_history.size()) {
-                            history_index++;
-                            // fmt::print("\033[2K\r");
+                        if (history_index > 0) {
+                            history_index--;
+                            for (int i=0; i<input.size(); i++) {
+                                fmt::print("\b \b");
+                            }
+
                             input = this->cmd_history[history_index];
-                            fmt::print("> {}", input);
+                            fmt::print("{}", input);
+                            curser_index = input.size();
                         }
 
                         break;
                     case 'B':
-                        if (!input.empty() && history_index > 0) {
-                            // fmt::print("\033[2K\r");
-                            history_index--;
-                            if (history_index == 0) {
+                        if (history_index < this->cmd_history.size()) {
+                            history_index++;
+                            if (history_index == this->cmd_history.size()) {
+                                for (int i=0; i<input.size(); i++) {
+                                    fmt::print("\b \b");
+                                }
+
                                 input.clear();
                             } else {
+                                for (int i=0; i<input.size(); i++) {
+                                    fmt::print("\b \b");
+                                }
+
                                 input = this->cmd_history[history_index];
                             }
-                            fmt::print("> {}", input);
+
+                            curser_index = input.size();
+                            fmt::print("{}", input);
                         }
 
                         break;
                     case 'C':
-                        fmt::print("\033[C");
+                        if (curser_index < input.size()) {
+                            fmt::print("\033[C");
+                            curser_index++;
+                        }
 
                         break;
                     case 'D':
-                        if (!input.empty()) {
+                        if (curser_index > 0) {
                             fmt::print("\033[D");
+                            curser_index--;
                         }
 
                         break;
@@ -215,7 +236,7 @@ std::string Shell::read() {
                         break;
                 }
             }
-        } else if (!input.empty() && (current == 8 || current == 127)) {
+        } else if (curser_index > 0 && !input.empty() && (current == 8 || current == 127)) {
             fmt::print("\b \b");
             input.pop_back();
         } else if (current == 10) {
@@ -223,6 +244,7 @@ std::string Shell::read() {
             break;
         } else {
             input += static_cast<char>(current);
+            curser_index++;
             fmt::print("{}", static_cast<char>(current));
         }
     }
