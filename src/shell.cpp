@@ -78,7 +78,7 @@ Shell::Shell() {
         std::string input;
         while (!fin.eof()) {
             getline(fin, input);
-            this->cmd_history.push(input);
+            this->cmd_history.push_back(input);
         }
 
         fin.close();
@@ -131,6 +131,7 @@ int Shell::run(cxxopts::ParseResult& result) {
             tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
 
             int current;
+            int history_index = 0;
             this->output();
             while (1) {
                 current = std::cin.get();
@@ -140,16 +141,36 @@ int Shell::run(cxxopts::ParseResult& result) {
                     if (key1 == '[') {
                         switch (key2) {
                             case 'A':
-                                std::cout << "Up arrow key pressed." << std::endl;
+                                if (!input.empty() && history_index < this->cmd_history.size()) {
+                                    history_index++;
+                                    // fmt::print("\033[2K\r");
+                                    input = this->cmd_history[history_index];
+                                    fmt::print("> {}", input);
+                                }
+
                                 break;
                             case 'B':
-                                std::cout << "Down arrow key pressed." << std::endl;
+                                if (!input.empty() && history_index > 0) {
+                                    // fmt::print("\033[2K\r");
+                                    history_index--;
+                                    if (history_index == 0) {
+                                        input.clear();
+                                    } else {
+                                        input = this->cmd_history[history_index];
+                                    }
+                                    fmt::print("> {}", input);
+                                }
+
                                 break;
                             case 'C':
                                 fmt::print("\033[C");
+
                                 break;
                             case 'D':
-                                fmt::print("\033[D");
+                                if (!input.empty()) {
+                                    fmt::print("\033[D");
+                                }
+
                                 break;
                             default:
                                 break;

@@ -5,7 +5,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-#include <stack>
 #include <fstream>
 
 #include <cxxopts.hpp>
@@ -35,7 +34,7 @@ class Shell {
             NOT_FOUND = 127,
         };
 
-        std::stack<std::string> cmd_history;
+        std::vector<std::string> cmd_history;
         std::filesystem::path rc_file;
         std::filesystem::path alternitive_rc;
         std::filesystem::path history_file;
