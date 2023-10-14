@@ -236,9 +236,12 @@ std::string Shell::read() {
                         break;
                 }
             }
-        } else if (curser_index > 0 && !input.empty() && (current == 8 || current == 127)) {
-            fmt::print("\b \b");
-            input.pop_back();
+        } else if ((current == 8 || current == 127)) {
+            if (curser_index > 0) {
+                fmt::print("\b \b");
+                curser_index--;
+                input.pop_back();
+            }
         } else if (current == 10) {
             fmt::print("\n");
             break;
