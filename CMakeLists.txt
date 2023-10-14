@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.0)
-project(yush VERSION 0.5.3)
+project(yush VERSION 0.6.0)
 
 set(CMAKE_CXX_STANDARD 23)
 

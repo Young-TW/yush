@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2023-10-14
+### Added
+- termios to read arrow key input
+- read past commands from history file
+
 ## [0.5.3] - 2023-10-05
 ### Added
 - `~/.config/yush/config.yush` file
@@ -114,6 +119,7 @@ Remove Windows support after this version
 ### Added
 - Initial release
 
+[0.6.0]: https://github.com/Young-TW/yush/releases/tag/v0.6.0
 [0.5.3]: https://github.com/Young-TW/yush/releases/tag/v0.5.3
 [0.5.2]: https://github.com/Young-TW/yush/releases/tag/v0.5.2
 [0.5.1]: https://github.com/Young-TW/yush/releases/tag/v0.5.1
