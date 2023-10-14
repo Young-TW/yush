@@ -5,7 +5,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-#include <stack>
 #include <fstream>
 
 #include <cxxopts.hpp>
@@ -22,6 +21,7 @@ class Shell {
         std::ifstream fin;
         std::ofstream fout;
         int output();
+        std::string read();
         int exec_cmd(std::vector<std::string>& arg);
         int exec_shell_builtin(const std::vector<std::string>& arg);
         std::vector<std::string> process_cmd(const std::string& cmd);
@@ -35,7 +35,7 @@ class Shell {
             NOT_FOUND = 127,
         };
 
-        std::stack<std::string> cmd_history;
+        std::vector<std::string> cmd_history;
         std::filesystem::path rc_file;
         std::filesystem::path alternitive_rc;
         std::filesystem::path history_file;
