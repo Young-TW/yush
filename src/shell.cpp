@@ -361,6 +361,7 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         {"cd", &Shell::cmd_cd},
         {"echo", &Shell::cmd_echo},
         {"function", &Shell::cmd_function},
+        {"if", &Shell::cmd_if},
         {"ls", &Shell::cmd_ls},
         {"pwd", &Shell::cmd_pwd},
         {"set", &Shell::cmd_set},

@@ -49,6 +49,7 @@ class Shell {
         int cmd_cd(const std::vector<std::string>& arg);
         int cmd_echo(const std::vector<std::string>& arg);
         int cmd_function(const std::vector<std::string>& arg);
+        int cmd_if(const std::vector<std::string>& arg);
         int cmd_ls(const std::vector<std::string>& arg);
         int cmd_pwd(const std::vector<std::string>& arg);
         int cmd_set(const std::vector<std::string>& arg);
