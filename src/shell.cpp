@@ -236,12 +236,10 @@ std::string Shell::read() {
                         break;
                 }
             }
-        } else if ((current == 8 || current == 127)) {
-            if (curser_index > 0) {
-                fmt::print("\b \b");
-                curser_index--;
-                input.pop_back();
-            }
+        } else if ((current == 8 || current == 127) && curser_index > 0) {
+            input.erase(curser_index - 1, 1);
+            fmt::print("\b \b");
+            curser_index--;
         } else if (current == 10) {
             fmt::print("\n");
             break;
