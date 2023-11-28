@@ -240,6 +240,18 @@ std::string Shell::read() {
             input.erase(curser_index - 1, 1);
             fmt::print("\b \b");
             curser_index--;
+            int old_input_size = input.size() + 1;
+            for (int i = curser_index; i < input.size(); i++) {
+                fmt::print("{}", input[i]);
+            }
+
+            for (int i = input.size(); i < old_input_size; i++) {
+                fmt::print(" ");
+            }
+
+            for (int i = curser_index; i < old_input_size; i++) {
+                fmt::print("\033[D");
+            }
         } else if (current == 10) {
             fmt::print("\n");
             break;
