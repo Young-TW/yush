@@ -1,15 +1,15 @@
-# yush – Young's Shell
+# yush install script
 
 # build
 
 echo "start Build"
 
-cmake . -B build
+cmake -B build
 
 cmake --build build --config RELEASE
 
 # install
 
-cmake --install build
+cmake --install build --config RELEASE
 
 echo "yush installed successfully"

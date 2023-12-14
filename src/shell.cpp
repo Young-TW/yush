@@ -236,11 +236,21 @@ std::string Shell::read() {
                         break;
                 }
             }
-        } else if ((current == 8 || current == 127)) {
-            if (curser_index > 0) {
-                fmt::print("\b \b");
-                curser_index--;
-                input.pop_back();
+        } else if ((current == 8 || current == 127) && curser_index > 0) {
+            input.erase(curser_index - 1, 1);
+            fmt::print("\b \b");
+            curser_index--;
+            int old_input_size = input.size() + 1;
+            for (int i = curser_index; i < input.size(); i++) {
+                fmt::print("{}", input[i]);
+            }
+
+            for (int i = input.size(); i < old_input_size; i++) {
+                fmt::print(" ");
+            }
+
+            for (int i = curser_index; i < old_input_size; i++) {
+                fmt::print("\033[D");
             }
         } else if (current == 10) {
             fmt::print("\n");
@@ -361,6 +371,7 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         {"cd", &Shell::cmd_cd},
         {"echo", &Shell::cmd_echo},
         {"function", &Shell::cmd_function},
+        {"if", &Shell::cmd_if},
         {"ls", &Shell::cmd_ls},
         {"pwd", &Shell::cmd_pwd},
         {"set", &Shell::cmd_set},

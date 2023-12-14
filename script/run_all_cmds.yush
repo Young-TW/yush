@@ -3,8 +3,9 @@ hi
 
 cd ~
 
-clear
+set a 10
 
+echo $a
 echo hello
 echo $PATH
 
@@ -12,4 +13,5 @@ ls
 
 pwd
 
-exit
+function hello \
+    echo "hello world"

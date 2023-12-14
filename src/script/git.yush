@@ -1,0 +1,4 @@
+if ./git exists
+    # get current branch
+    set git_branch_file ./git/HEAD
+    set git_branch (cat $git_branch_file | sed -e 's/^ref: refs\/heads\///')
