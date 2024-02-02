@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2024-02-03
+
+### Added
+
+- pre-push hook to run tests before push
+- github actions build docker image and push to dockerhub
+
+### Updated
+
+- github actions checkout version to v4
+- line1 `#!/usr/bin/yush` of every yush scripts
+
+### Fixed
+
+- Dockerfile build error
+
 ## [0.6.1] - 2023-12-14
 
 ### Fixed
@@ -175,6 +191,7 @@ Remove Windows support after this version
 
 - Initial release
 
+[0.6.2]: https://github.com/Young-TW/yush/releases/tag/v0.6.2
 [0.6.1]: https://github.com/Young-TW/yush/releases/tag/v0.6.1
 [0.6.0]: https://github.com/Young-TW/yush/releases/tag/v0.6.0
 [0.5.3]: https://github.com/Young-TW/yush/releases/tag/v0.5.3
