@@ -9,7 +9,10 @@ RUN \
     apt install -y build-essential git cmake
 
 COPY . .
-RUN mkdir build && cmake -B build && cmake --build build -j $(nproc)
+
+RUN \
+    cmake -B build && \
+    cmake --build build -j $(nproc)
 
 FROM ubuntu:rolling
 
