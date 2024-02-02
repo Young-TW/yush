@@ -1,0 +1,3 @@
+#!/usr/bin/yush
+
+mv ./.githooks/pre-push ./.git/hooks/pre-push
