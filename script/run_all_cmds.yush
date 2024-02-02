@@ -1,3 +1,5 @@
+#!/usr/bin/yush
+
 alias hi 'echo hello'
 hi
 

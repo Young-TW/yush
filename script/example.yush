@@ -1,3 +1,5 @@
+#!/usr/bin/yush
+
 ls
 whoami
 echo $SYSTEM
