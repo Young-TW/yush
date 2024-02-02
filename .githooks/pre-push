@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Run CMake build
+cmake --build build
+
+# Check the exit code of the build command
+if [ $? -ne 0 ]; then
+    echo "CMake build failed. Aborting push."
+    exit 1
+fi
+
+# If the build was successful, allow the push to proceed
+exit 0
