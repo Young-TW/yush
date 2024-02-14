@@ -41,8 +41,7 @@ Shell::Shell() {
         exit(FAILURE);
     }
 
-    this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.yushrc");
-    this->alternitive_rc = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
+    this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
     this->history_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
     this->config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
 
@@ -52,11 +51,7 @@ Shell::Shell() {
         std::filesystem::create_directory(config_dir);
     }
 
-    if (std::filesystem::exists(this->alternitive_rc) && !this->alternitive_rc.empty()) {
-        this->rc_file = this->alternitive_rc;
-    }
-
-    if (std::filesystem::exists(this->rc_file)) {{
+    if (std::filesystem::exists(this->rc_file)) {
         fin.open(this->rc_file);
         std::string input;
         while (!fin.eof()) {
