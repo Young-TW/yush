@@ -56,9 +56,7 @@ Shell::Shell() {
         this->rc_file = this->alternitive_rc;
     }
 
-    if (!std::filesystem::exists(this->rc_file)) {
-        fmt::print(fg(fmt::color::red), "no rc file\n");
-    } else {
+    if (std::filesystem::exists(this->rc_file)) {{
         fin.open(this->rc_file);
         std::string input;
         while (!fin.eof()) {
