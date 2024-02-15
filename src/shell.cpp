@@ -52,15 +52,7 @@ Shell::Shell() {
     }
 
     if (std::filesystem::exists(this->rc_file)) {
-        fin.open(this->rc_file);
-        std::string input;
-        while (!fin.eof()) {
-            getline(fin, input);
-            std::vector<std::string> arg = process_cmd(input);
-            runtime_status = exec_cmd(arg);
-        }
-
-        fin.close();
+        this->run(this->rc_file);
     }
 
     if (!std::filesystem::exists(this->history_file)) {
@@ -85,26 +77,6 @@ int Shell::run(cxxopts::ParseResult& result) {
         std::string input = result["command"].as<std::string>();
         std::vector<std::string> arg = process_cmd(input);
         return exec_cmd(arg);
-    }
-
-    if (result.unmatched().size() >= 1 && !result.unmatched().empty()) {
-        for (auto& script : result.unmatched()) {
-            if (!std::filesystem::exists(script)) {
-                fmt::print(stderr, "Error: script file `{}` not found\n", script);
-                return FAILURE;
-            }
-
-            fin.open(script);
-            while (!fin.eof()) {
-                getline(fin, input);
-                std::vector<std::string> arg = process_cmd(input);
-                runtime_status = exec_cmd(arg);
-            }
-
-            fin.close();
-        }
-
-        return runtime_status;
     }
 
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
@@ -140,6 +112,24 @@ int Shell::run(cxxopts::ParseResult& result) {
 
     } while (!std::cin.eof());
 
+    return runtime_status;
+}
+
+int Shell::run(const std::filesystem::path& file) {
+    if (!std::filesystem::exists(file)) {
+        fmt::print(stderr, "Error: script file `{}` not found\n", file.string());
+        return FAILURE;
+    }
+
+    fin.open(file);
+    std::string input;
+    while (!fin.eof()) {
+        getline(fin, input);
+        std::vector<std::string> arg = process_cmd(input);
+        runtime_status = exec_cmd(arg);
+    }
+
+    fin.close();
     return runtime_status;
 }
 

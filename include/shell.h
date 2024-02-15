@@ -16,6 +16,7 @@ class Shell {
     public:
         Shell();
         int run(cxxopts::ParseResult& result);
+        int run(const std::filesystem::path& file);
 
     private:
         std::ifstream fin;
@@ -37,7 +38,6 @@ class Shell {
 
         std::vector<std::string> cmd_history;
         std::filesystem::path rc_file;
-        std::filesystem::path alternitive_rc;
         std::filesystem::path history_file;
         std::filesystem::path config_dir;
 
