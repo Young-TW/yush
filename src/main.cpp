@@ -32,5 +32,9 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
+    if (result.unmatched().size() > 0) {
+        return Shell().run(result.unmatched().at(0));
+    }
+
     return Shell().run(result);
 }

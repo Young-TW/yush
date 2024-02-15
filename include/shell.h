@@ -23,6 +23,7 @@ class Shell {
         std::ofstream fout;
         int output();
         std::string read();
+        std::string read(std::istream& input_stream);
         int exec_cmd(std::vector<std::string>& arg);
         int exec_shell_builtin(const std::vector<std::string>& arg);
         std::vector<std::string> process_cmd(const std::string& cmd);

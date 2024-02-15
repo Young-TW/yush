@@ -124,7 +124,7 @@ int Shell::run(const std::filesystem::path& file) {
     fin.open(file);
     std::string input;
     while (!fin.eof()) {
-        getline(fin, input);
+        input = this->read(fin);
         std::vector<std::string> arg = process_cmd(input);
         runtime_status = exec_cmd(arg);
     }
@@ -246,6 +246,16 @@ std::string Shell::read() {
     }
 
     tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
+    return input;
+}
+
+std::string Shell::read(std::istream& input_stream) {
+    std::string input;
+    std::getline(input_stream, input);
+    if (input[input.length()-1] == '\\') {
+        input += read(input_stream);
+    }
+
     return input;
 }
 
