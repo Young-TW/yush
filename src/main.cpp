@@ -36,5 +36,5 @@ int main(int argc, char *argv[]) {
         return Shell().run(result.unmatched().at(0));
     }
 
-    return Shell().run(result);
+    return shell.run(result);
 }

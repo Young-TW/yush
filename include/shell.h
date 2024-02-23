@@ -6,8 +6,12 @@
 #include <string_view>
 #include <vector>
 #include <fstream>
+#include <set>
+#include <map>
 
 #include <cxxopts.hpp>
+
+#include "command.h"
 
 #include "env/system_var.h"
 #include "variable_manager.h"
@@ -24,9 +28,7 @@ class Shell {
         int output();
         std::string read();
         std::string read(std::istream& input_stream);
-        int exec_cmd(std::vector<std::string>& arg);
         int exec_shell_builtin(const std::vector<std::string>& arg);
-        std::vector<std::string> process_cmd(const std::string& cmd);
 
         int runtime_status = 0;
         enum return_value {
@@ -43,7 +45,7 @@ class Shell {
         std::filesystem::path config_dir;
 
         VariableManager vars;
-        VariableManager alias;
+        std::set<std::map<std::string, Command>> alias;
         VariableManager functions;
 
         int cmd_alias(const std::vector<std::string>& arg);
@@ -54,6 +56,10 @@ class Shell {
         int cmd_ls(const std::vector<std::string>& arg);
         int cmd_pwd(const std::vector<std::string>& arg);
         int cmd_set(const std::vector<std::string>& arg);
+
+    friend class Command;
 };
+
+static Shell shell;
 
 #endif
