@@ -39,7 +39,7 @@ Shell::Shell() {
 
     if (vars.get("HOME").empty()) {
         fmt::print(stderr, "Error: HOME is not set\n");
-        exit(FAILURE);
+        exit(1);
     }
 
     this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
@@ -82,7 +82,7 @@ int Shell::run(cxxopts::ParseResult& result) {
 
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
         fmt::print(stderr, "Error: signal handler failed\n");
-        return FAILURE;
+        return 1;
     }
 
     fout.open(this->history_file, std::ios::app);
@@ -119,7 +119,7 @@ int Shell::run(cxxopts::ParseResult& result) {
 int Shell::run(const std::filesystem::path& file) {
     if (!std::filesystem::exists(file)) {
         fmt::print(stderr, "Error: script file `{}` not found\n", file.string());
-        return FAILURE;
+        return 1;
     }
 
     fin.open(file);
@@ -140,13 +140,13 @@ int Shell::output() {
     fmt::print(fg(fmt::color::cyan),"{} ", vars.get("NAME"));
     fmt::print(fg(fmt::color::violet),"{}\n", path_str_gen(vars.get("HOME")));
 
-    if (runtime_status != SUCCESS) {
+    if (runtime_status != 0) {
         fmt::print(fg(fmt::color::red),"{} > ", runtime_status);
         return runtime_status;
     }
 
     fmt::print("> ");
-    return SUCCESS;
+    return 0;
 }
 
 std::string Shell::read() {
@@ -279,5 +279,5 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         return (this->*(command_it->second))(arg);
     }
 
-    return NOT_FOUND;
+    return 127;
 }

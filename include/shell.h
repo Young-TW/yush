@@ -31,13 +31,6 @@ class Shell {
         int exec_shell_builtin(const std::vector<std::string>& arg);
 
         int runtime_status = 0;
-        enum return_value {
-            PID_FAILURE = -1,
-            SUCCESS = 0,
-            FAILURE = 1,
-            EXIT = 2,
-            NOT_FOUND = 127,
-        };
 
         std::vector<std::string> cmd_history;
         std::filesystem::path rc_file;

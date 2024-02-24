@@ -133,7 +133,7 @@ int Command::parse() {
 
 int Command::exec() {
     if (this->args.empty()) {
-        return SUCCESS;
+        return 0;
     }
 
     /*
@@ -150,7 +150,7 @@ int Command::exec() {
     int shell_builtin_ans =
         shell.exec_shell_builtin(this->args);
 
-    if (shell_builtin_ans != NOT_FOUND) {
+    if (shell_builtin_ans != 127) {
         return shell_builtin_ans;
     }
 
@@ -180,18 +180,18 @@ int Command::exec() {
 
     if (cmd_path_str.empty()) {
         fmt::print(stderr, "Error: command `{}` not found.\n", args[0]);
-        return NOT_FOUND;
+        return 127;
     }
 
     pid_t pid = fork();
 
-    if (pid == PID_FAILURE) {
-        return PID_FAILURE;
+    if (pid == -1) {
+        return -1;
     }
 
     if (pid > 0) {
         int status;
-        waitpid(pid, &status, SUCCESS);
+        waitpid(pid, &status, 0);
         return status;
     }
 
