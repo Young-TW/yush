@@ -74,12 +74,6 @@ Shell::Shell() {
 int Shell::run(cxxopts::ParseResult& result) {
     Command command;
 
-    if (result.count("command")) {
-        command.assign(result["command"].as<std::string>());
-        command.parse();
-        return command.exec();
-    }
-
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
         fmt::print(stderr, "Error: signal handler failed\n");
         return 1;
