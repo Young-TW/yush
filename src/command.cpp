@@ -40,14 +40,13 @@ int Command::parse() {
         return this->assign(alias_cmd);
     }
     */
-
-    std::vector<std::string> result;
+    this->args.clear();
     std::size_t begin = std::string::npos;
 
     for (std::size_t i = 0; i < this->command.size(); i++) {
         if (this->command[i] == ' ') {
             if (begin != std::string::npos) {
-                result.push_back(this->command.substr(begin, i - begin));
+                this->args.push_back(this->command.substr(begin, i - begin));
                 begin = std::string::npos;
             }
 
@@ -56,7 +55,7 @@ int Command::parse() {
 
         if (this->command[i] == '$') {
             if (begin != std::string::npos) {
-                result.push_back(this->command.substr(begin, i - begin));
+                this->args.push_back(this->command.substr(begin, i - begin));
                 begin = std::string::npos;
             }
 
@@ -69,7 +68,7 @@ int Command::parse() {
             }
 
             std::string var_name = this->command.substr(i + 1, end - i - 1);
-            result.emplace_back(shell.vars.get(var_name));
+            this->args.emplace_back(shell.vars.get(var_name));
             i = end - 1;
             continue;
         }
@@ -80,7 +79,7 @@ int Command::parse() {
             }
 
             if (begin != std::string::npos) {
-                result.push_back(this->command.substr(begin, i - begin));
+                this->args.push_back(this->command.substr(begin, i - begin));
                 begin = std::string::npos;
             }
 
@@ -90,7 +89,7 @@ int Command::parse() {
                 end = this->command.size();
             }
 
-            result.emplace_back(this->command.substr(i + 1, end - i - 1));
+            this->args.emplace_back(this->command.substr(i + 1, end - i - 1));
             i = end;
 
             continue;
@@ -104,14 +103,14 @@ int Command::parse() {
                     end = this->command.size();
                 }
 
-                result.emplace_back(this->command.substr(i + 1, end - i - 1));
+                this->args.emplace_back(this->command.substr(i + 1, end - i - 1));
                 i = end;
 
                 continue;
             }
 
             if (begin != std::string::npos) {
-                result.push_back(this->command.substr(begin, i - begin));
+                this->args.push_back(this->command.substr(begin, i - begin));
                 begin = std::string::npos;
             }
         }
@@ -126,10 +125,8 @@ int Command::parse() {
     }
 
     if (begin != std::string::npos) {
-        result.push_back(this->command.substr(begin));
+        this->args.push_back(this->command.substr(begin));
     }
-
-    this->args = result;
 
     return 0;
 }
