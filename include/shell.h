@@ -38,7 +38,7 @@ class Shell {
         std::filesystem::path config_dir;
 
         VariableManager vars;
-        std::set<std::map<std::string, Command>> alias;
+        std::map<std::string, Command> alias;
         VariableManager functions;
 
         int cmd_alias(const std::vector<std::string>& arg);
