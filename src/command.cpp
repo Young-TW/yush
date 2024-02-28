@@ -33,13 +33,20 @@ int Command::assign(std::vector<std::string>& args) {
     return 0;
 }
 
+int Command::assign(Command& cmd) {
+    this->command = cmd.command;
+    this->args = cmd.args;
+    return 0;
+}
+
 int Command::parse() {
-    /*
-    if (Shell::alias.exist(this->command)) {
-        std::string alias_cmd(Shell::alias.get(this->command));
-        return this->assign(alias_cmd);
+    if (shell.alias.count(this->command)) {
+        Command alias_cmd = shell.alias.find(this->command)->second;
+        this->assign(alias_cmd);
+        this->parse();
+        return 0;
     }
-    */
+
     this->args.clear();
     std::size_t begin = std::string::npos;
 
@@ -136,16 +143,14 @@ int Command::exec() {
         return 0;
     }
 
-    /*
-    if (functions.exist(this->args[0])) {
-        for (const auto& cmd : string_parser(functions.get(args[0]), '\n')) {
+    if (shell.functions.exist(this->args[0])) {
+        for (const auto& cmd : string_parser(shell.functions.get(args[0]), '\n')) {
             Command command(cmd);
             this->runtime_status = command.exec();
         }
 
         return this->runtime_status;
     }
-    */
 
     int shell_builtin_ans =
         shell.exec_shell_builtin(this->args);

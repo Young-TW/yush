@@ -22,6 +22,10 @@ class Shell {
         int run(cxxopts::ParseResult& result);
         int run(const std::filesystem::path& file);
 
+        VariableManager vars;
+        std::map<std::string, Command> alias;
+        VariableManager functions;
+
     private:
         std::ifstream fin;
         std::ofstream fout;
@@ -36,10 +40,6 @@ class Shell {
         std::filesystem::path rc_file;
         std::filesystem::path history_file;
         std::filesystem::path config_dir;
-
-        VariableManager vars;
-        std::map<std::string, Command> alias;
-        VariableManager functions;
 
         int cmd_alias(const std::vector<std::string>& arg);
         int cmd_cd(const std::vector<std::string>& arg);

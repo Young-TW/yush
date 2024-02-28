@@ -12,6 +12,7 @@ class Command {
 
         int assign(std::string_view cmd);
         int assign(std::vector<std::string>& args);
+        int assign(Command& cmd);
 
         int parse();
         int exec();
