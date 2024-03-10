@@ -10,7 +10,7 @@
 2. cd
 3. echo
 4. function
-5. help
+5. if
 6. ls
 7. pwd
 8. set
