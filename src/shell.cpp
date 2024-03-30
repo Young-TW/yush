@@ -104,7 +104,6 @@ int Shell::run(cxxopts::ParseResult& result) {
         if (!command.empty()) {
             fout << command.command << std::endl;
         }
-
     } while (!std::cin.eof());
 
     return runtime_status;
