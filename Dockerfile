@@ -5,8 +5,8 @@ FROM ubuntu:rolling AS builder
 WORKDIR /app
 
 RUN \
-    apt update && \
-    apt install -y build-essential git cmake
+    apt-get update && \
+    apt-get install -y build-essential git cmake
 
 COPY . .
 
