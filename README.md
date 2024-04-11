@@ -19,6 +19,7 @@ A simple shell built by Young.
 - [x] echo
 - [x] exit
 - [x] function
+- [ ] if
 - [x] ls
 - [x] pwd
 - [x] set
