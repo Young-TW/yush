@@ -25,10 +25,11 @@ yush uses a `Shell` class to manage the whole shell.
 
 `Shell` class is a singleton class, which means there is only one instance of `Shell` class in the whole program.
 
-`Shell` class has some built-in commands, such as `alias`, `cd`, `clear`, `echo`, `pwd`, `set`, etc.
-Built-in commands are named in the format of `cmd_<command_name>`.
+`Shell` class has some built-in commands, such as `alias`, `cd`, `echo`, `pwd`, `set`, etc.
+Built-in commands are named in the format of `cmd_<command_name>` in `Shell` class.
 
 `Shell` class also has a `VariableManager` class to manage variables from env.
 
 Any program returns a value to the shell, which is called `runtime_status`.
 
+`Command` class is the base class for user input commands(from interactive shell or script file).

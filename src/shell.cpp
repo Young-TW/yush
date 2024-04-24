@@ -1,4 +1,5 @@
 #include "shell.h"
+#include "command.h"
 
 #include <iostream>
 #include <fstream>
@@ -38,7 +39,7 @@ Shell::Shell() {
 
     if (vars.get("HOME").empty()) {
         fmt::print(stderr, "Error: HOME is not set\n");
-        exit(FAILURE);
+        exit(1);
     }
 
     this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
@@ -51,18 +52,8 @@ Shell::Shell() {
         std::filesystem::create_directory(config_dir);
     }
 
-    if (!std::filesystem::exists(this->rc_file)) {
-        fmt::print(fg(fmt::color::red), "no rc file\n");
-    } else {
-        fin.open(this->rc_file);
-        std::string input;
-        while (!fin.eof()) {
-            getline(fin, input);
-            std::vector<std::string> arg = process_cmd(input);
-            runtime_status = exec_cmd(arg);
-        }
-
-        fin.close();
+    if (std::filesystem::exists(this->rc_file)) {
+        this->run(this->rc_file);
     }
 
     if (!std::filesystem::exists(this->history_file)) {
@@ -81,37 +72,11 @@ Shell::Shell() {
 }
 
 int Shell::run(cxxopts::ParseResult& result) {
-    std::string input;
-
-    if (result.count("command")) {
-        std::string input = result["command"].as<std::string>();
-        std::vector<std::string> arg = process_cmd(input);
-        return exec_cmd(arg);
-    }
-
-    if (result.unmatched().size() >= 1 && !result.unmatched().empty()) {
-        for (auto& script : result.unmatched()) {
-            if (!std::filesystem::exists(script)) {
-                fmt::print(stderr, "Error: script file `{}` not found\n", script);
-                return FAILURE;
-            }
-
-            fin.open(script);
-            while (!fin.eof()) {
-                getline(fin, input);
-                std::vector<std::string> arg = process_cmd(input);
-                runtime_status = exec_cmd(arg);
-            }
-
-            fin.close();
-        }
-
-        return runtime_status;
-    }
+    Command command;
 
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
         fmt::print(stderr, "Error: signal handler failed\n");
-        return FAILURE;
+        return 1;
     }
 
     fout.open(this->history_file, std::ios::app);
@@ -119,29 +84,46 @@ int Shell::run(cxxopts::ParseResult& result) {
     do {
         if (result["interactive"].as<bool>()) {
             this->output();
-            input = this->read();
+            command.assign(this->read());
         }
 
-        std::vector<std::string> arg = process_cmd(input);
+        command.parse();
 
-        if (arg.empty()) {
+        if (command.empty()) {
             continue;
         }
 
-        if (arg[0] == "exit") {
-            if (arg.size() > 1) {
-                return atoi(arg[1].c_str());
+        if (command.arg()[0] == "exit") {
+            if (command.arg().size() > 1) {
+                return atoi(command.arg()[1].c_str());
             }
             break;
         }
 
-        runtime_status = exec_cmd(arg);
-        if (!input.empty()) {
-            fout << input << std::endl;
+        runtime_status = command.exec();
+        if (!command.empty()) {
+            fout << command.command << std::endl;
         }
-
     } while (!std::cin.eof());
 
+    return runtime_status;
+}
+
+int Shell::run(const std::filesystem::path& file) {
+    if (!std::filesystem::exists(file)) {
+        fmt::print(stderr, "Error: script file `{}` not found\n", file.string());
+        return 1;
+    }
+
+    fin.open(file);
+    std::string input;
+    while (!fin.eof()) {
+        Command command = Command(this->read(fin));
+        command.parse();
+        runtime_status = command.exec();
+    }
+
+    fin.close();
     return runtime_status;
 }
 
@@ -151,13 +133,13 @@ int Shell::output() {
     fmt::print(fg(fmt::color::cyan),"{} ", vars.get("NAME"));
     fmt::print(fg(fmt::color::violet),"{}\n", path_str_gen(vars.get("HOME")));
 
-    if (runtime_status != SUCCESS) {
+    if (runtime_status != 0) {
         fmt::print(fg(fmt::color::red),"{} > ", runtime_status);
         return runtime_status;
     }
 
     fmt::print("> ");
-    return SUCCESS;
+    return 0;
 }
 
 std::string Shell::read() {
@@ -261,101 +243,14 @@ std::string Shell::read() {
     return input;
 }
 
-std::vector<std::string> Shell::process_cmd(const std::string& cmd) {
-    if (this->alias.exist(cmd)) {
-        std::string alias_cmd(this->alias.get(cmd));
-        return process_cmd(alias_cmd);
+std::string Shell::read(std::istream& input_stream) {
+    std::string input;
+    std::getline(input_stream, input);
+    if (input[input.length()-1] == '\\') {
+        input += read(input_stream);
     }
 
-    std::vector<std::string> result;
-    std::size_t begin = std::string::npos;
-
-    for (std::size_t i = 0; i < cmd.size(); i++) {
-        if (cmd[i] == ' ') {
-            if (begin != std::string::npos) {
-                result.push_back(cmd.substr(begin, i - begin));
-                begin = std::string::npos;
-            }
-
-            continue;
-        }
-
-        if (cmd[i] == '$') {
-            if (begin != std::string::npos) {
-                result.push_back(cmd.substr(begin, i - begin));
-                begin = std::string::npos;
-            }
-
-            std::size_t end = cmd.find_first_not_of(
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_",
-                i + 1);
-
-            if (end == std::string::npos) {
-                end = cmd.size();
-            }
-
-            std::string var_name = cmd.substr(i + 1, end - i - 1);
-            result.emplace_back(vars.get(var_name));
-            i = end - 1;
-            continue;
-        }
-
-        if (cmd[i] == '"') {
-            if (begin == std::string::npos || begin == i - 1) {
-                continue;
-            }
-
-            if (begin != std::string::npos) {
-                result.push_back(cmd.substr(begin, i - begin));
-                begin = std::string::npos;
-            }
-
-            std::size_t end = cmd.find_first_of('"', i + 1);
-
-            if (end == std::string::npos) {
-                end = cmd.size();
-            }
-
-            result.emplace_back(cmd.substr(i + 1, end - i - 1));
-            i = end;
-
-            continue;
-        }
-
-        if (cmd[i] == '\'') {
-            if (begin == std::string::npos || begin == i - 1) {
-                std::size_t end = cmd.find_first_of('\'', i + 1);
-
-                if (end == std::string::npos) {
-                    end = cmd.size();
-                }
-
-                result.emplace_back(cmd.substr(i + 1, end - i - 1));
-                i = end;
-
-                continue;
-            }
-
-            if (begin != std::string::npos) {
-                result.push_back(cmd.substr(begin, i - begin));
-                begin = std::string::npos;
-            }
-        }
-
-        if (cmd[i] == '#') {
-            break;
-        }
-
-        if (begin == std::string::npos) {
-            begin = i;
-        }
-    }
-
-    if (begin != std::string::npos) {
-        result.push_back(cmd.substr(begin));
-    }
-
-    return result;
+    return input;
 }
 
 int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
@@ -377,73 +272,5 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         return (this->*(command_it->second))(arg);
     }
 
-    return NOT_FOUND;
-}
-
-int Shell::exec_cmd(std::vector<std::string>& arg) {
-    if (arg.empty()) {
-        return SUCCESS;
-    }
-
-    if (this->functions.exist(arg[0])) {
-        for (const auto& cmd : string_parser(this->functions.get(arg[0]), '\n')) {
-            std::vector<std::string> arg = process_cmd(cmd);
-            runtime_status = exec_cmd(arg);
-        }
-
-        return runtime_status;
-    }
-
-    int shell_builtin_ans =
-        exec_shell_builtin(arg);
-
-    if (shell_builtin_ans != NOT_FOUND) {
-        return shell_builtin_ans;
-    }
-
-    std::unique_ptr<char *[]> argv = std::make_unique<char *[]>(arg.size() + 1);
-    for (size_t i = 0; i < arg.size(); i++) {
-        argv[i] = arg[i].data();
-    }
-
-    std::string cmd_path_str;
-
-    if (std::filesystem::exists(arg[0]) && std::filesystem::is_regular_file(arg[0])) {
-        cmd_path_str = arg[0];
-    } else {
-        std::vector<std::string> cmd_paths =
-            string_parser(vars.get("PATH"), ':');
-
-        for (const auto& cmd : cmd_paths) {
-            std::filesystem::path cmd_path = cmd / std::filesystem::path(arg[0]);
-
-            if (std::filesystem::exists(cmd_path) &&
-                std::filesystem::is_regular_file(cmd_path)) {
-                cmd_path_str = cmd_path.lexically_normal().string();
-                break;
-            }
-        }
-    }
-
-    if (cmd_path_str.empty()) {
-        fmt::print(stderr, "Error: command `{}` not found.\n", arg[0]);
-        return NOT_FOUND;
-    }
-
-    pid_t pid = fork();
-
-    if (pid == PID_FAILURE) {
-        return PID_FAILURE;
-    }
-
-    if (pid > 0) {
-        int status;
-        waitpid(pid, &status, SUCCESS);
-        return status;
-    }
-
-    signal(SIGINT, SIG_DFL);
-
-    execve(cmd_path_str.c_str(), argv.get(), environ);
-    unreachable();
+    return 127;
 }

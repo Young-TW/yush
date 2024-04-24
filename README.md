@@ -2,6 +2,8 @@
 
 ![yush](./public/yush_logo.png)
 
+[![CodeFactor](https://www.codefactor.io/repository/github/young-tw/yush/badge)](https://www.codefactor.io/repository/github/young-tw/yush)
+
 A simple shell built by Young.
 
 ## Documentation
@@ -17,6 +19,7 @@ A simple shell built by Young.
 - [x] echo
 - [x] exit
 - [x] function
+- [ ] if
 - [x] ls
 - [x] pwd
 - [x] set

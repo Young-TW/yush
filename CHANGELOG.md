@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.3] - 2024-04-24
+
+### Updated
+
+- docs for development
+- refactor code
+
+### Fixed
+
+- executing script
+
 ## [0.6.2] - 2024-02-03
 
 ### Added
@@ -23,7 +34,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - bug of deleting char in interactive mode
-
+DUBSTEP卍
 ## [0.6.0] - 2023-10-14
 
 ### Added
@@ -191,6 +202,7 @@ Remove Windows support after this version
 
 - Initial release
 
+[0.6.3]: https://github.com/Young-TW/yush/releases/tag/v0.6.3
 [0.6.2]: https://github.com/Young-TW/yush/releases/tag/v0.6.2
 [0.6.1]: https://github.com/Young-TW/yush/releases/tag/v0.6.1
 [0.6.0]: https://github.com/Young-TW/yush/releases/tag/v0.6.0

@@ -1,5 +1,7 @@
 #include "shell.h"
 
+#include "command.h"
+
 #include <string>
 
 #include <fmt/format.h>
@@ -10,6 +12,8 @@ int Shell::cmd_alias(const std::vector<std::string>& arg) {
         return 1;
     }
 
-    this->alias.set(arg[1], arg[2]);
+    Command alias_cmd = Command(arg[2]);
+
+    this->alias.try_emplace(arg[1], alias_cmd);
     return 0;
 }
