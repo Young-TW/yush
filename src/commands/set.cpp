@@ -1,10 +1,10 @@
-#include "shell.h"
+#include <fmt/format.h>
 
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 #include <string>
 
-#include <fmt/format.h>
+#include "shell.h"
 
 int Shell::cmd_set(const std::vector<std::string>& arg) {
     if (arg.size() != 3) {

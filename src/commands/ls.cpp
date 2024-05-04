@@ -1,10 +1,10 @@
-#include "shell.h"
-
-#include <iostream>
-#include <filesystem>
-
-#include <fmt/format.h>
 #include <fmt/color.h>
+#include <fmt/format.h>
+
+#include <filesystem>
+#include <iostream>
+
+#include "shell.h"
 
 int Shell::cmd_ls(const std::vector<std::string>& arg) {
     if (!std::filesystem::exists(std::filesystem::current_path())) {
@@ -16,10 +16,12 @@ int Shell::cmd_ls(const std::vector<std::string>& arg) {
     for (auto& it : list) {
         if (it.path().filename().string()[0] != '.') {
             if (it.is_directory()) {
-                fmt::print(fg(fmt::color::cyan), "{}", it.path().filename().string());
+                fmt::print(fg(fmt::color::cyan), "{}",
+                           it.path().filename().string());
                 fmt::print("/");
             } else {
-                fmt::print(fg(fmt::color::white), "{}", it.path().filename().string());
+                fmt::print(fg(fmt::color::white), "{}",
+                           it.path().filename().string());
             }
 
             fmt::print("\t");

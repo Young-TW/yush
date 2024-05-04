@@ -1,9 +1,9 @@
-#include "shell.h"
-
 #include <iostream>
 #include <string_view>
 #include <unordered_map>
 #include <vector>
+
+#include "shell.h"
 
 int Shell::cmd_function(const std::vector<std::string>& arg) {
     std::string function_content;

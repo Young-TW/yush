@@ -1,10 +1,9 @@
-#include "shell.h"
-
-#include "command.h"
+#include <fmt/format.h>
 
 #include <string>
 
-#include <fmt/format.h>
+#include "command.h"
+#include "shell.h"
 
 int Shell::cmd_alias(const std::vector<std::string>& arg) {
     if (arg.size() != 3) {
