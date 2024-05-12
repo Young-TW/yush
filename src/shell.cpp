@@ -213,10 +213,13 @@ std::string Shell::read() {
                         break;
                 }
             }
-        } else if ((current == 8 || current == 127) && curser_index > 0) {
-            input.erase(curser_index - 1, 1);
-            fmt::print("\b \b");
-            curser_index--;
+        } else if ((current == 8 || current == 127)) {
+            if (curser_index > 0) {
+                input.erase(curser_index - 1, 1);
+                fmt::print("\b \b");
+                curser_index--;
+            }
+
             int old_input_size = input.size() + 1;
             for (int i = curser_index; i < input.size(); i++) {
                 fmt::print("{}", input[i]);
