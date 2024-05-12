@@ -12,6 +12,8 @@
 #include <fstream>
 #include <iostream>
 #include <string_view>
+#include <thread>
+#include <future>
 
 #include "command.h"
 #include "common.hpp"
@@ -59,15 +61,20 @@ Shell::Shell() {
         fmt::print(stderr, "Error: history file path is empty\n");
         return;
     } else {
-        fin.open(this->history_file);
-        std::string input;
-        while (!fin.eof()) {
-            getline(fin, input);
-            this->cmd_history.push_back(input);
-        }
-
-        fin.close();
+        this->read_history();
     }
+}
+
+int Shell::read_history() {
+    fin.open(this->history_file);
+    std::string input;
+    while (!fin.eof()) {
+        getline(fin, input);
+        this->cmd_history.push_back(input);
+    }
+
+    fin.close();
+    return 0;
 }
 
 int Shell::run(cxxopts::ParseResult& result) {
@@ -77,8 +84,6 @@ int Shell::run(cxxopts::ParseResult& result) {
         fmt::print(stderr, "Error: signal handler failed\n");
         return 1;
     }
-
-    fout.open(this->history_file, std::ios::app);
 
     do {
         if (result["interactive"].as<bool>()) {
@@ -101,11 +106,18 @@ int Shell::run(cxxopts::ParseResult& result) {
 
         runtime_status = command.exec();
         if (!command.empty()) {
-            fout << command.command << std::endl;
+            this->write_history(command.command);
         }
     } while (!std::cin.eof());
 
     return runtime_status;
+}
+
+int Shell::write_history(const std::string& cmd) {
+    fout.open(this->history_file, std::ios::app);
+    fout << cmd << std::endl;
+    fout.close();
+    return 0;
 }
 
 int Shell::run(const std::filesystem::path& file) {
