@@ -121,22 +121,33 @@ int Shell::write_history(const std::string& cmd) {
 }
 
 int Shell::run(const std::filesystem::path& file) {
+    std::vector<Command> commands = read_script(file);
+    for (auto& command : commands) {
+        if (!command.command.empty()) {
+            command.parse();
+            shell.runtime_status = command.exec();
+            this->write_history(command.command);
+        }
+    }
+
+    return runtime_status;
+}
+
+std::vector<Command> Shell::read_script(const std::filesystem::path& file) {
     if (!std::filesystem::exists(file)) {
         fmt::print(stderr, "Error: script file `{}` not found\n",
                    file.string());
-        return 1;
+        return {};
     }
 
-    fin.open(file);
-    std::string input;
+    std::vector<Command> commands;
+    std::ifstream fin(file);
     while (!fin.eof()) {
-        Command command = Command(this->read(fin));
-        command.parse();
-        runtime_status = command.exec();
+        commands.push_back(Command(shell.read(fin)));
     }
 
     fin.close();
-    return runtime_status;
+    return commands;
 }
 
 int Shell::output() {

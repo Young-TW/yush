@@ -31,6 +31,7 @@ private:
     std::string read();
     std::string read(std::istream& input_stream);
     int exec_shell_builtin(const std::vector<std::string>& arg);
+    std::vector<Command> read_script(const std::filesystem::path& file);
     int read_history();
     int write_history(const std::string& cmd);
 
