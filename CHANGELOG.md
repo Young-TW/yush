@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.6.4] - 2024-
+## [0.6.4] - 2024-05-28
+
+### Added
+
+- Shell::read_script function to read script file
+- Security.md for security policy
 
 ### Fixed
 
