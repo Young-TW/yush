@@ -15,7 +15,8 @@ std::string path_str_gen(std::string_view home_dir) {
     }
 }
 
-std::string reverse_path_str_gen(std::string_view home_dir, std::string_view pwd) {
+std::string reverse_path_str_gen(std::string_view home_dir,
+                                 std::string_view pwd) {
     if (pwd.substr(0, 1) == "~") {
         return std::string(home_dir) +
                std::string(pwd.substr(1, std::string_view::npos));

@@ -1,13 +1,12 @@
-#include "shell.h"
-
-#include <iostream>
-#include <filesystem>
-#include <string>
-
 #include <fmt/format.h>
 
-static int cd_single(std::string_view path,
-                     std::filesystem::path& current_path,
+#include <filesystem>
+#include <iostream>
+#include <string>
+
+#include "shell.h"
+
+static int cd_single(std::string_view path, std::filesystem::path& current_path,
                      VariableManager& vars) {
     if (path == ".") {
         return 0;

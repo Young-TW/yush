@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.4] - 2024-05-28
+
+### Added
+
+- Shell::read_script function to read script file
+- Security.md for security policy
+
+### Fixed
+
+- bug of deleting char in interactive mode
+
 ## [0.6.3] - 2024-04-24
 
 ### Updated
@@ -202,6 +213,7 @@ Remove Windows support after this version
 
 - Initial release
 
+[0.6.4]: https://github.com/Young-TW/yush/releases/tag/v0.6.4
 [0.6.3]: https://github.com/Young-TW/yush/releases/tag/v0.6.3
 [0.6.2]: https://github.com/Young-TW/yush/releases/tag/v0.6.2
 [0.6.1]: https://github.com/Young-TW/yush/releases/tag/v0.6.1

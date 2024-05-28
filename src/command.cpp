@@ -1,27 +1,24 @@
-#include "shell.h"
 #include "command.h"
 
-#include <string>
-#include <iostream>
-#include <filesystem>
-#include <unistd.h>
-#include <signal.h>
-#include <termios.h>
-
-#include <sys/wait.h>
-
 #include <fmt/format.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <termios.h>
+#include <unistd.h>
 
-#include "feature/string_parser.h"
+#include <filesystem>
+#include <iostream>
+#include <string>
+
 #include "common.hpp"
+#include "feature/string_parser.h"
+#include "shell.h"
 
 extern char** environ;
 
 Command::Command() {}
 
-Command::Command(std::string_view cmd) {
-    this->command = cmd;
-}
+Command::Command(std::string_view cmd) { this->command = cmd; }
 
 int Command::assign(std::string_view cmd) {
     this->command = cmd;
@@ -67,7 +64,8 @@ int Command::parse() {
             }
 
             std::size_t end = this->command.find_first_not_of(
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_",
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                "_",
                 i + 1);
 
             if (end == std::string::npos) {
@@ -110,7 +108,8 @@ int Command::parse() {
                     end = this->command.size();
                 }
 
-                this->args.emplace_back(this->command.substr(i + 1, end - i - 1));
+                this->args.emplace_back(
+                    this->command.substr(i + 1, end - i - 1));
                 i = end;
 
                 continue;
@@ -144,7 +143,8 @@ int Command::exec() {
     }
 
     if (shell.functions.exist(this->args[0])) {
-        for (const auto& cmd : string_parser(shell.functions.get(args[0]), '\n')) {
+        for (const auto& cmd :
+             string_parser(shell.functions.get(args[0]), '\n')) {
             Command command(cmd);
             this->runtime_status = command.exec();
         }
@@ -152,28 +152,29 @@ int Command::exec() {
         return this->runtime_status;
     }
 
-    int shell_builtin_ans =
-        shell.exec_shell_builtin(this->args);
+    int shell_builtin_ans = shell.exec_shell_builtin(this->args);
 
     if (shell_builtin_ans != 127) {
         return shell_builtin_ans;
     }
 
-    std::unique_ptr<char *[]> argv = std::make_unique<char *[]>(args.size() + 1);
+    std::unique_ptr<char*[]> argv = std::make_unique<char*[]>(args.size() + 1);
     for (size_t i = 0; i < this->args.size(); i++) {
         argv[i] = this->args[i].data();
     }
 
     std::string cmd_path_str;
 
-    if (std::filesystem::exists(args[0]) && std::filesystem::is_regular_file(args[0])) {
+    if (std::filesystem::exists(args[0]) &&
+        std::filesystem::is_regular_file(args[0])) {
         cmd_path_str = this->args[0];
     } else {
         std::vector<std::string> cmd_paths =
             string_parser(shell.vars.get("PATH"), ':');
 
         for (const auto& cmd : cmd_paths) {
-            std::filesystem::path cmd_path = cmd / std::filesystem::path(args[0]);
+            std::filesystem::path cmd_path =
+                cmd / std::filesystem::path(args[0]);
 
             if (std::filesystem::exists(cmd_path) &&
                 std::filesystem::is_regular_file(cmd_path)) {
@@ -206,10 +207,6 @@ int Command::exec() {
     unreachable();
 }
 
-bool Command::empty() {
-    return this->command.empty();
-}
+bool Command::empty() { return this->command.empty(); }
 
-std::vector<std::string> Command::arg() {
-    return this->args;
-}
+std::vector<std::string> Command::arg() { return this->args; }

@@ -1,39 +1,37 @@
 #include "shell.h"
-#include "command.h"
 
-#include <iostream>
-#include <fstream>
-#include <string_view>
-#include <unistd.h>
-#include <stdlib.h>
+#include <fmt/color.h>
+#include <fmt/format.h>
 #include <signal.h>
-#include <termios.h>
-
+#include <stdlib.h>
 #include <sys/wait.h>
+#include <termios.h>
+#include <unistd.h>
 
 #include <cxxopts.hpp>
+#include <fstream>
+#include <iostream>
+#include <string_view>
+#include <thread>
+#include <future>
 
-#include <fmt/format.h>
-#include <fmt/color.h>
-
+#include "command.h"
+#include "common.hpp"
 #include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
-#include "common.hpp"
 
 extern char** environ;
 
 Shell::Shell() {
-    vars.set("SYSTEM", sys)
-        .set("SHELL", "yush");
+    vars.set("SYSTEM", sys).set("SHELL", "yush");
 
     for (char** current = environ; *current; current++) {
         std::string current_str(*current);
         auto delimiter = current_str.find('=');
         std::string key(current_str.substr(0, delimiter));
-        std::string value(
-            delimiter != std::string::npos ?
-            current_str.substr(delimiter + 1) :
-            "");
+        std::string value(delimiter != std::string::npos
+                              ? current_str.substr(delimiter + 1)
+                              : "");
         vars.set(key, value);
     }
 
@@ -42,11 +40,14 @@ Shell::Shell() {
         exit(1);
     }
 
-    this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
-    this->history_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
+    this->rc_file =
+        reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
+    this->history_file =
+        reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
     this->config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
 
-    if (!(std::filesystem::exists(this->config_dir) && std::filesystem::is_directory(this->config_dir))) {
+    if (!(std::filesystem::exists(this->config_dir) &&
+          std::filesystem::is_directory(this->config_dir))) {
         fmt::print(stderr, "Error: yush config dir path is not exists\n");
         fmt::print(stdout, "Auto creating config dir\n");
         std::filesystem::create_directory(config_dir);
@@ -60,15 +61,20 @@ Shell::Shell() {
         fmt::print(stderr, "Error: history file path is empty\n");
         return;
     } else {
-        fin.open(this->history_file);
-        std::string input;
-        while (!fin.eof()) {
-            getline(fin, input);
-            this->cmd_history.push_back(input);
-        }
-
-        fin.close();
+        this->read_history();
     }
+}
+
+int Shell::read_history() {
+    fin.open(this->history_file);
+    std::string input;
+    while (!fin.eof()) {
+        getline(fin, input);
+        this->cmd_history.push_back(input);
+    }
+
+    fin.close();
+    return 0;
 }
 
 int Shell::run(cxxopts::ParseResult& result) {
@@ -78,8 +84,6 @@ int Shell::run(cxxopts::ParseResult& result) {
         fmt::print(stderr, "Error: signal handler failed\n");
         return 1;
     }
-
-    fout.open(this->history_file, std::ios::app);
 
     do {
         if (result["interactive"].as<bool>()) {
@@ -102,39 +106,58 @@ int Shell::run(cxxopts::ParseResult& result) {
 
         runtime_status = command.exec();
         if (!command.empty()) {
-            fout << command.command << std::endl;
+            this->write_history(command.command);
         }
     } while (!std::cin.eof());
 
     return runtime_status;
 }
 
+int Shell::write_history(const std::string& cmd) {
+    fout.open(this->history_file, std::ios::app);
+    fout << cmd << std::endl;
+    fout.close();
+    return 0;
+}
+
 int Shell::run(const std::filesystem::path& file) {
-    if (!std::filesystem::exists(file)) {
-        fmt::print(stderr, "Error: script file `{}` not found\n", file.string());
-        return 1;
+    std::vector<Command> commands = read_script(file);
+    for (auto& command : commands) {
+        if (!command.command.empty()) {
+            command.parse();
+            shell.runtime_status = command.exec();
+            this->write_history(command.command);
+        }
     }
 
-    fin.open(file);
-    std::string input;
-    while (!fin.eof()) {
-        Command command = Command(this->read(fin));
-        command.parse();
-        runtime_status = command.exec();
-    }
-
-    fin.close();
     return runtime_status;
 }
 
+std::vector<Command> Shell::read_script(const std::filesystem::path& file) {
+    if (!std::filesystem::exists(file)) {
+        fmt::print(stderr, "Error: script file `{}` not found\n",
+                   file.string());
+        return {};
+    }
+
+    std::vector<Command> commands;
+    std::ifstream fin(file);
+    while (!fin.eof()) {
+        commands.push_back(Command(shell.read(fin)));
+    }
+
+    fin.close();
+    return commands;
+}
+
 int Shell::output() {
-    fmt::print(fg(fmt::color::orange),"\n{}", vars.get("USER"));
+    fmt::print(fg(fmt::color::orange), "\n{}", vars.get("USER"));
     fmt::print("@");
-    fmt::print(fg(fmt::color::cyan),"{} ", vars.get("NAME"));
-    fmt::print(fg(fmt::color::violet),"{}\n", path_str_gen(vars.get("HOME")));
+    fmt::print(fg(fmt::color::cyan), "{} ", vars.get("NAME"));
+    fmt::print(fg(fmt::color::violet), "{}\n", path_str_gen(vars.get("HOME")));
 
     if (runtime_status != 0) {
-        fmt::print(fg(fmt::color::red),"{} > ", runtime_status);
+        fmt::print(fg(fmt::color::red), "{} > ", runtime_status);
         return runtime_status;
     }
 
@@ -163,7 +186,7 @@ std::string Shell::read() {
                     case 'A':
                         if (history_index > 0) {
                             history_index--;
-                            for (int i=0; i<input.size(); i++) {
+                            for (int i = 0; i < input.size(); i++) {
                                 fmt::print("\b \b");
                             }
 
@@ -177,13 +200,13 @@ std::string Shell::read() {
                         if (history_index < this->cmd_history.size()) {
                             history_index++;
                             if (history_index == this->cmd_history.size()) {
-                                for (int i=0; i<input.size(); i++) {
+                                for (int i = 0; i < input.size(); i++) {
                                     fmt::print("\b \b");
                                 }
 
                                 input.clear();
                             } else {
-                                for (int i=0; i<input.size(); i++) {
+                                for (int i = 0; i < input.size(); i++) {
                                     fmt::print("\b \b");
                                 }
 
@@ -213,10 +236,13 @@ std::string Shell::read() {
                         break;
                 }
             }
-        } else if ((current == 8 || current == 127) && curser_index > 0) {
-            input.erase(curser_index - 1, 1);
-            fmt::print("\b \b");
-            curser_index--;
+        } else if ((current == 8 || current == 127)) {
+            if (curser_index > 0) {
+                input.erase(curser_index - 1, 1);
+                fmt::print("\b \b");
+                curser_index--;
+            }
+
             int old_input_size = input.size() + 1;
             for (int i = curser_index; i < input.size(); i++) {
                 fmt::print("{}", input[i]);
@@ -246,7 +272,7 @@ std::string Shell::read() {
 std::string Shell::read(std::istream& input_stream) {
     std::string input;
     std::getline(input_stream, input);
-    if (input[input.length()-1] == '\\') {
+    if (input[input.length() - 1] == '\\') {
         input += read(input_stream);
     }
 
@@ -257,14 +283,10 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
     using CommandType = int (Shell::*)(const std::vector<std::string>&);
 
     static const std::unordered_map<std::string, CommandType> command_map{
-        {"alias", &Shell::cmd_alias},
-        {"cd", &Shell::cmd_cd},
-        {"echo", &Shell::cmd_echo},
-        {"function", &Shell::cmd_function},
-        {"if", &Shell::cmd_if},
-        {"ls", &Shell::cmd_ls},
-        {"pwd", &Shell::cmd_pwd},
-        {"set", &Shell::cmd_set},
+        {"alias", &Shell::cmd_alias}, {"cd", &Shell::cmd_cd},
+        {"echo", &Shell::cmd_echo},   {"function", &Shell::cmd_function},
+        {"if", &Shell::cmd_if},       {"ls", &Shell::cmd_ls},
+        {"pwd", &Shell::cmd_pwd},     {"set", &Shell::cmd_set},
     };
 
     auto command_it = command_map.find(arg[0]);
