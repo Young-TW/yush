@@ -8,6 +8,12 @@ You can download pre-built binary from [GitHub Release](https://github.com/Young
 
 To build from source, please ensure CMake and C++ compiler installed (may require make or ninja).
 
+Here is a script to install yush from source:
+
+```sh
+curl https://raw.githubusercontent.com/Young-TW/yush/main/script/install.sh | bash
+```
+
 ### Clone
 
 Clone this repository with submodules.
