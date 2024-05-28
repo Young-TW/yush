@@ -30,5 +30,6 @@ echo "start Build"
 git submodule update --init --recursive
 cmake -B build
 cmake --build build --config RELEASE
-cmake --install build --config RELEASE
+sudo cmake --install build --config RELEASE
 echo "yush installed successfully"
+cd .. || exit
