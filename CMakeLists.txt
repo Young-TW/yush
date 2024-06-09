@@ -8,6 +8,12 @@ include_directories(./include)
 add_subdirectory(cxxopts)
 add_subdirectory(fmt)
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    add_compile_definitions(YUSH_WINDOWS)
+else()
+    add_compile_definitions(YUSH_UNIX)
+endif()
+
 file(GLOB_RECURSE SRC_FILES ./src/*.cpp)
 
 add_executable(${PROJECT_NAME} ${SRC_FILES})
