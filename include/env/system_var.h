@@ -4,12 +4,16 @@
 #include <string>
 
 const std::string sys =
-#ifdef __APPLE__
-    "MacOS"
-#elif defined(__linux__)
+#ifdef YUSH_MACOS
+    "macOS"
+#elif YUSH_LINUX
     "Linux"
-#elif defined(__unix__)
+#elif YUSH_UNIX
     "Unix"
+#elif YUSH_WINDOWS
+    "Windows"
+#elif YUSH_FREEBSD
+    "FreeBSD"
 #else
     "Unknown"
 #endif
