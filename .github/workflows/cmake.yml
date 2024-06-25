@@ -24,6 +24,11 @@ jobs:
     - name: install google test
       run: |
         sudo apt install libgtest-dev
+        cd /usr/src/googletest
+        sudo cmake CMakeLists.txt
+        sudo make
+        sudo cp -r include/gtest/ /usr/include/
+        sudo cp -r lib/libgtest* /usr/lib/
 
     - name: Configure CMake
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
