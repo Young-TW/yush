@@ -23,13 +23,15 @@ public:
     VariableManager vars;
     VariableManager functions;
 
+    int exec_cmd(const Command& cmd);
+
 private:
     std::ifstream fin;
     std::ofstream fout;
     int output();
     std::string read();
     std::string read(std::istream& input_stream);
-    int exec_shell_builtin(const std::vector<std::string>& arg);
+    int exec_shell_builtin(const Command& cmd);
     std::vector<Command> read_script(const std::filesystem::path& file);
     int read_history();
     int write_history(const std::string& cmd);
@@ -41,6 +43,8 @@ private:
     std::filesystem::path history_file;
     std::filesystem::path config_dir;
 
+    int exec_file(const Command& cmd);
+
     int cmd_alias(const std::vector<std::string>& arg);
     int cmd_cd(const std::vector<std::string>& arg);
     int cmd_echo(const std::vector<std::string>& arg);
@@ -49,8 +53,6 @@ private:
     int cmd_ls(const std::vector<std::string>& arg);
     int cmd_pwd(const std::vector<std::string>& arg);
     int cmd_set(const std::vector<std::string>& arg);
-
-    friend class Command;
 };
 
 static Shell shell;

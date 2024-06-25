@@ -36,6 +36,8 @@ int Command::assign(Command& cmd) {
     return 0;
 }
 
+std::string Command::get() { return this->command; }
+
 int Command::parse() {
     if (shell.functions.exist(this->command)) {
         Command alias_cmd = shell.functions.get(this->command);
@@ -120,76 +122,6 @@ int Command::parse() {
     return 0;
 }
 
-int Command::exec() {
-    if (this->args.empty()) {
-        return 0;
-    }
-
-    if (shell.functions.exist(this->args[0])) {
-        for (const auto& cmd :
-             string_parser(shell.functions.get(args[0]), '\n')) {
-            Command command(cmd);
-            this->runtime_status = command.exec();
-        }
-
-        return this->runtime_status;
-    }
-
-    int shell_builtin_ans = shell.exec_shell_builtin(this->args);
-
-    if (shell_builtin_ans != 127) {
-        return shell_builtin_ans;
-    }
-
-    std::unique_ptr<char*[]> argv = std::make_unique<char*[]>(args.size() + 1);
-    for (size_t i = 0; i < this->args.size(); i++) {
-        argv[i] = this->args[i].data();
-    }
-
-    std::string cmd_path_str;
-
-    if (std::filesystem::exists(args[0]) &&
-        std::filesystem::is_regular_file(args[0])) {
-        cmd_path_str = this->args[0];
-    } else {
-        std::vector<std::string> cmd_paths =
-            string_parser(shell.vars.get("PATH"), ':');
-
-        for (const auto& cmd : cmd_paths) {
-            std::filesystem::path cmd_path =
-                cmd / std::filesystem::path(args[0]);
-
-            if (std::filesystem::exists(cmd_path) &&
-                std::filesystem::is_regular_file(cmd_path)) {
-                cmd_path_str = cmd_path.lexically_normal().string();
-                break;
-            }
-        }
-    }
-
-    if (cmd_path_str.empty()) {
-        fmt::print(stderr, "Error: command `{}` not found.\n", args[0]);
-        return 127;
-    }
-
-    pid_t pid = fork();
-
-    if (pid == -1) {
-        return -1;
-    }
-
-    if (pid > 0) {
-        int status;
-        waitpid(pid, &status, 0);
-        return status;
-    }
-
-    signal(SIGINT, SIG_DFL);
-
-    execve(cmd_path_str.c_str(), argv.get(), environ);
-    unreachable();
-}
-
 bool Command::empty() { return this->command.empty(); }
 
-std::vector<std::string> Command::arg() { return this->args; }
+const std::vector<std::string>& Command::arg() const { return this->args; }

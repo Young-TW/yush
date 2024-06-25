@@ -104,9 +104,9 @@ int Shell::run(cxxopts::ParseResult& result) {
             break;
         }
 
-        runtime_status = command.exec();
+        runtime_status = exec_cmd(command);
         if (!command.empty()) {
-            this->write_history(command.command);
+            this->write_history(command.get());
         }
     } while (!std::cin.eof());
 
@@ -123,10 +123,10 @@ int Shell::write_history(const std::string& cmd) {
 int Shell::run(const std::filesystem::path& file) {
     std::vector<Command> commands = read_script(file);
     for (auto& command : commands) {
-        if (!command.command.empty()) {
+        if (!command.empty()) {
             command.parse();
-            shell.runtime_status = command.exec();
-            this->write_history(command.command);
+            shell.runtime_status = exec_cmd(command);
+            this->write_history(command.get());
         }
     }
 
@@ -279,7 +279,7 @@ std::string Shell::read(std::istream& input_stream) {
     return input;
 }
 
-int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
+int Shell::exec_shell_builtin(const Command& cmd) {
     using CommandType = int (Shell::*)(const std::vector<std::string>&);
 
     static const std::unordered_map<std::string, CommandType> command_map{
@@ -289,10 +289,75 @@ int Shell::exec_shell_builtin(const std::vector<std::string>& arg) {
         {"pwd", &Shell::cmd_pwd},     {"set", &Shell::cmd_set},
     };
 
-    auto command_it = command_map.find(arg[0]);
+    auto command_it = command_map.find(cmd.arg()[0]);
     if (command_it != command_map.cend()) {
-        return (this->*(command_it->second))(arg);
+        return (this->*(command_it->second))(cmd.arg());
     }
 
     return 127;
+}
+
+int Shell::exec_cmd(const Command& cmd) {
+    if (functions.exist(cmd.arg()[0])) {
+        for (const auto& cmd_str : string_parser(functions.get(cmd.arg()[0]), '\n')) {
+            Command command(cmd_str);
+            runtime_status = exec_cmd(command);
+        }
+
+        return runtime_status;
+    }
+
+    exec_file(cmd);
+
+    return exec_shell_builtin(cmd);
+}
+
+int Shell::exec_file(const Command& cmd) {
+    std::unique_ptr<char*[]> argv = std::make_unique<char*[]>(cmd.arg().size() + 1);
+    for (size_t i = 0; i < cmd.arg().size(); i++) {
+        argv[i] = const_cast<char*>(cmd.arg()[i].c_str());
+    }
+
+    std::string file_path_str;
+
+    if (std::filesystem::exists(cmd.arg()[0]) &&
+        std::filesystem::is_regular_file(cmd.arg()[0])) {
+        file_path_str = cmd.arg()[0];
+    } else {
+        std::vector<std::string> file_pathes =
+            string_parser(shell.vars.get("PATH"), ':');
+
+        for (const auto& file : file_pathes) {
+            std::filesystem::path file_path =
+                file / std::filesystem::path(cmd.arg()[0]);
+
+            if (std::filesystem::exists(file_path) &&
+                std::filesystem::is_regular_file(file_path)) {
+                file_path_str = file_path.lexically_normal().string();
+                break;
+            }
+        }
+    }
+
+    if (file_path_str.empty()) {
+        fmt::print(stderr, "Error: command `{}` not found.\n", cmd.arg()[0]);
+        return 127;
+    }
+
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        return -1;
+    }
+
+    if (pid > 0) {
+        int status;
+        waitpid(pid, &status, 0);
+        return status;
+    }
+
+    signal(SIGINT, SIG_DFL);
+
+    execve(file_path_str.c_str(), argv.get(), environ);
+    unreachable();
 }
