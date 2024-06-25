@@ -21,28 +21,25 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "UNIX")
 endif()
 
 file(GLOB_RECURSE SRC_FILES ./src/*.cpp)
+list(REMOVE_ITEM SRC_FILES "src/main.cpp")
 
-add_executable(${PROJECT_NAME} ${SRC_FILES})
-target_link_libraries(${PROJECT_NAME} cxxopts)
-target_link_libraries(${PROJECT_NAME} fmt::fmt)
+add_library(${PROJECT_NAME}_lib STATIC ${SRC_FILES})
+target_link_libraries(${PROJECT_NAME}_lib cxxopts fmt::fmt)
+target_compile_definitions(${PROJECT_NAME}_lib PUBLIC YUSH_VERSION="${PROJECT_VERSION}")
 
-target_compile_definitions(${PROJECT_NAME} PRIVATE YUSH_VERSION="${PROJECT_VERSION}")
+add_executable(${PROJECT_NAME} "src/main.cpp")
+target_link_libraries(${PROJECT_NAME} ${PROJECT_NAME}_lib)
 
 install(TARGETS ${PROJECT_NAME})
 
-# enable_testing()
+enable_testing()
 
-# add_executable(${PROJECT_NAME}_test ./test/test.cpp)
-# set(GTEST_MAIN_LIBRARY /opt/homebrew/include/gtest)
-# find_package(GTest REQUIRED)
-# target_link_libraries(
-#   ${PROJECT_NAME}_test
-#   GTest::gtest_main
-# )
+file(GLOB_RECURSE TEST_FILES ./test/*.cpp)
+add_executable(${PROJECT_NAME}_test ${TEST_FILES})
+find_package(GTest REQUIRED)
 
-# set_target_properties(GTest::gtest_main PROPERTIES
-#     IMPORTED_LOCATION ${GTEST_MAIN_LIBRARY}/libgtest_main.a
-# )
+target_link_libraries(${PROJECT_NAME}_test GTest::gtest_main)
+target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME}_lib)
 
-# include(GoogleTest)
-# gtest_discover_tests(${PROJECT_NAME}_test)
+include(GoogleTest)
+gtest_discover_tests(${PROJECT_NAME}_test)
