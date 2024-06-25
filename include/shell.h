@@ -21,7 +21,6 @@ public:
     int run(const std::filesystem::path& file);
 
     VariableManager vars;
-    std::map<std::string, Command> alias;
     VariableManager functions;
 
 private:

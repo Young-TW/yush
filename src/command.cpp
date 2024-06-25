@@ -37,8 +37,8 @@ int Command::assign(Command& cmd) {
 }
 
 int Command::parse() {
-    if (shell.alias.count(this->command)) {
-        Command alias_cmd = shell.alias.find(this->command)->second;
+    if (shell.functions.exist(this->command)) {
+        Command alias_cmd = shell.functions.get(this->command);
         this->assign(alias_cmd);
         this->parse();
         return 0;
