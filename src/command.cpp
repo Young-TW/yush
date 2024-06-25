@@ -89,29 +89,19 @@ int Command::parse() {
             this->args.push_back(this->command.substr(double_quote + 1, i - double_quote - 1));
             begin = std::string::npos;
             double_quote = std::string::npos;
-
             continue;
         }
 
         if (this->command[i] == '\'') {
-            if (begin == std::string::npos || begin == i - 1) {
-                std::size_t end = this->command.find_first_of('\'', i + 1);
-
-                if (end == std::string::npos) {
-                    end = this->command.size();
-                }
-
-                this->args.emplace_back(
-                    this->command.substr(i + 1, end - i - 1));
-                i = end;
-
+            if (single_quote == std::string::npos) {
+                single_quote = i;
                 continue;
             }
 
-            if (begin != std::string::npos) {
-                this->args.push_back(this->command.substr(begin, i - begin));
-                begin = std::string::npos;
-            }
+            this->args.push_back(this->command.substr(single_quote + 1, i - single_quote - 1));
+            begin = std::string::npos;
+            single_quote = std::string::npos;
+            continue;
         }
 
         if (this->command[i] == '#') {
