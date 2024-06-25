@@ -45,11 +45,13 @@ int Command::parse() {
     }
 
     this->args.clear();
+    std::size_t double_quote = std::string::npos;
+    std::size_t single_quote = std::string::npos;
     std::size_t begin = std::string::npos;
 
     for (std::size_t i = 0; i < this->command.size(); i++) {
         if (this->command[i] == ' ') {
-            if (begin != std::string::npos) {
+            if (begin != std::string::npos && double_quote == std::string::npos && single_quote == std::string::npos) {
                 this->args.push_back(this->command.substr(begin, i - begin));
                 begin = std::string::npos;
             }
@@ -79,23 +81,14 @@ int Command::parse() {
         }
 
         if (this->command[i] == '"') {
-            if (begin == std::string::npos || begin == i - 1) {
+            if (double_quote == std::string::npos) {
+                double_quote = i;
                 continue;
             }
 
-            if (begin != std::string::npos) {
-                this->args.push_back(this->command.substr(begin, i - begin));
-                begin = std::string::npos;
-            }
-
-            std::size_t end = this->command.find_first_of('"', i + 1);
-
-            if (end == std::string::npos) {
-                end = this->command.size();
-            }
-
-            this->args.emplace_back(this->command.substr(i + 1, end - i - 1));
-            i = end;
+            this->args.push_back(this->command.substr(double_quote + 1, i - double_quote - 1));
+            begin = std::string::npos;
+            double_quote = std::string::npos;
 
             continue;
         }
