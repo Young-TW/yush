@@ -1,8 +1,8 @@
-#include <fmt/format.h>
-
-#include <cxxopts.hpp>
 #include <filesystem>
 #include <fstream>
+
+#include "cxxopts.hpp"
+#include "fmt/format.h"
 
 #include "shell.h"
 
@@ -11,16 +11,12 @@ int main(int argc, char *argv[]) {
 
     options.allow_unrecognised_options();
 
-    options.add_options()("o,debug-output",
-                          "Enable debug message output to a file",
+    options.add_options()("o,debug-output", "Enable debug message output to a file",
                           cxxopts::value<std::filesystem::path>())(
-        "h,help", "Print help message and exit",
-        cxxopts::value<bool>()->default_value("false"))(
+        "h,help", "Print help message and exit", cxxopts::value<bool>()->default_value("false"))(
         "c,command", "Execute single command", cxxopts::value<std::string>())(
-        "i,interactive", "Is interactive mode",
-        cxxopts::value<bool>()->default_value("true"))(
-        "v,version", "Print version and exit",
-        cxxopts::value<bool>()->default_value("false"));
+        "i,interactive", "Is interactive mode", cxxopts::value<bool>()->default_value("true"))(
+        "v,version", "Print version and exit", cxxopts::value<bool>()->default_value("false"));
 
     auto result = options.parse(argc, argv);
 

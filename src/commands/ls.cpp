@@ -1,8 +1,8 @@
-#include <fmt/color.h>
-#include <fmt/format.h>
-
 #include <filesystem>
 #include <iostream>
+
+#include "fmt/color.h"
+#include "fmt/format.h"
 
 #include "shell.h"
 
@@ -16,12 +16,10 @@ int Shell::cmd_ls(const std::vector<std::string>& arg) {
     for (auto& it : list) {
         if (it.path().filename().string()[0] != '.') {
             if (it.is_directory()) {
-                fmt::print(fg(fmt::color::cyan), "{}",
-                           it.path().filename().string());
+                fmt::print(fg(fmt::color::cyan), "{}", it.path().filename().string());
                 fmt::print("/");
             } else {
-                fmt::print(fg(fmt::color::white), "{}",
-                           it.path().filename().string());
+                fmt::print(fg(fmt::color::white), "{}", it.path().filename().string());
             }
 
             fmt::print("\t");

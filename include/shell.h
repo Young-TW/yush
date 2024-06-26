@@ -1,7 +1,6 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <cxxopts.hpp>
 #include <filesystem>
 #include <fstream>
 #include <map>
@@ -9,6 +8,8 @@
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include "cxxopts.hpp"
 
 #include "command.h"
 #include "env/system_var.h"
