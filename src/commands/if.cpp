@@ -1,5 +1,3 @@
-#include <fmt/core.h>
-
 #include <iostream>
 #include <string>
 #include <vector>

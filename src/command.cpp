@@ -1,17 +1,9 @@
 #include "command.h"
 
-#include <fmt/format.h>
-#include <signal.h>
-#include <sys/wait.h>
-#include <termios.h>
-#include <unistd.h>
-
-#include <filesystem>
-#include <iostream>
 #include <string>
 
-#include "common.hpp"
-#include "feature/string_parser.h"
+#include "fmt/format.h"
+
 #include "shell.h"
 
 extern char** environ;
@@ -52,12 +44,10 @@ int Command::parse() {
     std::size_t begin = std::string::npos;
 
     for (std::size_t i = 0; i < this->command.size(); i++) {
-        if (this->command[i] == ' ') {
-            if (begin != std::string::npos && double_quote == std::string::npos && single_quote == std::string::npos) {
-                this->args.push_back(this->command.substr(begin, i - begin));
-                begin = std::string::npos;
-            }
-
+        if (this->command[i] == ' ' && begin != std::string::npos &&
+            double_quote == std::string::npos && single_quote == std::string::npos) {
+            this->args.push_back(this->command.substr(begin, i - begin));
+            begin = std::string::npos;
             continue;
         }
 

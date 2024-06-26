@@ -1,8 +1,7 @@
-#include <fmt/format.h>
-
 #include <filesystem>
-#include <iostream>
 #include <string>
+
+#include "fmt/format.h"
 
 #include "shell.h"
 

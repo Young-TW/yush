@@ -1,21 +1,17 @@
 #include "shell.h"
 
-#include <fmt/color.h>
-#include <fmt/format.h>
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <termios.h>
 #include <unistd.h>
 
-#include <cxxopts.hpp>
-#include <fstream>
 #include <iostream>
-#include <string_view>
-#include <thread>
-#include <future>
 
-#include "command.h"
+#include "cxxopts.hpp"
+#include "fmt/color.h"
+#include "fmt/format.h"
+
 #include "common.hpp"
 #include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
@@ -29,9 +25,7 @@ Shell::Shell() {
         std::string current_str(*current);
         auto delimiter = current_str.find('=');
         std::string key(current_str.substr(0, delimiter));
-        std::string value(delimiter != std::string::npos
-                              ? current_str.substr(delimiter + 1)
-                              : "");
+        std::string value(delimiter != std::string::npos ? current_str.substr(delimiter + 1) : "");
         vars.set(key, value);
     }
 
@@ -40,10 +34,8 @@ Shell::Shell() {
         exit(1);
     }
 
-    this->rc_file =
-        reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
-    this->history_file =
-        reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
+    this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
+    this->history_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
     this->config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
 
     if (!(std::filesystem::exists(this->config_dir) &&
@@ -135,8 +127,7 @@ int Shell::run(const std::filesystem::path& file) {
 
 std::vector<Command> Shell::read_script(const std::filesystem::path& file) {
     if (!std::filesystem::exists(file)) {
-        fmt::print(stderr, "Error: script file `{}` not found\n",
-                   file.string());
+        fmt::print(stderr, "Error: script file `{}` not found\n", file.string());
         return {};
     }
 
@@ -283,10 +274,9 @@ int Shell::exec_shell_builtin(const Command& cmd) {
     using CommandType = int (Shell::*)(const std::vector<std::string>&);
 
     static const std::unordered_map<std::string, CommandType> command_map{
-        {"alias", &Shell::cmd_alias}, {"cd", &Shell::cmd_cd},
-        {"echo", &Shell::cmd_echo},   {"function", &Shell::cmd_function},
-        {"if", &Shell::cmd_if},       {"ls", &Shell::cmd_ls},
-        {"pwd", &Shell::cmd_pwd},     {"set", &Shell::cmd_set},
+        {"alias", &Shell::cmd_alias},       {"cd", &Shell::cmd_cd},   {"echo", &Shell::cmd_echo},
+        {"function", &Shell::cmd_function}, {"if", &Shell::cmd_if},   {"ls", &Shell::cmd_ls},
+        {"pwd", &Shell::cmd_pwd},           {"set", &Shell::cmd_set},
     };
 
     auto command_it = command_map.find(cmd.arg()[0]);
@@ -320,19 +310,15 @@ int Shell::exec_file(const Command& cmd) {
 
     std::string file_path_str;
 
-    if (std::filesystem::exists(cmd.arg()[0]) &&
-        std::filesystem::is_regular_file(cmd.arg()[0])) {
+    if (std::filesystem::exists(cmd.arg()[0]) && std::filesystem::is_regular_file(cmd.arg()[0])) {
         file_path_str = cmd.arg()[0];
     } else {
-        std::vector<std::string> file_pathes =
-            string_parser(shell.vars.get("PATH"), ':');
+        std::vector<std::string> file_pathes = string_parser(shell.vars.get("PATH"), ':');
 
         for (const auto& file : file_pathes) {
-            std::filesystem::path file_path =
-                file / std::filesystem::path(cmd.arg()[0]);
+            std::filesystem::path file_path = file / std::filesystem::path(cmd.arg()[0]);
 
-            if (std::filesystem::exists(file_path) &&
-                std::filesystem::is_regular_file(file_path)) {
+            if (std::filesystem::exists(file_path) && std::filesystem::is_regular_file(file_path)) {
                 file_path_str = file_path.lexically_normal().string();
                 break;
             }
@@ -345,19 +331,15 @@ int Shell::exec_file(const Command& cmd) {
     }
 
     pid_t pid = fork();
-
     if (pid == -1) {
         return -1;
     }
-
     if (pid > 0) {
         int status;
         waitpid(pid, &status, 0);
         return status;
     }
-
     signal(SIGINT, SIG_DFL);
-
     execve(file_path_str.c_str(), argv.get(), environ);
     unreachable();
 }
