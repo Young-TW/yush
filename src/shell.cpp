@@ -165,7 +165,7 @@ std::string Shell::read() {
     tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
 
     int current;
-    int curser_index = 0;
+    int cursor_index = 0;
     int history_index = this->cmd_history.size();
     while (1) {
         current = std::cin.get();
@@ -183,7 +183,7 @@ std::string Shell::read() {
 
                             input = this->cmd_history[history_index];
                             fmt::print("{}", input);
-                            curser_index = input.size();
+                            cursor_index = input.size();
                         }
 
                         break;
@@ -204,22 +204,22 @@ std::string Shell::read() {
                                 input = this->cmd_history[history_index];
                             }
 
-                            curser_index = input.size();
+                            cursor_index = input.size();
                             fmt::print("{}", input);
                         }
 
                         break;
                     case 'C':
-                        if (curser_index < input.size()) {
+                        if (cursor_index < input.size()) {
                             fmt::print("\033[C");
-                            curser_index++;
+                            cursor_index++;
                         }
 
                         break;
                     case 'D':
-                        if (curser_index > 0) {
+                        if (cursor_index > 0) {
                             fmt::print("\033[D");
-                            curser_index--;
+                            cursor_index--;
                         }
 
                         break;
@@ -228,14 +228,14 @@ std::string Shell::read() {
                 }
             }
         } else if ((current == 8 || current == 127)) {
-            if (curser_index > 0) {
-                input.erase(curser_index - 1, 1);
+            if (cursor_index > 0) {
+                input.erase(cursor_index - 1, 1);
                 fmt::print("\b \b");
-                curser_index--;
+                cursor_index--;
             }
 
             int old_input_size = input.size() + 1;
-            for (int i = curser_index; i < input.size(); i++) {
+            for (int i = cursor_index; i < input.size(); i++) {
                 fmt::print("{}", input[i]);
             }
 
@@ -243,7 +243,7 @@ std::string Shell::read() {
                 fmt::print(" ");
             }
 
-            for (int i = curser_index; i < old_input_size; i++) {
+            for (int i = cursor_index; i < old_input_size; i++) {
                 fmt::print("\033[D");
             }
         } else if (current == 10) {
@@ -251,7 +251,7 @@ std::string Shell::read() {
             break;
         } else {
             input += static_cast<char>(current);
-            curser_index++;
+            cursor_index++;
             fmt::print("{}", static_cast<char>(current));
         }
     }
