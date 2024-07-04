@@ -10,8 +10,6 @@ const std::string sys =
     "Linux"
 #elif YUSH_UNIX
     "Unix"
-#elif YUSH_WINDOWS
-    "Windows"
 #elif YUSH_FREEBSD
     "FreeBSD"
 #else
