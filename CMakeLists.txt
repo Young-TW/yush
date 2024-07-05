@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.27.0)
 project(yush VERSION 0.6.4)
 
+include(CTest)
+
 set(CMAKE_CXX_STANDARD 23)
 
 add_subdirectory(cxxopts)
@@ -30,11 +32,13 @@ install(TARGETS ${PROJECT_NAME})
 
 enable_testing()
 
-file(GLOB_RECURSE TEST_FILES test/*.cpp)
-add_executable(${PROJECT_NAME}_test ${TEST_FILES})
-find_package(GTest REQUIRED)
+if (BUILD_TESTING)
+    find_package(GTest REQUIRED)
+    include(GoogleTest)
 
-target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main PRIVATE ${PROJECT_NAME}_lib)
+    file(GLOB_RECURSE TEST_FILES test/*.cpp)
 
-include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME}_test)
+    add_executable(${PROJECT_NAME}_test ${TEST_FILES})
+    target_link_libraries(${PROJECT_NAME}_test PRIVATE GTest::gtest_main PRIVATE ${PROJECT_NAME}_lib)
+    gtest_discover_tests(${PROJECT_NAME}_test)
+endif ()
