@@ -276,9 +276,9 @@ int Shell::exec_cmd(const Command& cmd) {
     if (functions.exist(cmd.arg()[0])) {
         for (const auto& cmd_str : string_parser(functions.get(cmd.arg()[0]), '\n')) {
             Command command(cmd_str);
-            runtime_status = exec_cmd(command);
+            status = exec_cmd(command);
         }
-        return runtime_status;
+        return status;
     }
 
     status = exec_file(cmd);
