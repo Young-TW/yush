@@ -299,9 +299,9 @@ int Shell::exec_file(const Command& cmd) {
     if (std::filesystem::exists(cmd.arg()[0]) && std::filesystem::is_regular_file(cmd.arg()[0])) {
         file_path_str = cmd.arg()[0];
     } else {
-        std::vector<std::string> file_paths = string_parser(shell.vars.get("PATH"), ':');
-        for (const auto& file : file_paths) {
-            std::filesystem::path file_path = file / std::filesystem::path(cmd.arg()[0]);
+        std::vector<std::string> paths = string_parser(shell.vars.get("PATH"), ':');
+        for (const auto& path : paths) {
+            std::filesystem::path file_path = path / std::filesystem::path(cmd.arg()[0]);
             if (std::filesystem::exists(file_path) && std::filesystem::is_regular_file(file_path)) {
                 file_path_str = file_path.lexically_normal().string();
                 break;
