@@ -308,9 +308,7 @@ int Shell::exec_file(const Command& cmd) {
             }
         }
     }
-
     if (file_path_str.empty()) {
-        fmt::print(stderr, "Error: command `{}` not found.\n", cmd.arg()[0]);
         return 127;
     }
 
