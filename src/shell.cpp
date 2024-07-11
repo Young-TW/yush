@@ -271,6 +271,8 @@ std::string Shell::read(std::istream& input_stream) {
 }
 
 int Shell::exec_cmd(const Command& cmd) {
+    int status;
+
     if (functions.exist(cmd.arg()[0])) {
         for (const auto& cmd_str : string_parser(functions.get(cmd.arg()[0]), '\n')) {
             Command command(cmd_str);
@@ -279,7 +281,10 @@ int Shell::exec_cmd(const Command& cmd) {
         return runtime_status;
     }
 
-    exec_file(cmd);
+    status = exec_file(cmd);
+    if (status != 127) {
+        return status;
+    }
 
     return exec_shell_builtin(cmd);
 }
