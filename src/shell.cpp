@@ -270,30 +270,12 @@ std::string Shell::read(std::istream& input_stream) {
     return input;
 }
 
-int Shell::exec_shell_builtin(const Command& cmd) {
-    using CommandType = int (Shell::*)(const std::vector<std::string>&);
-
-    static const std::unordered_map<std::string, CommandType> command_map{
-        {"alias", &Shell::cmd_alias},       {"cd", &Shell::cmd_cd},   {"echo", &Shell::cmd_echo},
-        {"function", &Shell::cmd_function}, {"if", &Shell::cmd_if},   {"ls", &Shell::cmd_ls},
-        {"pwd", &Shell::cmd_pwd},           {"set", &Shell::cmd_set},
-    };
-
-    auto command_it = command_map.find(cmd.arg()[0]);
-    if (command_it != command_map.cend()) {
-        return (this->*(command_it->second))(cmd.arg());
-    }
-
-    return 127;
-}
-
 int Shell::exec_cmd(const Command& cmd) {
     if (functions.exist(cmd.arg()[0])) {
         for (const auto& cmd_str : string_parser(functions.get(cmd.arg()[0]), '\n')) {
             Command command(cmd_str);
             runtime_status = exec_cmd(command);
         }
-
         return runtime_status;
     }
 
@@ -342,4 +324,21 @@ int Shell::exec_file(const Command& cmd) {
     signal(SIGINT, SIG_DFL);
     execve(file_path_str.c_str(), argv.get(), environ);
     unreachable();
+}
+
+int Shell::exec_shell_builtin(const Command& cmd) {
+    using CommandType = int (Shell::*)(const std::vector<std::string>&);
+
+    static const std::unordered_map<std::string, CommandType> command_map{
+        {"alias", &Shell::cmd_alias},       {"cd", &Shell::cmd_cd},   {"echo", &Shell::cmd_echo},
+        {"function", &Shell::cmd_function}, {"if", &Shell::cmd_if},   {"ls", &Shell::cmd_ls},
+        {"pwd", &Shell::cmd_pwd},           {"set", &Shell::cmd_set},
+    };
+
+    auto command_it = command_map.find(cmd.arg()[0]);
+    if (command_it != command_map.cend()) {
+        return (this->*(command_it->second))(cmd.arg());
+    }
+
+    return 127;
 }
