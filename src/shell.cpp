@@ -270,34 +270,21 @@ std::string Shell::read(std::istream& input_stream) {
     return input;
 }
 
-int Shell::exec_shell_builtin(const Command& cmd) {
-    using CommandType = int (Shell::*)(const std::vector<std::string>&);
-
-    static const std::unordered_map<std::string, CommandType> command_map{
-        {"alias", &Shell::cmd_alias},       {"cd", &Shell::cmd_cd},   {"echo", &Shell::cmd_echo},
-        {"function", &Shell::cmd_function}, {"if", &Shell::cmd_if},   {"ls", &Shell::cmd_ls},
-        {"pwd", &Shell::cmd_pwd},           {"set", &Shell::cmd_set},
-    };
-
-    auto command_it = command_map.find(cmd.arg()[0]);
-    if (command_it != command_map.cend()) {
-        return (this->*(command_it->second))(cmd.arg());
-    }
-
-    return 127;
-}
-
 int Shell::exec_cmd(const Command& cmd) {
+    int status;
+
     if (functions.exist(cmd.arg()[0])) {
         for (const auto& cmd_str : string_parser(functions.get(cmd.arg()[0]), '\n')) {
             Command command(cmd_str);
-            runtime_status = exec_cmd(command);
+            status = exec_cmd(command);
         }
-
-        return runtime_status;
+        return status;
     }
 
-    exec_file(cmd);
+    status = exec_file(cmd);
+    if (status != 127) {
+        return status;
+    }
 
     return exec_shell_builtin(cmd);
 }
@@ -309,24 +296,19 @@ int Shell::exec_file(const Command& cmd) {
     }
 
     std::string file_path_str;
-
     if (std::filesystem::exists(cmd.arg()[0]) && std::filesystem::is_regular_file(cmd.arg()[0])) {
         file_path_str = cmd.arg()[0];
     } else {
-        std::vector<std::string> file_pathes = string_parser(shell.vars.get("PATH"), ':');
-
-        for (const auto& file : file_pathes) {
-            std::filesystem::path file_path = file / std::filesystem::path(cmd.arg()[0]);
-
+        std::vector<std::string> paths = string_parser(shell.vars.get("PATH"), ':');
+        for (const auto& path : paths) {
+            std::filesystem::path file_path = path / std::filesystem::path(cmd.arg()[0]);
             if (std::filesystem::exists(file_path) && std::filesystem::is_regular_file(file_path)) {
                 file_path_str = file_path.lexically_normal().string();
                 break;
             }
         }
     }
-
     if (file_path_str.empty()) {
-        fmt::print(stderr, "Error: command `{}` not found.\n", cmd.arg()[0]);
         return 127;
     }
 
@@ -342,4 +324,21 @@ int Shell::exec_file(const Command& cmd) {
     signal(SIGINT, SIG_DFL);
     execve(file_path_str.c_str(), argv.get(), environ);
     unreachable();
+}
+
+int Shell::exec_shell_builtin(const Command& cmd) {
+    using CommandType = int (Shell::*)(const std::vector<std::string>&);
+
+    static const std::unordered_map<std::string, CommandType> command_map{
+        {"alias", &Shell::cmd_alias},       {"cd", &Shell::cmd_cd},   {"echo", &Shell::cmd_echo},
+        {"function", &Shell::cmd_function}, {"if", &Shell::cmd_if},   {"ls", &Shell::cmd_ls},
+        {"pwd", &Shell::cmd_pwd},           {"set", &Shell::cmd_set},
+    };
+
+    auto command_it = command_map.find(cmd.arg()[0]);
+    if (command_it != command_map.cend()) {
+        return (this->*(command_it->second))(cmd.arg());
+    }
+
+    return 127;
 }

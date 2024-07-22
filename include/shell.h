@@ -20,11 +20,10 @@ public:
     Shell();
     int run(cxxopts::ParseResult& result);
     int run(const std::filesystem::path& file);
+    int exec_cmd(const Command& cmd);
 
     VariableManager vars;
     VariableManager functions;
-
-    int exec_cmd(const Command& cmd);
 
 private:
     std::ifstream fin;
@@ -32,10 +31,11 @@ private:
     int output();
     std::string read();
     std::string read(std::istream& input_stream);
-    int exec_shell_builtin(const Command& cmd);
     std::vector<Command> read_script(const std::filesystem::path& file);
     int read_history();
     int write_history(const std::string& cmd);
+    int exec_file(const Command& cmd);
+    int exec_shell_builtin(const Command& cmd);
 
     int runtime_status = 0;
 
@@ -43,8 +43,6 @@ private:
     std::filesystem::path rc_file;
     std::filesystem::path history_file;
     std::filesystem::path config_dir;
-
-    int exec_file(const Command& cmd);
 
     int cmd_alias(const std::vector<std::string>& arg);
     int cmd_cd(const std::vector<std::string>& arg);
