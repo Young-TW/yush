@@ -168,12 +168,12 @@ std::string Shell::read() {
     std::size_t history_index = this->cmd_history.size();
     while (true) {
         current = std::cin.get();
-        if (current == 27) {
+        if (current == 27 /* ESC */) {
             int key1 = std::cin.get();
             int key2 = std::cin.get();
             if (key1 != '[') continue;
             switch (key2) {
-            case 'A':
+            case 'A': // Arrow up.
                 if (history_index == 0) break;
                 history_index--;
                 for (std::size_t i = 0; i < input.size(); i++) {
@@ -183,7 +183,7 @@ std::string Shell::read() {
                 fmt::print("{}", input);
                 cursor_index = input.size();
                 break;
-            case 'B':
+            case 'B': // Arrow down.
                 if (history_index == this->cmd_history.size()) break;
                 history_index++;
                 for (std::size_t i = 0; i < input.size(); i++) {
@@ -197,12 +197,12 @@ std::string Shell::read() {
                 cursor_index = input.size();
                 fmt::print("{}", input);
                 break;
-            case 'C':
+            case 'C': // Arrow right.
                 if (cursor_index == input.size()) break;
                 fmt::print("\033[C");
                 cursor_index++;
                 break;
-            case 'D':
+            case 'D': // Arrow left.
                 if (cursor_index == 0) break;
                 fmt::print("\033[D");
                 cursor_index--;
@@ -210,14 +210,14 @@ std::string Shell::read() {
             default:
                 break;
             }
-        } else if (current == 8 || current == 127) {
+        } else if (current == 8 /* BS */ || current == 127 /* DEL */) {
             if (cursor_index == 0) continue;
             input.erase(--cursor_index, 1);
             fmt::print("\b{} ", input.substr(cursor_index));
             for (std::size_t i = cursor_index; i < input.size() + 1; i++) {
                 fmt::print("\033[D");
             }
-        } else if (current == 10) {
+        } else if (current == 10 /* LF */) {
             fmt::print("\n");
             break;
         } else {
