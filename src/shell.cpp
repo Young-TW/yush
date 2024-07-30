@@ -186,15 +186,12 @@ std::string Shell::read() {
             case 'B':
                 if (history_index == this->cmd_history.size()) break;
                 history_index++;
+                for (std::size_t i = 0; i < input.size(); i++) {
+                    fmt::print("\b \b");
+                }
                 if (history_index == this->cmd_history.size()) {
-                    for (std::size_t i = 0; i < input.size(); i++) {
-                        fmt::print("\b \b");
-                    }
                     input.clear();
                 } else {
-                    for (std::size_t i = 0; i < input.size(); i++) {
-                        fmt::print("\b \b");
-                    }
                     input = this->cmd_history[history_index];
                 }
                 cursor_index = input.size();
