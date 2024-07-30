@@ -157,17 +157,16 @@ int Shell::output() {
 }
 
 std::string Shell::read() {
-    std::string input;
-    struct termios old_termios, new_termios;
+    termios old_termios, new_termios;
     tcgetattr(STDIN_FILENO, &old_termios);
     new_termios = old_termios;
     new_termios.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
-
+    std::string input;
     int current;
-    int cursor_index = 0;
-    int history_index = this->cmd_history.size();
-    while (1) {
+    std::size_t cursor_index = 0;
+    std::size_t history_index = this->cmd_history.size();
+    while (true) {
         current = std::cin.get();
         if (current == 27) {
             int key1 = std::cin.get();
@@ -177,7 +176,7 @@ std::string Shell::read() {
                     case 'A':
                         if (history_index > 0) {
                             history_index--;
-                            for (int i = 0; i < input.size(); i++) {
+                            for (std::size_t i = 0; i < input.size(); i++) {
                                 fmt::print("\b \b");
                             }
 
@@ -191,13 +190,13 @@ std::string Shell::read() {
                         if (history_index < this->cmd_history.size()) {
                             history_index++;
                             if (history_index == this->cmd_history.size()) {
-                                for (int i = 0; i < input.size(); i++) {
+                                for (std::size_t i = 0; i < input.size(); i++) {
                                     fmt::print("\b \b");
                                 }
 
                                 input.clear();
                             } else {
-                                for (int i = 0; i < input.size(); i++) {
+                                for (std::size_t i = 0; i < input.size(); i++) {
                                     fmt::print("\b \b");
                                 }
 
@@ -234,16 +233,16 @@ std::string Shell::read() {
                 cursor_index--;
             }
 
-            int old_input_size = input.size() + 1;
-            for (int i = cursor_index; i < input.size(); i++) {
+            std::size_t old_input_size = input.size() + 1;
+            for (std::size_t i = cursor_index; i < input.size(); i++) {
                 fmt::print("{}", input[i]);
             }
 
-            for (int i = input.size(); i < old_input_size; i++) {
+            for (std::size_t i = input.size(); i < old_input_size; i++) {
                 fmt::print(" ");
             }
 
-            for (int i = cursor_index; i < old_input_size; i++) {
+            for (std::size_t i = cursor_index; i < old_input_size; i++) {
                 fmt::print("\033[D");
             }
         } else if (current == 10) {
@@ -255,7 +254,6 @@ std::string Shell::read() {
             fmt::print("{}", static_cast<char>(current));
         }
     }
-
     tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
     return input;
 }
