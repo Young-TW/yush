@@ -171,60 +171,47 @@ std::string Shell::read() {
         if (current == 27) {
             int key1 = std::cin.get();
             int key2 = std::cin.get();
-            if (key1 == '[') {
-                switch (key2) {
-                    case 'A':
-                        if (history_index > 0) {
-                            history_index--;
-                            for (std::size_t i = 0; i < input.size(); i++) {
-                                fmt::print("\b \b");
-                            }
-
-                            input = this->cmd_history[history_index];
-                            fmt::print("{}", input);
-                            cursor_index = input.size();
-                        }
-
-                        break;
-                    case 'B':
-                        if (history_index < this->cmd_history.size()) {
-                            history_index++;
-                            if (history_index == this->cmd_history.size()) {
-                                for (std::size_t i = 0; i < input.size(); i++) {
-                                    fmt::print("\b \b");
-                                }
-
-                                input.clear();
-                            } else {
-                                for (std::size_t i = 0; i < input.size(); i++) {
-                                    fmt::print("\b \b");
-                                }
-
-                                input = this->cmd_history[history_index];
-                            }
-
-                            cursor_index = input.size();
-                            fmt::print("{}", input);
-                        }
-
-                        break;
-                    case 'C':
-                        if (cursor_index < input.size()) {
-                            fmt::print("\033[C");
-                            cursor_index++;
-                        }
-
-                        break;
-                    case 'D':
-                        if (cursor_index > 0) {
-                            fmt::print("\033[D");
-                            cursor_index--;
-                        }
-
-                        break;
-                    default:
-                        break;
+            if (key1 != '[') continue;
+            switch (key2) {
+            case 'A':
+                if (history_index == 0) break;
+                history_index--;
+                for (std::size_t i = 0; i < input.size(); i++) {
+                    fmt::print("\b \b");
                 }
+                input = this->cmd_history[history_index];
+                fmt::print("{}", input);
+                cursor_index = input.size();
+                break;
+            case 'B':
+                if (history_index == this->cmd_history.size()) break;
+                history_index++;
+                if (history_index == this->cmd_history.size()) {
+                    for (std::size_t i = 0; i < input.size(); i++) {
+                        fmt::print("\b \b");
+                    }
+                    input.clear();
+                } else {
+                    for (std::size_t i = 0; i < input.size(); i++) {
+                        fmt::print("\b \b");
+                    }
+                    input = this->cmd_history[history_index];
+                }
+                cursor_index = input.size();
+                fmt::print("{}", input);
+                break;
+            case 'C':
+                if (cursor_index == input.size()) break;
+                fmt::print("\033[C");
+                cursor_index++;
+                break;
+            case 'D':
+                if (cursor_index == 0) break;
+                fmt::print("\033[D");
+                cursor_index--;
+                break;
+            default:
+                break;
             }
         } else if ((current == 8 || current == 127)) {
             if (cursor_index > 0) {
