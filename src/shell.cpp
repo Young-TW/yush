@@ -210,23 +210,11 @@ std::string Shell::read() {
             default:
                 break;
             }
-        } else if ((current == 8 || current == 127)) {
-            if (cursor_index > 0) {
-                input.erase(cursor_index - 1, 1);
-                fmt::print("\b \b");
-                cursor_index--;
-            }
-
-            std::size_t old_input_size = input.size() + 1;
-            for (std::size_t i = cursor_index; i < input.size(); i++) {
-                fmt::print("{}", input[i]);
-            }
-
-            for (std::size_t i = input.size(); i < old_input_size; i++) {
-                fmt::print(" ");
-            }
-
-            for (std::size_t i = cursor_index; i < old_input_size; i++) {
+        } else if (current == 8 || current == 127) {
+            if (cursor_index == 0) continue;
+            input.erase(--cursor_index, 1);
+            fmt::print("\b{} ", input.substr(cursor_index));
+            for (std::size_t i = cursor_index; i < input.size() + 1; i++) {
                 fmt::print("\033[D");
             }
         } else if (current == 10) {
