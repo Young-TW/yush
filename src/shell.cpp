@@ -221,9 +221,11 @@ std::string Shell::read() {
             fmt::print("\n");
             break;
         } else {
-            input += static_cast<char>(current);
-            cursor_index++;
-            fmt::print("{}", static_cast<char>(current));
+            input.insert(cursor_index, 1, static_cast<char>(current));
+            fmt::print("{}", input.substr(cursor_index++));
+            for (std::size_t i = cursor_index; i < input.size(); i++) {
+                fmt::print("\033[D");
+            }
         }
     }
     tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
