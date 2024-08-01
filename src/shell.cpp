@@ -175,21 +175,25 @@ std::string Shell::read() {
             switch (key2) {
             case 'A': // Arrow up.
                 if (history_index == 0) break;
-                history_index--;
+                for (std::size_t i = cursor_index; i < input.size(); i++) {
+                    fmt::print("\033[C");
+                }
                 for (std::size_t i = 0; i < input.size(); i++) {
                     fmt::print("\b \b");
                 }
-                input = this->cmd_history[history_index];
-                fmt::print("{}", input);
+                input = this->cmd_history[--history_index];
                 cursor_index = input.size();
+                fmt::print("{}", input);
                 break;
             case 'B': // Arrow down.
                 if (history_index == this->cmd_history.size()) break;
-                history_index++;
+                for (std::size_t i = cursor_index; i < input.size(); i++) {
+                    fmt::print("\033[C");
+                }
                 for (std::size_t i = 0; i < input.size(); i++) {
                     fmt::print("\b \b");
                 }
-                if (history_index == this->cmd_history.size()) {
+                if (++history_index == this->cmd_history.size()) {
                     input.clear();
                 } else {
                     input = this->cmd_history[history_index];
