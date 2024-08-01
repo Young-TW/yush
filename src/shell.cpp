@@ -157,105 +157,81 @@ int Shell::output() {
 }
 
 std::string Shell::read() {
-    std::string input;
-    struct termios old_termios, new_termios;
+    termios old_termios, new_termios;
     tcgetattr(STDIN_FILENO, &old_termios);
     new_termios = old_termios;
     new_termios.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
-
+    std::string input;
     int current;
-    int curser_index = 0;
-    int history_index = this->cmd_history.size();
-    while (1) {
+    std::size_t cursor_index = 0;
+    std::size_t history_index = this->cmd_history.size();
+    while (true) {
         current = std::cin.get();
-        if (current == 27) {
+        if (current == 27 /* ESC */) {
             int key1 = std::cin.get();
             int key2 = std::cin.get();
-            if (key1 == '[') {
-                switch (key2) {
-                    case 'A':
-                        if (history_index > 0) {
-                            history_index--;
-                            for (int i = 0; i < input.size(); i++) {
-                                fmt::print("\b \b");
-                            }
-
-                            input = this->cmd_history[history_index];
-                            fmt::print("{}", input);
-                            curser_index = input.size();
-                        }
-
-                        break;
-                    case 'B':
-                        if (history_index < this->cmd_history.size()) {
-                            history_index++;
-                            if (history_index == this->cmd_history.size()) {
-                                for (int i = 0; i < input.size(); i++) {
-                                    fmt::print("\b \b");
-                                }
-
-                                input.clear();
-                            } else {
-                                for (int i = 0; i < input.size(); i++) {
-                                    fmt::print("\b \b");
-                                }
-
-                                input = this->cmd_history[history_index];
-                            }
-
-                            curser_index = input.size();
-                            fmt::print("{}", input);
-                        }
-
-                        break;
-                    case 'C':
-                        if (curser_index < input.size()) {
-                            fmt::print("\033[C");
-                            curser_index++;
-                        }
-
-                        break;
-                    case 'D':
-                        if (curser_index > 0) {
-                            fmt::print("\033[D");
-                            curser_index--;
-                        }
-
-                        break;
-                    default:
-                        break;
+            if (key1 != '[') continue;
+            switch (key2) {
+            case 'A': // Arrow up.
+                if (history_index == 0) break;
+                for (std::size_t i = cursor_index; i < input.size(); i++) {
+                    fmt::print("\033[C");
                 }
+                for (std::size_t i = 0; i < input.size(); i++) {
+                    fmt::print("\b \b");
+                }
+                input = this->cmd_history[--history_index];
+                cursor_index = input.size();
+                fmt::print("{}", input);
+                break;
+            case 'B': // Arrow down.
+                if (history_index == this->cmd_history.size()) break;
+                for (std::size_t i = cursor_index; i < input.size(); i++) {
+                    fmt::print("\033[C");
+                }
+                for (std::size_t i = 0; i < input.size(); i++) {
+                    fmt::print("\b \b");
+                }
+                if (++history_index == this->cmd_history.size()) {
+                    input.clear();
+                } else {
+                    input = this->cmd_history[history_index];
+                }
+                cursor_index = input.size();
+                fmt::print("{}", input);
+                break;
+            case 'C': // Arrow right.
+                if (cursor_index == input.size()) break;
+                fmt::print("\033[C");
+                cursor_index++;
+                break;
+            case 'D': // Arrow left.
+                if (cursor_index == 0) break;
+                fmt::print("\033[D");
+                cursor_index--;
+                break;
+            default:
+                break;
             }
-        } else if ((current == 8 || current == 127)) {
-            if (curser_index > 0) {
-                input.erase(curser_index - 1, 1);
-                fmt::print("\b \b");
-                curser_index--;
-            }
-
-            int old_input_size = input.size() + 1;
-            for (int i = curser_index; i < input.size(); i++) {
-                fmt::print("{}", input[i]);
-            }
-
-            for (int i = input.size(); i < old_input_size; i++) {
-                fmt::print(" ");
-            }
-
-            for (int i = curser_index; i < old_input_size; i++) {
+        } else if (current == 8 /* BS */ || current == 127 /* DEL */) {
+            if (cursor_index == 0) continue;
+            input.erase(--cursor_index, 1);
+            fmt::print("\b{} ", input.substr(cursor_index));
+            for (std::size_t i = cursor_index; i < input.size() + 1; i++) {
                 fmt::print("\033[D");
             }
-        } else if (current == 10) {
+        } else if (current == 10 /* LF */) {
             fmt::print("\n");
             break;
         } else {
-            input += static_cast<char>(current);
-            curser_index++;
-            fmt::print("{}", static_cast<char>(current));
+            input.insert(cursor_index, 1, static_cast<char>(current));
+            fmt::print("{}", input.substr(cursor_index++));
+            for (std::size_t i = cursor_index; i < input.size(); i++) {
+                fmt::print("\033[D");
+            }
         }
     }
-
     tcsetattr(STDIN_FILENO, TCSANOW, &old_termios);
     return input;
 }
