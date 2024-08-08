@@ -14,19 +14,19 @@ public:
     int assign(std::vector<std::string>& args);
     int assign(Command& cmd);
 
+    std::string get();
+
     int parse();
     int exec();
 
     bool empty();
 
-    std::vector<std::string> arg();  // return arg
+    const std::vector<std::string>& arg() const;  // return arg
 
 private:
     std::string command;
     std::vector<std::string> args;
     int runtime_status = 0;
-
-    friend class Shell;
 };
 
 #endif

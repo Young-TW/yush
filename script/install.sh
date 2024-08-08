@@ -24,9 +24,12 @@ if ! [ -x "$(command -v clang)" ]; then
   exit 1
 fi
 
+git clone --recursive https://github.com/Young-TW/yush.git
+cd yush || exit
 echo "start Build"
 git submodule update --init --recursive
 cmake -B build
 cmake --build build --config RELEASE
-cmake --install build --config RELEASE
+sudo cmake --install build --config RELEASE
 echo "yush installed successfully"
+cd .. || exit

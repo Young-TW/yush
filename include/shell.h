@@ -1,7 +1,6 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include <cxxopts.hpp>
 #include <filesystem>
 #include <fstream>
 #include <map>
@@ -9,6 +8,8 @@
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include "cxxopts.hpp"
 
 #include "command.h"
 #include "env/system_var.h"
@@ -19,9 +20,9 @@ public:
     Shell();
     int run(cxxopts::ParseResult& result);
     int run(const std::filesystem::path& file);
+    int exec_cmd(const Command& cmd);
 
     VariableManager vars;
-    std::map<std::string, Command> alias;
     VariableManager functions;
 
 private:
@@ -30,10 +31,11 @@ private:
     int output();
     std::string read();
     std::string read(std::istream& input_stream);
-    int exec_shell_builtin(const std::vector<std::string>& arg);
     std::vector<Command> read_script(const std::filesystem::path& file);
     int read_history();
     int write_history(const std::string& cmd);
+    int exec_file(const Command& cmd);
+    int exec_shell_builtin(const Command& cmd);
 
     int runtime_status = 0;
 
@@ -50,8 +52,6 @@ private:
     int cmd_ls(const std::vector<std::string>& arg);
     int cmd_pwd(const std::vector<std::string>& arg);
     int cmd_set(const std::vector<std::string>& arg);
-
-    friend class Command;
 };
 
 static Shell shell;

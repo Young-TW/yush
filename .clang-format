@@ -1,5 +1,8 @@
 BasedOnStyle: Google
 AccessModifierOffset: -4
+IndentCaseLabels: false
 IndentWidth: 4
 UseTab: Never
 BreakBeforeBraces: Attach
+ColumnLimit: 100
+IncludeBlocks: Preserve
