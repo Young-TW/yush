@@ -98,7 +98,8 @@ int Shell::run(cxxopts::ParseResult& result) {
 
         runtime_status = exec_cmd(command);
         if (!command.empty()) {
-            this->write_history(command.get());
+            this->cmd_history.push_back(command.command);
+            this->write_history(command.command);
         }
     } while (!std::cin.eof());
 

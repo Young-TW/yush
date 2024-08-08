@@ -11,7 +11,7 @@ To build from source, please ensure CMake and C++ compiler installed (may requir
 Here is a script to install yush from source:
 
 ```sh
-curl https://raw.githubusercontent.com/Young-TW/yush/main/script/install.sh | bash
+curl https://raw.githubusercontent.com/Young-TW/yush/master/script/install.sh | bash
 ```
 
 ### Clone
