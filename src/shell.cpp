@@ -239,12 +239,12 @@ int Shell::exec_cmd(const Command& cmd) {
         return status;
     }
 
-    status = exec_file(cmd);
+    status = exec_shell_builtin(cmd);
     if (status != 127) {
         return status;
     }
 
-    return exec_shell_builtin(cmd);
+    return exec_file(cmd);
 }
 
 int Shell::exec_file(const Command& cmd) {
