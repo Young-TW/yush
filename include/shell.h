@@ -12,6 +12,7 @@
 #include "cxxopts.hpp"
 
 #include "command.h"
+#include "history.h"
 #include "env/system_var.h"
 #include "variable_manager.h"
 
@@ -32,16 +33,13 @@ private:
     std::string read();
     std::string read(std::istream& input_stream);
     std::vector<Command> read_script(const std::filesystem::path& file);
-    int read_history();
-    int write_history(const std::string& cmd);
     int exec_file(const Command& cmd);
     int exec_shell_builtin(const Command& cmd);
 
     int runtime_status = 0;
 
-    std::vector<std::string> cmd_history;
+    History history;
     std::filesystem::path rc_file;
-    std::filesystem::path history_file;
     std::filesystem::path config_dir;
 
     int cmd_alias(const std::vector<std::string>& arg);

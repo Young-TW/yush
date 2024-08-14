@@ -35,7 +35,7 @@ Shell::Shell() {
     }
 
     this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
-    this->history_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history");
+    this->history.set_file(reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history"));
     this->config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
 
     if (!(std::filesystem::exists(this->config_dir) &&
@@ -49,24 +49,12 @@ Shell::Shell() {
         this->run(this->rc_file);
     }
 
-    if (!std::filesystem::exists(this->history_file)) {
+    if (!this->history.check_file()) {
         fmt::print(stderr, "Error: history file path is empty\n");
         return;
     } else {
-        this->read_history();
+        this->history.load_file();
     }
-}
-
-int Shell::read_history() {
-    fin.open(this->history_file);
-    std::string input;
-    while (!fin.eof()) {
-        getline(fin, input);
-        this->cmd_history.push_back(input);
-    }
-
-    fin.close();
-    return 0;
 }
 
 int Shell::run(cxxopts::ParseResult& result) {
@@ -98,19 +86,12 @@ int Shell::run(cxxopts::ParseResult& result) {
 
         runtime_status = exec_cmd(command);
         if (!command.empty()) {
-            this->cmd_history.push_back(command.get());
-            this->write_history(command.get());
+            this->history.add(command.get());
         }
     } while (!std::cin.eof());
 
+    this->history.write_file();
     return runtime_status;
-}
-
-int Shell::write_history(const std::string& cmd) {
-    fout.open(this->history_file, std::ios::app);
-    fout << cmd << std::endl;
-    fout.close();
-    return 0;
 }
 
 int Shell::run(const std::filesystem::path& file) {
@@ -119,7 +100,7 @@ int Shell::run(const std::filesystem::path& file) {
         if (!command.empty()) {
             command.parse();
             shell.runtime_status = exec_cmd(command);
-            this->write_history(command.get());
+            this->history.add(command.get());
         }
     }
 
@@ -166,7 +147,7 @@ std::string Shell::read() {
     std::string input;
     int current;
     std::size_t cursor_index = 0;
-    std::size_t history_index = this->cmd_history.size();
+    std::size_t history_index = this->history.size();
     while (true) {
         current = std::cin.get();
         if (current == 27 /* ESC */) {
@@ -182,22 +163,22 @@ std::string Shell::read() {
                 for (std::size_t i = 0; i < input.size(); i++) {
                     fmt::print("\b \b");
                 }
-                input = this->cmd_history[--history_index];
+                input = this->history.get(--history_index);
                 cursor_index = input.size();
                 fmt::print("{}", input);
                 break;
             case 'B': // Arrow down.
-                if (history_index == this->cmd_history.size()) break;
+                if (history_index == this->history.size()) break;
                 for (std::size_t i = cursor_index; i < input.size(); i++) {
                     fmt::print("\033[C");
                 }
                 for (std::size_t i = 0; i < input.size(); i++) {
                     fmt::print("\b \b");
                 }
-                if (++history_index == this->cmd_history.size()) {
+                if (++history_index == this->history.size()) {
                     input.clear();
                 } else {
-                    input = this->cmd_history[history_index];
+                    input = this->history.get(history_index);
                 }
                 cursor_index = input.size();
                 fmt::print("{}", input);
