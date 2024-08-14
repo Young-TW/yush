@@ -49,23 +49,3 @@ std::string History::get(size_t index) {
 int History::size() {
     return history.size();
 }
-
-// int Shell::read_history() {
-//     fin.open(this->history_file);
-//     std::string input;
-//     while (!fin.eof()) {
-//         getline(fin, input);
-//         this->cmd_history.push_back(input);
-//     }
-
-//     fin.close();
-//     return 0;
-// }
-
-
-// int Shell::write_history(const std::string& cmd) {
-//     fout.open(this->history_file, std::ios::app);
-//     fout << cmd << std::endl;
-//     fout.close();
-//     return 0;
-// }
