@@ -119,10 +119,15 @@ std::vector<Command> Shell::read_script(const std::filesystem::path& file) {
 }
 
 int Shell::output() {
-    fmt::print(fg(fmt::color::orange), "\n{}", vars.get("USER"));
+    using namespace std::filesystem;
+    fmt::print(fg(fmt::color::orange), "{}", vars.get("USER"));
     fmt::print("@");
     fmt::print(fg(fmt::color::cyan), "{} ", vars.get("NAME"));
-    fmt::print(fg(fmt::color::violet), "{}\n", std::filesystem::current_path().string());
+    if (current_path().string().find(vars.get("HOME")) == 0) {
+        fmt::print(fg(fmt::color::violet), "~{}\n", current_path().string().substr(vars.get("HOME").length()));
+    } else {
+        fmt::print(fg(fmt::color::violet), "{}\n", current_path().string());
+    }
 
     if (runtime_status != 0) {
         fmt::print(fg(fmt::color::red), "{} > ", runtime_status);
