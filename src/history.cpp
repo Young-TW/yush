@@ -1,13 +1,14 @@
 #include "history.h"
 
+#include <filesystem>
 #include <fstream>
 
-int History::set_file(const std::filesystem::path& file) {
-    this->file = file;
-    return 0;
-}
-
-int History::check_file() {
+int History::check_file(std::filesystem::path home) {
+    this->history_dir = home/this->history_dir;
+    this->file = home/this->file;
+    if (!(std::filesystem::exists(this->history_dir) && std::filesystem::is_directory(this->history_dir))) {
+        std::filesystem::create_directory(this->history_dir);
+    }
     return std::filesystem::exists(this->file);
 }
 

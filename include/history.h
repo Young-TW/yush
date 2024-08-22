@@ -6,8 +6,7 @@ class History {
 public:
     History() = default;
 
-    int set_file(const std::filesystem::path& file);
-    int check_file();
+    int check_file(std::filesystem::path home);
     int load_file();
     int write_file();
 
@@ -21,5 +20,6 @@ public:
 
 private:
     std::vector<std::string> history;
-    std::filesystem::path file;
+    std::filesystem::path history_dir = ".local/share/yush";
+    std::filesystem::path file = ".local/share/yush/history";
 };

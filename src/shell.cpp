@@ -13,7 +13,6 @@
 #include "fmt/format.h"
 
 #include "common.hpp"
-#include "feature/path_str_gen.h"
 #include "feature/string_parser.h"
 
 extern char** environ;
@@ -34,22 +33,18 @@ Shell::Shell() {
         exit(1);
     }
 
-    this->rc_file = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/config.yush");
-    this->history.set_file(reverse_path_str_gen(vars.get("HOME"), "~/.config/yush/history"));
-    this->config_dir = reverse_path_str_gen(vars.get("HOME"), "~/.config/yush");
-
-    if (!(std::filesystem::exists(this->config_dir) &&
-          std::filesystem::is_directory(this->config_dir))) {
+    if (!(std::filesystem::exists(vars.get("HOME")/this->config_dir) &&
+          std::filesystem::is_directory(vars.get("HOME")/this->config_dir))) {
         fmt::print(stderr, "Error: yush config dir path is not exists\n");
         fmt::print(stdout, "Auto creating config dir\n");
-        std::filesystem::create_directory(config_dir);
+        std::filesystem::create_directory(vars.get("HOME")/config_dir);
     }
 
-    if (std::filesystem::exists(this->rc_file)) {
-        this->run(this->rc_file);
+    if (std::filesystem::exists(vars.get("HOME")/this->rc_file)) {
+        this->run(vars.get("HOME")/this->rc_file);
     }
 
-    if (!this->history.check_file()) {
+    if (!this->history.check_file(vars.get("HOME"))) {
         fmt::print(stderr, "Error: history file path is empty\n");
         return;
     } else {
@@ -127,7 +122,7 @@ int Shell::output() {
     fmt::print(fg(fmt::color::orange), "\n{}", vars.get("USER"));
     fmt::print("@");
     fmt::print(fg(fmt::color::cyan), "{} ", vars.get("NAME"));
-    fmt::print(fg(fmt::color::violet), "{}\n", path_str_gen(vars.get("HOME")));
+    fmt::print(fg(fmt::color::violet), "{}\n", std::filesystem::current_path().string());
 
     if (runtime_status != 0) {
         fmt::print(fg(fmt::color::red), "{} > ", runtime_status);

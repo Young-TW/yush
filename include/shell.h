@@ -39,8 +39,8 @@ private:
     int runtime_status = 0;
 
     History history;
-    std::filesystem::path rc_file;
-    std::filesystem::path config_dir;
+    const std::filesystem::path rc_file = ".config/yush/config.yush";
+    const std::filesystem::path config_dir = ".config/yush";
 
     int cmd_alias(const std::vector<std::string>& arg);
     int cmd_cd(const std::vector<std::string>& arg);
