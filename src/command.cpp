@@ -7,6 +7,7 @@
 #include "shell.h"
 
 extern char** environ;
+extern Shell shell;
 
 Command::Command() {}
 

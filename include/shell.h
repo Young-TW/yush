@@ -52,6 +52,4 @@ private:
     int cmd_set(const std::vector<std::string>& arg);
 };
 
-static Shell shell;
-
 #endif

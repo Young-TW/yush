@@ -89,7 +89,7 @@ int Shell::run(const std::filesystem::path& file) {
     for (auto& command : commands) {
         if (!command.empty()) {
             command.parse();
-            shell.runtime_status = exec_cmd(command);
+            runtime_status = exec_cmd(command);
             this->history.add(command.get());
         }
     }
@@ -106,7 +106,7 @@ std::vector<Command> Shell::read_script(const std::filesystem::path& file) {
     std::vector<Command> commands;
     std::ifstream fin(file);
     while (!fin.eof()) {
-        commands.push_back(Command(shell.read(fin)));
+        commands.push_back(Command(this->read(fin)));
     }
 
     fin.close();
@@ -252,7 +252,7 @@ int Shell::exec_file(const Command& cmd) {
     if (std::filesystem::exists(cmd.arg()[0]) && std::filesystem::is_regular_file(cmd.arg()[0])) {
         file_path_str = cmd.arg()[0];
     } else {
-        std::vector<std::string> paths = string_parser(shell.vars.get("PATH"), ':');
+        std::vector<std::string> paths = string_parser(this->vars.get("PATH"), ':');
         for (const auto& path : paths) {
             std::filesystem::path file_path = path / std::filesystem::path(cmd.arg()[0]);
             if (std::filesystem::exists(file_path) && std::filesystem::is_regular_file(file_path)) {

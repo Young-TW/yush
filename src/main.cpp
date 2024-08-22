@@ -6,6 +6,8 @@
 
 #include "shell.h"
 
+Shell shell;
+
 int main(int argc, char *argv[]) {
     cxxopts::Options options("yush", "Young's shell");
 
