@@ -44,12 +44,7 @@ Shell::Shell() {
         this->run(vars.get("HOME")/this->rc_file);
     }
 
-    if (!this->history.check_file(vars.get("HOME"))) {
-        fmt::print(stderr, "Error: history file path is empty\n");
-        return;
-    } else {
-        this->history.load_file();
-    }
+    this->history.check_file(vars.get("HOME"));
 }
 
 int Shell::run(cxxopts::ParseResult& result) {
