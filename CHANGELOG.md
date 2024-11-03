@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.5] - 2024-11-03
+
+### Fixed
+
+- find shell_builtin before finding command in $PATH
+- Shell output not displaying ~ to replace $HOME
+- Shell constuctor calls more than once
+
 ## [0.6.4] - 2024-05-28
 
 ### Added
@@ -213,6 +221,7 @@ Remove Windows support after this version
 
 - Initial release
 
+[0.6.5]: https://github.com/Young-TW/yush/releases/tag/v0.6.5
 [0.6.4]: https://github.com/Young-TW/yush/releases/tag/v0.6.4
 [0.6.3]: https://github.com/Young-TW/yush/releases/tag/v0.6.3
 [0.6.2]: https://github.com/Young-TW/yush/releases/tag/v0.6.2
