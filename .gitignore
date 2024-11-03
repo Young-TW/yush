@@ -3,3 +3,8 @@
 /.vscode
 /.idea
 /.cache
+
+
+# Added by cargo
+
+/target

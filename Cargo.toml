@@ -1,0 +1,10 @@
+[package]
+name = "yush"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = "4.5.20"
+fmt = "0.1.0"
+nix = { version = "0.29", features = ["process"] }
+signal-hook = "0.3.17"
