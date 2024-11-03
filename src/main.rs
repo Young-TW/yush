@@ -1,5 +1,4 @@
 use clap::Arg;
-use std::process;
 
 use yush::shell::Shell;
 use yush::command::Command;
@@ -35,9 +34,8 @@ fn main() {
 
     if let Some(command) = matches.get_one::<String>("command") {
         let mut cmd = Command::from_str(command);
-        if let output = shell.exec_cmd(&mut cmd) {
-            println!("{}", output);
-        }
+        let output = shell.exec_cmd(&mut cmd);
+        println!("{}", output);
     } else {
         // Run interactive shell if no command is provided
         shell.run();
