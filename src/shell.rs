@@ -7,8 +7,6 @@ use std::process::{Command, exit};
 use signal_hook::iterator::Signals;
 use std::process::ExitStatus;
 
-use crate::command;
-
 pub struct Shell {
     pub vars: HashMap<String, String>,
     pub config_dir: PathBuf,
@@ -85,28 +83,37 @@ impl Shell {
         status
     }
 
-    pub fn exec_file(&self, script_path: &PathBuf) {
-        let file = fs::File::open(script_path).expect("Unable to open file");
-        let reader = io::BufReader::new(file);
-
-        for line in reader.lines() {
-            if let Ok(command_str) = line {
-                if command_str.trim().is_empty() {
-                    continue;
+    pub fn exec_file(cmd: Vec<String>) -> i32 {
+        let file_path = {
+            let command = &cmd[0];
+            if fs::metadata(command).map(|m| m.is_file()).unwrap_or(false) {
+                PathBuf::from(command)
+            } else {
+                if let Some(paths) = env::var_os("PATH") {
+                    for path in env::split_paths(&paths) {
+                        let candidate = path.join(command);
+                        if fs::metadata(&candidate).map(|m| m.is_file()).unwrap_or(false) {
+                            return 1; // candidate;
+                        }
+                    }
                 }
-                let mut cmd = Command::new(command_str.clone());
-                let status = cmd.spawn().expect("Failed to execute command").wait().expect("Command wasn't running");
-                if !status.success() {
-                    eprintln!("Error executing command: {}", command_str);
+                return -1; // None;
+            }
+        };
+
+        let file_path = file_path.to_str();
+
+        match file_path {
+            Some(file_path) => {
+                let status = Command::new(file_path)
+                    .args(&cmd[1..])
+                    .status();
+                match status {
+                    Ok(exit_status) => exit_status.code().unwrap_or(-1),
+                    Err(_) => 127,
                 }
             }
+            None => 127,
         }
-    }
-
-    pub fn exec_cmd(self, cmd: &mut command::Command) -> i32 {
-        cmd.parse();
-        cmd.exec();
-
-        cmd.status
     }
 }

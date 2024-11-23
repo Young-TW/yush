@@ -1,7 +1,6 @@
 use clap::Arg;
 
 use yush::shell::Shell;
-use yush::command::Command;
 
 const YUSH_VERSION: &str = "v1.0.0";
 
@@ -33,9 +32,7 @@ fn main() {
     let shell: Shell = Shell::new();
 
     if let Some(command) = matches.get_one::<String>("command") {
-        let mut cmd = Command::from_str(command);
-        let output = shell.exec_cmd(&mut cmd);
-        println!("{}", output);
+        // not implemented
     } else {
         // Run interactive shell if no command is provided
         shell.run();

@@ -1,2 +1,3 @@
 pub mod shell;
-pub mod command;
+pub mod history;
+pub mod variable_manager;
