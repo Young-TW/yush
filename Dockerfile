@@ -1,23 +1,17 @@
-# yush – Young's Shell
-
-FROM ubuntu:rolling AS builder
+FROM rust:latest AS builder
 
 WORKDIR /app
 
-RUN \
-    apt-get update && \
-    apt-get install -y build-essential git cmake
+COPY Cargo.toml Cargo.lock ./
+
+RUN cargo fetch
 
 COPY . .
 
-RUN \
-    git submodule update --init --recursive
-
-RUN \
-    cmake -B build && \
-    cmake --build build -j $(nproc)
+RUN cargo build --release
 
 FROM ubuntu:rolling
 
-COPY --from=builder /app/build/yush /usr/local/bin/yush
+RUN apt-get update && apt-get install -y libssl-dev
+COPY --from=builder /app/target/release/yush /usr/local/bin/yush
 ENTRYPOINT [ "yush" ]
