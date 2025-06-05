@@ -40,4 +40,4 @@ alias '...' 'cd ../..'
 # customize your shell under here
 
 echo "Welcome to yush!"
-echo "edit ~/.yushrc or ~/.config/yush/confifg.yush to customize your shell"
+echo "edit ~/.yushrc or ~/.config/yush/config.yush to customize your shell"
