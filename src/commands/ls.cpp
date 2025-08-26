@@ -9,7 +9,7 @@
 int Shell::cmd_ls(const std::vector<std::string>& arg) {
     // parse arguments if path parameters are given
     if (arg.size() > 1) {
-        for (size_t i = 1; i < arg.size(); ++i) {
+        for (size_t i{1}; i < arg.size(); ++i) {
             if (!std::filesystem::exists(arg[i])) {
                 fmt::print(stderr, "Path '{}' does not exist.\n", arg[i]);
                 return 1;

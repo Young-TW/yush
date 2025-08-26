@@ -11,7 +11,7 @@ int Shell::cmd_alias(const std::vector<std::string>& arg) {
         return 1;
     }
 
-    Command alias_cmd = Command(arg[2]);
+    Command alias_cmd{Command(arg[2])};
 
     this->functions.set(arg[1], alias_cmd.get());
     return 0;
