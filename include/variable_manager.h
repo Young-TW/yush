@@ -1,5 +1,4 @@
-#ifndef VARIABLE_MANAGER_H
-#define VARIABLE_MANAGER_H
+#pragma once
 
 #include <string>
 #include <string_view>
@@ -18,5 +17,3 @@ public:
 private:
     std::unordered_map<std::string, std::string> variables;
 };
-
-#endif

@@ -1,6 +1,3 @@
-#ifndef COMMON_HPP
-#define COMMON_HPP
+#pragma once
 
 #define unreachable() __builtin_unreachable()
-
-#endif
