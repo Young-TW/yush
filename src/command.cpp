@@ -11,7 +11,7 @@ extern Shell shell;
 
 Command::Command() {}
 
-Command::Command(std::string_view cmd) { this->command = cmd; }
+Command::Command(std::string_view cmd) : command{cmd} {}
 
 int Command::assign(std::string_view cmd) {
     this->command = cmd;
@@ -33,18 +33,18 @@ std::string Command::get() { return this->command; }
 
 int Command::parse() {
     if (shell.functions.exist(this->command)) {
-        Command alias_cmd = shell.functions.get(this->command);
+        Command alias_cmd{shell.functions.get(this->command)};
         this->assign(alias_cmd);
         this->parse();
         return 0;
     }
 
     this->args.clear();
-    std::size_t double_quote = std::string::npos;
-    std::size_t single_quote = std::string::npos;
-    std::size_t begin = std::string::npos;
+    std::size_t double_quote{std::string::npos};
+    std::size_t single_quote{std::string::npos};
+    std::size_t begin{std::string::npos};
 
-    for (std::size_t i = 0; i < this->command.size(); i++) {
+    for (std::size_t i{0}; i < this->command.size(); i++) {
         if (this->command[i] == ' ' && begin != std::string::npos &&
             double_quote == std::string::npos && single_quote == std::string::npos) {
             this->args.push_back(this->command.substr(begin, i - begin));

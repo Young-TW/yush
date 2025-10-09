@@ -1,5 +1,4 @@
-#ifndef COMMAND_H
-#define COMMAND_H
+#pragma once
 
 #include <string>
 #include <string_view>
@@ -28,5 +27,3 @@ private:
     std::vector<std::string> args;
     int runtime_status = 0;
 };
-
-#endif

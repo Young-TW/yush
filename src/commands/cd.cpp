@@ -15,13 +15,16 @@ static int cd_single(std::string_view path, std::filesystem::path& current_path,
     } else if (path == "~") {
         current_path = vars.get("HOME");
         return 0;
-    } else if (std::filesystem::is_directory(current_path.append(path))) {
-        return 0;
-    } else {
-        fmt::print(stderr, "cd: {} is not a directory.\n", path);
-        return 1;
     }
-    return 0;
+
+    std::filesystem::path new_path{current_path / std::string(path)};
+    if (std::filesystem::is_directory(new_path)) {
+        current_path = new_path;
+        return 0;
+    }
+
+    fmt::print(stderr, "cd: {} is not a directory.\n", path);
+    return 1;
 }
 
 int Shell::cmd_cd(const std::vector<std::string>& arg) {
@@ -30,14 +33,14 @@ int Shell::cmd_cd(const std::vector<std::string>& arg) {
     }
 
     std::filesystem::path current_path(std::filesystem::current_path());
-    std::string_view path = arg[1];
+    std::string_view path{arg[1]};
 
     if (path[0] == '/') {
         current_path = current_path.root_path();
     }
 
-    for (size_t i = 0; i < path.size();) {
-        auto slash = path.find('/', i);
+    for (size_t i{0}; i < path.size();) {
+        auto slash{path.find('/', i)};
         if (slash == std::string::npos) {
             slash = path.size();
         }

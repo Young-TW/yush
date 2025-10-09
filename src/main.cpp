@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
         "i,interactive", "Is interactive mode", cxxopts::value<bool>()->default_value("true"))(
         "v,version", "Print version and exit", cxxopts::value<bool>()->default_value("false"));
 
-    auto result = options.parse(argc, argv);
+    auto result{options.parse(argc, argv)};
 
     if (result.count("help")) {
         fmt::print("{}", options.help());

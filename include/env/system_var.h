@@ -1,5 +1,4 @@
-#ifndef ENV_SYSTEM_VAR_H
-#define ENV_SYSTEM_VAR_H
+#pragma once
 
 #include <string>
 
@@ -16,5 +15,3 @@ const std::string sys =
     "Unknown"
 #endif
     ;
-
-#endif

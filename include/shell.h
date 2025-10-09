@@ -1,5 +1,4 @@
-#ifndef SHELL_H
-#define SHELL_H
+#pragma once
 
 #include <filesystem>
 #include <fstream>
@@ -51,5 +50,3 @@ private:
     int cmd_pwd(const std::vector<std::string>& arg);
     int cmd_set(const std::vector<std::string>& arg);
 };
-
-#endif

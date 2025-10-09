@@ -20,9 +20,9 @@ extern char** environ;
 Shell::Shell() {
     vars.set("SYSTEM", sys).set("SHELL", "yush");
 
-    for (char** current = environ; *current; current++) {
+    for (char** current{environ}; *current; current++) {
         std::string current_str(*current);
-        auto delimiter = current_str.find('=');
+        auto delimiter{current_str.find('=')};
         std::string key(current_str.substr(0, delimiter));
         std::string value(delimiter != std::string::npos ? current_str.substr(delimiter + 1) : "");
         vars.set(key, value);
@@ -85,7 +85,7 @@ int Shell::run(cxxopts::ParseResult& result) {
 }
 
 int Shell::run(const std::filesystem::path& file) {
-    std::vector<Command> commands = read_script(file);
+    std::vector<Command> commands{read_script(file)};
     for (auto& command : commands) {
         if (!command.empty()) {
             command.parse();
@@ -141,21 +141,21 @@ std::string Shell::read() {
     tcsetattr(STDIN_FILENO, TCSANOW, &new_termios);
     std::string input;
     int current;
-    std::size_t cursor_index = 0;
-    std::size_t history_index = this->history.size();
+    std::size_t cursor_index{0};
+    std::size_t history_index{static_cast<std::size_t>(this->history.size())};
     while (true) {
         current = std::cin.get();
         if (current == 27 /* ESC */) {
-            int key1 = std::cin.get();
-            int key2 = std::cin.get();
+            int key1{std::cin.get()};
+            int key2{std::cin.get()};
             if (key1 != '[') continue;
             switch (key2) {
             case 'A': // Arrow up.
                 if (history_index == 0) break;
-                for (std::size_t i = cursor_index; i < input.size(); i++) {
+                for (std::size_t i{cursor_index}; i < input.size(); i++) {
                     fmt::print("\033[C");
                 }
-                for (std::size_t i = 0; i < input.size(); i++) {
+                for (std::size_t i{0}; i < input.size(); i++) {
                     fmt::print("\b \b");
                 }
                 input = this->history.get(--history_index);
@@ -164,10 +164,10 @@ std::string Shell::read() {
                 break;
             case 'B': // Arrow down.
                 if (history_index == this->history.size()) break;
-                for (std::size_t i = cursor_index; i < input.size(); i++) {
+                for (std::size_t i{cursor_index}; i < input.size(); i++) {
                     fmt::print("\033[C");
                 }
-                for (std::size_t i = 0; i < input.size(); i++) {
+                for (std::size_t i{0}; i < input.size(); i++) {
                     fmt::print("\b \b");
                 }
                 if (++history_index == this->history.size()) {
@@ -195,7 +195,7 @@ std::string Shell::read() {
             if (cursor_index == 0) continue;
             input.erase(--cursor_index, 1);
             fmt::print("\b{} ", input.substr(cursor_index));
-            for (std::size_t i = cursor_index; i < input.size() + 1; i++) {
+            for (std::size_t i{cursor_index}; i < input.size() + 1; i++) {
                 fmt::print("\033[D");
             }
         } else if (current == 10 /* LF */) {
@@ -204,7 +204,7 @@ std::string Shell::read() {
         } else {
             input.insert(cursor_index, 1, static_cast<char>(current));
             fmt::print("{}", input.substr(cursor_index++));
-            for (std::size_t i = cursor_index; i < input.size(); i++) {
+            for (std::size_t i{cursor_index}; i < input.size(); i++) {
                 fmt::print("\033[D");
             }
         }
@@ -215,11 +215,11 @@ std::string Shell::read() {
 
 std::string Shell::read(std::istream& input_stream) {
     std::string input;
-    std::getline(input_stream, input);
-    if (input[input.length() - 1] == '\\') {
+    if(!std::getline(input_stream, input)) return {};
+    if (!input.empty() && input.back() == '\\') {
+        input.pop_back();
         input += read(input_stream);
     }
-
     return input;
 }
 
@@ -244,7 +244,7 @@ int Shell::exec_cmd(const Command& cmd) {
 
 int Shell::exec_file(const Command& cmd) {
     std::unique_ptr<char*[]> argv = std::make_unique<char*[]>(cmd.arg().size() + 1);
-    for (size_t i = 0; i < cmd.arg().size(); i++) {
+    for (size_t i{0}; i < cmd.arg().size(); i++) {
         argv[i] = const_cast<char*>(cmd.arg()[i].c_str());
     }
 
@@ -265,7 +265,7 @@ int Shell::exec_file(const Command& cmd) {
         return 127;
     }
 
-    pid_t pid = fork();
+    pid_t pid{fork()};
     if (pid == -1) {
         return -1;
     }
@@ -288,7 +288,7 @@ int Shell::exec_shell_builtin(const Command& cmd) {
         {"pwd", &Shell::cmd_pwd},           {"set", &Shell::cmd_set},
     };
 
-    auto command_it = command_map.find(cmd.arg()[0]);
+    auto command_it{command_map.find(cmd.arg()[0])};
     if (command_it != command_map.cend()) {
         return (this->*(command_it->second))(cmd.arg());
     }
