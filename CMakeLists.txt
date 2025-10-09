@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27.0)
-project(yush VERSION 0.6.5)
+project(yush VERSION 0.7.0)
 
 include(CTest)
 

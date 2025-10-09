@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2025-10-09
+
+### Added
+
+- support multiple path in ls command
+- ci/cd badge in README.md
+
+### Fixed
+
+- typo in init script
+- path handling in cd command
+
+### Removed
+
+- docker(shell is a system app so no need to use docker to run it)
+
 ## [0.6.5] - 2024-11-03
 
 ### Fixed
@@ -221,6 +237,7 @@ Remove Windows support after this version
 
 - Initial release
 
+[0.7.0]: https://github.com/Young-TW/yush/releases/tag/v0.7.0
 [0.6.5]: https://github.com/Young-TW/yush/releases/tag/v0.6.5
 [0.6.4]: https://github.com/Young-TW/yush/releases/tag/v0.6.4
 [0.6.3]: https://github.com/Young-TW/yush/releases/tag/v0.6.3
