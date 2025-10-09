@@ -3,6 +3,8 @@
 ![yush](./public/yush_logo.png)
 
 [![CodeFactor](https://www.codefactor.io/repository/github/young-tw/yush/badge)](https://www.codefactor.io/repository/github/young-tw/yush)
+![CI/CD](https://github.com/Young-TW/yush/actions/workflows/cmake.yml/badge.svg)
+![CI/CD](https://github.com/Young-TW/yush/actions/workflows/release.yml/badge.svg)
 
 A simple shell built by Young.
 
