@@ -1,0 +1,31 @@
+# clangd configuration for yush
+
+CompileFlags:
+  Add: [
+      "--std=c++23",
+      "-I${workspace}/include",
+      "-I${workspace}/cxxopts/include",
+      "-I${workspace}/fmt/include",
+      "-DYUSH_VERSION=0.7.0",
+      # "-DYUSH_MACOS", # macOS platform define
+    ]
+
+Index:
+  Background: Build
+
+InlayHints:
+  Enabled: Yes
+  Designators: Yes
+  ParameterNames: Yes
+  DeducedTypes: Yes
+
+Diagnostics:
+  UnusedIncludes: Strict
+  ClangTidy:
+    Add: [performance-*, readability-*]
+    Remove: [
+        readability-identifier-length, # Optional: Disable if you prefer short names
+      ]
+
+Format:
+  Style: file # Use .clang-format for formatting
