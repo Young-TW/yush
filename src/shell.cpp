@@ -272,7 +272,13 @@ int Shell::exec_file(const Command& cmd) {
     if (pid > 0) {
         int status;
         waitpid(pid, &status, 0);
-        return status;
+        if (WIFEXITED(status)) {
+            return WEXITSTATUS(status);
+        }
+        if (WIFSIGNALED(status)) {
+            return 128 + WTERMSIG(status);
+        }
+        return -1;
     }
     signal(SIGINT, SIG_DFL);
     execve(file_path_str.c_str(), argv.get(), environ);
