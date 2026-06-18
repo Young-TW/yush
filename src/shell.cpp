@@ -91,7 +91,6 @@ int Shell::run(const std::filesystem::path& file) {
         if (!command.empty()) {
             command.parse();
             runtime_status = exec_cmd(command);
-            this->history.add(command.get());
         }
     }
 
