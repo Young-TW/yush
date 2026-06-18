@@ -66,8 +66,8 @@ int Shell::cmd_cd(const std::vector<std::string>& arg) {
 
     current_path = current_path.lexically_normal();
     std::filesystem::current_path(current_path);
-    vars.set("OLDPWD", old_path.string());
-    vars.set("PWD", current_path.string());
+    vars.set_exported("OLDPWD", old_path.string());
+    vars.set_exported("PWD", current_path.string());
     if (report) {
         fmt::print("{}\n", current_path.string());
     }

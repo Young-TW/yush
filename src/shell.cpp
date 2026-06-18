@@ -18,14 +18,14 @@
 extern char** environ;
 
 Shell::Shell() {
-    vars.set("SYSTEM", sys).set("SHELL", "yush");
+    vars.set_exported("SYSTEM", sys).set_exported("SHELL", "yush");
 
     for (char** current{environ}; *current; current++) {
         std::string current_str(*current);
         auto delimiter{current_str.find('=')};
         std::string key(current_str.substr(0, delimiter));
         std::string value(delimiter != std::string::npos ? current_str.substr(delimiter + 1) : "");
-        vars.set(key, value);
+        vars.set_exported(key, value);
     }
 
     if (vars.get("HOME").empty()) {
@@ -269,6 +269,12 @@ int Shell::exec_file(const Command& cmd) {
         return 127;
     }
 
+    std::vector<std::string> env_strings{this->vars.environment()};
+    std::unique_ptr<char*[]> envp = std::make_unique<char*[]>(env_strings.size() + 1);
+    for (size_t i{0}; i < env_strings.size(); i++) {
+        envp[i] = const_cast<char*>(env_strings[i].c_str());
+    }
+
     pid_t pid{fork()};
     if (pid == -1) {
         return -1;
@@ -285,7 +291,7 @@ int Shell::exec_file(const Command& cmd) {
         return -1;
     }
     signal(SIGINT, SIG_DFL);
-    execve(file_path_str.c_str(), argv.get(), environ);
+    execve(file_path_str.c_str(), argv.get(), envp.get());
     unreachable();
 }
 
@@ -293,9 +299,9 @@ int Shell::exec_shell_builtin(const Command& cmd) {
     using CommandType = int (Shell::*)(const std::vector<std::string>&);
 
     static const std::unordered_map<std::string, CommandType> command_map{
-        {"alias", &Shell::cmd_alias},       {"cd", &Shell::cmd_cd},   {"echo", &Shell::cmd_echo},
-        {"function", &Shell::cmd_function}, {"if", &Shell::cmd_if},   {"ls", &Shell::cmd_ls},
-        {"pwd", &Shell::cmd_pwd},           {"set", &Shell::cmd_set},
+        {"alias", &Shell::cmd_alias},       {"cd", &Shell::cmd_cd},         {"echo", &Shell::cmd_echo},
+        {"export", &Shell::cmd_export},     {"function", &Shell::cmd_function}, {"if", &Shell::cmd_if},
+        {"ls", &Shell::cmd_ls},             {"pwd", &Shell::cmd_pwd},       {"set", &Shell::cmd_set},
     };
 
     auto command_it{command_map.find(cmd.arg()[0])};
