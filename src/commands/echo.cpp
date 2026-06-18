@@ -1,4 +1,3 @@
-#include <iostream>
 #include <vector>
 
 #include "fmt/format.h"
@@ -6,10 +5,22 @@
 #include "shell.h"
 
 int Shell::cmd_echo(const std::vector<std::string>& arg) {
-    for (size_t i{1}; i < arg.size(); i++) {
-        fmt::print("{} ", arg[i]);
+    std::size_t first{1};
+    bool newline{true};
+    if (arg.size() > 1 && arg[1] == "-n") {
+        newline = false;
+        first = 2;
     }
 
-    fmt::print("\n");
+    for (std::size_t i{first}; i < arg.size(); ++i) {
+        if (i > first) {
+            fmt::print(" ");
+        }
+        fmt::print("{}", arg[i]);
+    }
+
+    if (newline) {
+        fmt::print("\n");
+    }
     return 0;
 }
