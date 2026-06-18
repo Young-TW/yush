@@ -53,6 +53,7 @@ private:
     int runtime_status = 0;
     bool exiting = false;
     int exit_code = 0;
+    bool read_cancelled = false;
 
     History history;
     const std::filesystem::path rc_file = ".config/yush/config.yush";

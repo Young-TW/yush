@@ -65,8 +65,13 @@ int Shell::run(cxxopts::ParseResult& result) {
 
         // Keep reading lines until the statement is complete (e.g. a multi-line
         // `if` block or an unterminated quote).
-        while (!std::cin.eof() && !statement_complete(line)) {
+        while (!std::cin.eof() && !this->read_cancelled && !statement_complete(line)) {
             line += "\n" + this->read();
+        }
+
+        // Ctrl-C discards the whole (possibly multi-line) input.
+        if (this->read_cancelled) {
+            continue;
         }
 
         runtime_status = exec_statement(line);
@@ -149,10 +154,17 @@ std::string Shell::read() {
     int current;
     std::size_t cursor_index{0};
     std::size_t history_index{static_cast<std::size_t>(this->history.size())};
+    this->read_cancelled = false;
     while (true) {
         current = std::cin.get();
         if (current == EOF /* Ctrl-D / end of input */) {
             fmt::print("\n");
+            break;
+        }
+        if (current == 3 /* Ctrl-C */) {
+            fmt::print("^C\n");
+            input.clear();
+            this->read_cancelled = true;
             break;
         }
         if (current == 27 /* ESC */) {
