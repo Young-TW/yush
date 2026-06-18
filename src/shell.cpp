@@ -37,7 +37,7 @@ Shell::Shell() {
           std::filesystem::is_directory(vars.get("HOME")/this->config_dir))) {
         fmt::print(stderr, "Error: yush config dir path is not exists\n");
         fmt::print(stdout, "Auto creating config dir\n");
-        std::filesystem::create_directory(vars.get("HOME")/config_dir);
+        std::filesystem::create_directories(vars.get("HOME")/config_dir);
     }
 
     if (std::filesystem::exists(vars.get("HOME")/this->rc_file)) {
