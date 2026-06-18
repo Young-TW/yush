@@ -146,6 +146,10 @@ std::string Shell::read() {
     std::size_t history_index{static_cast<std::size_t>(this->history.size())};
     while (true) {
         current = std::cin.get();
+        if (current == EOF /* Ctrl-D / end of input */) {
+            fmt::print("\n");
+            break;
+        }
         if (current == 27 /* ESC */) {
             int key1{std::cin.get()};
             int key2{std::cin.get()};
