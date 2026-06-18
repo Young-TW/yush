@@ -20,8 +20,9 @@ A simple shell built by Young.
 - [x] cd
 - [x] echo
 - [x] exit
+- [x] export
 - [x] function
-- [ ] if
+- [x] if
 - [x] ls
 - [x] pwd
 - [x] set

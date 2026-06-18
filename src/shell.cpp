@@ -63,7 +63,13 @@ int Shell::run(cxxopts::ParseResult& result) {
             line = this->read();
         }
 
-        runtime_status = exec_line(line);
+        // Keep reading lines until the statement is complete (e.g. a multi-line
+        // `if` block or an unterminated quote).
+        while (!std::cin.eof() && !statement_complete(line)) {
+            line += "\n" + this->read();
+        }
+
+        runtime_status = exec_statement(line);
         if (!line.empty()) {
             this->history.add(line);
         }
@@ -78,11 +84,20 @@ int Shell::run(cxxopts::ParseResult& result) {
 
 int Shell::run(const std::filesystem::path& file) {
     std::vector<Command> commands{read_script(file)};
+    std::string statement;
     for (auto& command : commands) {
-        runtime_status = exec_line(command.get());
+        statement = statement.empty() ? command.get() : statement + "\n" + command.get();
+        if (!statement_complete(statement)) {
+            continue;
+        }
+        runtime_status = exec_statement(statement);
+        statement.clear();
         if (this->exiting) {
             break;
         }
+    }
+    if (!statement.empty() && !this->exiting) {
+        runtime_status = exec_statement(statement);
     }
 
     return this->exiting ? this->exit_code : runtime_status;
@@ -345,6 +360,202 @@ int Shell::exec_line(const std::string& line) {
     }
 
     return status;
+}
+
+namespace {
+
+std::string trim(const std::string& s) {
+    std::size_t a{s.find_first_not_of(" \t")};
+    if (a == std::string::npos) {
+        return {};
+    }
+    std::size_t b{s.find_last_not_of(" \t")};
+    return s.substr(a, b - a + 1);
+}
+
+std::string first_word(const std::string& s) {
+    std::string t{trim(s)};
+    std::size_t sp{t.find_first_of(" \t")};
+    return sp == std::string::npos ? t : t.substr(0, sp);
+}
+
+// The text after the first whitespace-delimited word (e.g. drop a leading
+// `then`/`else`/`if` keyword), trimmed.
+std::string rest_after_first_word(const std::string& s) {
+    std::string t{trim(s)};
+    std::size_t sp{t.find_first_of(" \t")};
+    return sp == std::string::npos ? std::string{} : trim(t.substr(sp));
+}
+
+bool quotes_balanced(const std::string& text) {
+    bool in_single{false};
+    bool in_double{false};
+    for (std::size_t i{0}; i < text.size(); ++i) {
+        char c{text[i]};
+        if (c == '\\' && !in_single && i + 1 < text.size()) {
+            ++i;
+        } else if (c == '\'' && !in_double) {
+            in_single = !in_single;
+        } else if (c == '"' && !in_single) {
+            in_double = !in_double;
+        }
+    }
+    return !in_single && !in_double;
+}
+
+// Split a statement into clauses at top-level `;` and newlines (quote-aware),
+// dropping empty pieces. Connectors `&&`/`||`/`|` are left inside the clauses
+// so exec_line can handle them.
+std::vector<std::string> split_statements(const std::string& text) {
+    std::vector<std::string> out;
+    std::string cur;
+    bool in_single{false};
+    bool in_double{false};
+
+    for (std::size_t i{0}; i < text.size(); ++i) {
+        char c{text[i]};
+        if (c == '\\' && !in_single && i + 1 < text.size()) {
+            cur += c;
+            cur += text[++i];
+            continue;
+        }
+        if (c == '\'' && !in_double) {
+            in_single = !in_single;
+        } else if (c == '"' && !in_single) {
+            in_double = !in_double;
+        } else if ((c == ';' || c == '\n') && !in_single && !in_double) {
+            std::string t{trim(cur)};
+            if (!t.empty()) {
+                out.push_back(t);
+            }
+            cur.clear();
+            continue;
+        }
+        cur += c;
+    }
+    std::string t{trim(cur)};
+    if (!t.empty()) {
+        out.push_back(t);
+    }
+    return out;
+}
+
+}  // namespace
+
+bool Shell::statement_complete(const std::string& text) {
+    if (!quotes_balanced(text)) {
+        return false;
+    }
+    int depth{0};
+    for (const auto& clause : split_statements(text)) {
+        std::string word{first_word(clause)};
+        if (word == "if") {
+            ++depth;
+        } else if (word == "fi" && depth > 0) {
+            --depth;
+        }
+    }
+    return depth <= 0;
+}
+
+int Shell::exec_statement(const std::string& text) {
+    if (first_word(text) == "if") {
+        return exec_if(text);
+    }
+    return exec_line(text);
+}
+
+int Shell::exec_if(const std::string& text) {
+    std::vector<std::string> clauses{split_statements(text)};
+    std::size_t idx{0};
+
+    // Run a list of clauses, returning the status of the last one. Stops early
+    // if a clause requests shell exit.
+    auto run_clauses = [&](const std::vector<std::string>& list) {
+        int status{0};
+        for (const auto& clause : list) {
+            status = exec_line(clause);
+            if (this->exiting) {
+                break;
+            }
+        }
+        return status;
+    };
+
+    while (idx < clauses.size()) {
+        std::string keyword{first_word(clauses[idx])};
+        if (keyword != "if" && keyword != "elif") {
+            fmt::print(stderr, "if: syntax error near `{}`\n", clauses[idx]);
+            return 2;
+        }
+
+        // Condition: the remainder of this clause plus clauses up to `then`.
+        std::vector<std::string> condition;
+        std::string head{rest_after_first_word(clauses[idx])};
+        if (!head.empty()) {
+            condition.push_back(head);
+        }
+        ++idx;
+        while (idx < clauses.size() && first_word(clauses[idx]) != "then") {
+            condition.push_back(clauses[idx]);
+            ++idx;
+        }
+        if (idx >= clauses.size()) {
+            fmt::print(stderr, "if: missing `then`\n");
+            return 2;
+        }
+
+        // Body: the remainder after `then` plus clauses up to elif/else/fi.
+        std::vector<std::string> body;
+        std::string body_head{rest_after_first_word(clauses[idx])};
+        if (!body_head.empty()) {
+            body.push_back(body_head);
+        }
+        ++idx;
+        while (idx < clauses.size() && first_word(clauses[idx]) != "elif" &&
+               first_word(clauses[idx]) != "else" && first_word(clauses[idx]) != "fi") {
+            body.push_back(clauses[idx]);
+            ++idx;
+        }
+        if (idx >= clauses.size()) {
+            fmt::print(stderr, "if: missing `fi`\n");
+            return 2;
+        }
+
+        int condition_status{run_clauses(condition)};
+        if (this->exiting) {
+            return this->exit_code;
+        }
+        if (condition_status == 0) {
+            return run_clauses(body);
+        }
+
+        std::string terminator{first_word(clauses[idx])};
+        if (terminator == "elif") {
+            continue;  // re-enter the loop treating this clause as a new test
+        }
+        if (terminator == "else") {
+            std::vector<std::string> else_body;
+            std::string else_head{rest_after_first_word(clauses[idx])};
+            if (!else_head.empty()) {
+                else_body.push_back(else_head);
+            }
+            ++idx;
+            while (idx < clauses.size() && first_word(clauses[idx]) != "fi") {
+                else_body.push_back(clauses[idx]);
+                ++idx;
+            }
+            if (idx >= clauses.size()) {
+                fmt::print(stderr, "if: missing `fi`\n");
+                return 2;
+            }
+            return run_clauses(else_body);
+        }
+        // terminator == "fi": no branch taken.
+        return 0;
+    }
+
+    return 0;
 }
 
 namespace {
@@ -650,9 +861,10 @@ int Shell::exec_shell_builtin(const Command& cmd) {
     using CommandType = int (Shell::*)(const std::vector<std::string>&);
 
     static const std::unordered_map<std::string, CommandType> command_map{
-        {"alias", &Shell::cmd_alias},       {"cd", &Shell::cmd_cd},         {"echo", &Shell::cmd_echo},
-        {"export", &Shell::cmd_export},     {"function", &Shell::cmd_function}, {"if", &Shell::cmd_if},
-        {"ls", &Shell::cmd_ls},             {"pwd", &Shell::cmd_pwd},       {"set", &Shell::cmd_set},
+        {"alias", &Shell::cmd_alias},   {"cd", &Shell::cmd_cd},
+        {"echo", &Shell::cmd_echo},     {"export", &Shell::cmd_export},
+        {"function", &Shell::cmd_function}, {"ls", &Shell::cmd_ls},
+        {"pwd", &Shell::cmd_pwd},       {"set", &Shell::cmd_set},
     };
 
     auto command_it{command_map.find(cmd.arg()[0])};

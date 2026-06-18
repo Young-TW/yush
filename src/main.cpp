@@ -33,10 +33,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (result.count("command")) {
-        Command command;
-        command.assign(result["command"].as<std::string>());
-        command.parse();
-        return shell.exec_cmd(command);
+        return shell.exec_statement(result["command"].as<std::string>());
     }
 
     if (result.unmatched().size() > 0) {

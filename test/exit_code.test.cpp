@@ -167,3 +167,34 @@ TEST(ExecLine, RedirectOutAndAppend) {
     EXPECT_EQ(l1.substr(0, 5), "first");
     EXPECT_EQ(l2.substr(0, 6), "second");
 }
+
+// `if` dispatch and branch selection, observed through the resulting status.
+TEST(ExecStatement, IfThenRunsBodyWhenConditionTrue) {
+    // Body runs and its status (false -> 1) is reported.
+    EXPECT_EQ(shell.exec_statement("if /usr/bin/true; then /usr/bin/false; fi"), 1);
+}
+
+TEST(ExecStatement, IfWithoutElseReturnsZeroWhenConditionFalse) {
+    EXPECT_EQ(shell.exec_statement("if /usr/bin/false; then /usr/bin/false; fi"), 0);
+}
+
+TEST(ExecStatement, ElseRunsWhenConditionFalse) {
+    EXPECT_EQ(
+        shell.exec_statement("if /usr/bin/false; then /usr/bin/false; else /usr/bin/true; fi"),
+        0);
+}
+
+TEST(ExecStatement, ElifBranchSelected) {
+    EXPECT_EQ(shell.exec_statement(
+                  "if /usr/bin/false; then /usr/bin/true; "
+                  "elif /usr/bin/true; then /usr/bin/false; fi"),
+              1);
+}
+
+TEST(Shell, StatementCompleteTracksIfDepth) {
+    EXPECT_FALSE(shell.statement_complete("if /usr/bin/true"));
+    EXPECT_FALSE(shell.statement_complete("if /usr/bin/true\nthen\necho hi"));
+    EXPECT_TRUE(shell.statement_complete("if /usr/bin/true\nthen\necho hi\nfi"));
+    EXPECT_TRUE(shell.statement_complete("echo fi"));  // `fi` as an argument
+    EXPECT_FALSE(shell.statement_complete("echo \"unterminated"));
+}
