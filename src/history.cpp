@@ -41,10 +41,16 @@ int History::add(const std::string& cmd) {
 }
 
 std::string History::get() {
+    if (history.empty()) {
+        return {};
+    }
     return history.back();
 }
 
 std::string History::get(size_t index) {
+    if (index >= history.size()) {
+        return {};
+    }
     return history[index];
 }
 
