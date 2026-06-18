@@ -22,6 +22,10 @@ public:
     int run(const std::filesystem::path& file);
     int exec_cmd(const Command& cmd);
 
+    // Execute one input line, which may contain several commands joined by
+    // `;`, `&&` or `||`. Returns the status of the last command run.
+    int exec_line(const std::string& line);
+
     VariableManager vars;
     VariableManager functions;
 
@@ -36,6 +40,8 @@ private:
     int exec_shell_builtin(const Command& cmd);
 
     int runtime_status = 0;
+    bool exiting = false;
+    int exit_code = 0;
 
     History history;
     const std::filesystem::path rc_file = ".config/yush/config.yush";

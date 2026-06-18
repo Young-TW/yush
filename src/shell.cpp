@@ -49,52 +49,41 @@ Shell::Shell() {
 }
 
 int Shell::run(cxxopts::ParseResult& result) {
-    Command command;
-
     if (signal(SIGINT, SIG_IGN) == SIG_ERR) {
         fmt::print(stderr, "Error: signal handler failed\n");
         return 1;
     }
 
     do {
+        std::string line;
         if (result["interactive"].as<bool>()) {
             this->output();
-            command.assign(this->read());
+            line = this->read();
         }
 
-        command.parse();
-
-        if (command.empty()) {
-            continue;
+        runtime_status = exec_line(line);
+        if (!line.empty()) {
+            this->history.add(line);
         }
-
-        if (command.arg()[0] == "exit") {
-            if (command.arg().size() > 1) {
-                return atoi(command.arg()[1].c_str());
-            }
+        if (this->exiting) {
             break;
-        }
-
-        runtime_status = exec_cmd(command);
-        if (!command.empty()) {
-            this->history.add(command.get());
         }
     } while (!std::cin.eof());
 
     this->history.write_file();
-    return runtime_status;
+    return this->exiting ? this->exit_code : runtime_status;
 }
 
 int Shell::run(const std::filesystem::path& file) {
     std::vector<Command> commands{read_script(file)};
     for (auto& command : commands) {
-        if (!command.empty()) {
-            command.parse();
-            runtime_status = exec_cmd(command);
+        runtime_status = exec_line(command.get());
+        if (this->exiting) {
+            break;
         }
     }
 
-    return runtime_status;
+    return this->exiting ? this->exit_code : runtime_status;
 }
 
 std::vector<Command> Shell::read_script(const std::filesystem::path& file) {
@@ -248,6 +237,112 @@ int Shell::exec_cmd(const Command& cmd) {
     }
 
     return exec_file(cmd);
+}
+
+namespace {
+
+enum class Connector { Seq, And, Or };
+
+struct Segment {
+    std::string text;
+    Connector conn;  // connector that precedes this segment
+};
+
+// Split a line into segments at top-level `;`, `&&` and `||`, honoring
+// single/double quotes and backslash escapes so separators inside quotes are
+// left untouched. Empty segments (e.g. from a trailing `;`) are dropped.
+std::vector<Segment> split_line(const std::string& line) {
+    std::vector<Segment> segments;
+    std::string cur;
+    Connector pending{Connector::Seq};
+    bool in_single{false};
+    bool in_double{false};
+
+    auto flush = [&]() {
+        std::size_t start{cur.find_first_not_of(" \t")};
+        if (start != std::string::npos) {
+            std::size_t end{cur.find_last_not_of(" \t")};
+            segments.push_back({cur.substr(start, end - start + 1), pending});
+        }
+        cur.clear();
+    };
+
+    for (std::size_t i{0}; i < line.size(); ++i) {
+        char c{line[i]};
+
+        if (c == '\\' && !in_single && i + 1 < line.size()) {
+            cur += c;
+            cur += line[++i];
+            continue;
+        }
+        if (c == '\'' && !in_double) {
+            in_single = !in_single;
+            cur += c;
+            continue;
+        }
+        if (c == '"' && !in_single) {
+            in_double = !in_double;
+            cur += c;
+            continue;
+        }
+
+        if (!in_single && !in_double) {
+            if (c == ';') {
+                flush();
+                pending = Connector::Seq;
+                continue;
+            }
+            if (c == '&' && i + 1 < line.size() && line[i + 1] == '&') {
+                flush();
+                pending = Connector::And;
+                ++i;
+                continue;
+            }
+            if (c == '|' && i + 1 < line.size() && line[i + 1] == '|') {
+                flush();
+                pending = Connector::Or;
+                ++i;
+                continue;
+            }
+        }
+
+        cur += c;
+    }
+    flush();
+
+    return segments;
+}
+
+}  // namespace
+
+int Shell::exec_line(const std::string& line) {
+    int status{runtime_status};
+
+    for (const auto& segment : split_line(line)) {
+        if (segment.conn == Connector::And && status != 0) {
+            continue;
+        }
+        if (segment.conn == Connector::Or && status == 0) {
+            continue;
+        }
+
+        Command command(segment.text);
+        command.parse();
+        if (command.arg().empty()) {
+            continue;
+        }
+
+        if (command.arg()[0] == "exit") {
+            this->exiting = true;
+            this->exit_code =
+                command.arg().size() > 1 ? atoi(command.arg()[1].c_str()) : status;
+            return this->exit_code;
+        }
+
+        status = exec_cmd(command);
+    }
+
+    return status;
 }
 
 int Shell::exec_file(const Command& cmd) {

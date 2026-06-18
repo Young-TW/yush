@@ -119,3 +119,25 @@ TEST(ExitCode, ScriptExitOne) {
     cmd.parse();
     EXPECT_EQ(shell.exec_cmd(cmd), 1);
 }
+
+// `;`, `&&` and `||` chaining, observed through the line's resulting status.
+TEST(ExecLine, SequenceRunsAll) {
+    EXPECT_EQ(shell.exec_line("/usr/bin/false ; /usr/bin/true"), 0);
+}
+
+TEST(ExecLine, AndRunsSecondOnSuccess) {
+    EXPECT_EQ(shell.exec_line("/usr/bin/true && /usr/bin/false"), 1);
+}
+
+TEST(ExecLine, AndSkipsSecondOnFailure) {
+    // Second command is skipped, so the status stays at the first false (1).
+    EXPECT_EQ(shell.exec_line("/usr/bin/false && /usr/bin/false"), 1);
+}
+
+TEST(ExecLine, OrRunsSecondOnFailure) {
+    EXPECT_EQ(shell.exec_line("/usr/bin/false || /usr/bin/true"), 0);
+}
+
+TEST(ExecLine, OrSkipsSecondOnSuccess) {
+    EXPECT_EQ(shell.exec_line("/usr/bin/true || /usr/bin/false"), 0);
+}
