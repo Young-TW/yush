@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-06-19
+
+### Added
+
+- Pipelines with `|`
+- I/O redirection: `>`, `>>` and `<`
+- Command separators `;`, `&&` and `||`
+- `if`/`elif`/`else`/`fi` conditionals (single-line and multi-line)
+- Background execution with `&`, including job reporting and reaping
+- `export` builtin with a POSIX-style distinction between shell-local and environment variables
+- `cd` with no argument changes to `$HOME`; `cd -` switches to the previous directory
+- Variable expansion now supports `${VAR}`, concatenation (e.g. `/$DIR/x`) and expansion inside double quotes
+- `echo -n` to suppress the trailing newline
+- Ctrl-C cancels the current input line; Ctrl-D (EOF) exits cleanly
+
+### Changed
+
+- Rewrote the command parser as a separate lexer and expansion stage
+- Aliases are matched on the first word and forward their arguments
+
+### Fixed
+
+- Decode `waitpid()` status in `exec_file` so exit codes are reported correctly (#40)
+- `exec_cmd` returned an uninitialized status for empty function bodies
+- History was never loaded on startup; loading now avoids duplicate writes and a trailing blank line
+- Use `create_directories` for the config and history directories to avoid a crash on a fresh `$HOME`
+- EOF in the interactive reader no longer causes an infinite loop
+- Script and rc-file commands no longer pollute interactive history
+- Script files run on the global shell so their `set`/`alias` definitions take effect
+- `echo` no longer emits a trailing space
+
 ## [0.7.0] - 2025-10-09
 
 ### Added
