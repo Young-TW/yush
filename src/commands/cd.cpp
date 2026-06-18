@@ -28,14 +28,28 @@ static int cd_single(std::string_view path, std::filesystem::path& current_path,
 }
 
 int Shell::cmd_cd(const std::vector<std::string>& arg) {
-    if (arg.size() != 2) {
-        return 1;
+    std::filesystem::path old_path(std::filesystem::current_path());
+    std::filesystem::path current_path{old_path};
+
+    std::string target;
+    bool report{false};
+    if (arg.size() < 2) {
+        target = std::string(vars.get("HOME"));
+    } else if (arg[1] == "-") {
+        std::string_view old{vars.get("OLDPWD")};
+        if (old.empty()) {
+            fmt::print(stderr, "cd: OLDPWD not set\n");
+            return 1;
+        }
+        target = std::string(old);
+        report = true;
+    } else {
+        target = arg[1];
     }
 
-    std::filesystem::path current_path(std::filesystem::current_path());
-    std::string_view path{arg[1]};
+    std::string_view path{target};
 
-    if (path[0] == '/') {
+    if (!path.empty() && path[0] == '/') {
         current_path = current_path.root_path();
     }
 
@@ -50,6 +64,12 @@ int Shell::cmd_cd(const std::vector<std::string>& arg) {
         i = slash + 1;
     }
 
-    std::filesystem::current_path(current_path.lexically_normal());
+    current_path = current_path.lexically_normal();
+    std::filesystem::current_path(current_path);
+    vars.set("OLDPWD", old_path.string());
+    vars.set("PWD", current_path.string());
+    if (report) {
+        fmt::print("{}\n", current_path.string());
+    }
     return 0;
 }
