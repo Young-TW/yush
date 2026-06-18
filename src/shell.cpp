@@ -45,6 +45,7 @@ Shell::Shell() {
     }
 
     this->history.check_file(vars.get("HOME"));
+    this->history.load_file();
 }
 
 int Shell::run(cxxopts::ParseResult& result) {

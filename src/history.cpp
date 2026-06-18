@@ -15,22 +15,23 @@ int History::check_file(std::filesystem::path home) {
 int History::load_file() {
     std::ifstream fin(this->file);
     std::string input;
-    while (!fin.eof()) {
-        getline(fin, input);
+    while (getline(fin, input)) {
         this->history.push_back(input);
     }
 
     fin.close();
+    this->persisted = this->history.size();
     return 0;
 }
 
 int History::write_file() {
     std::ofstream fout(this->file, std::ios::app);
-    for (const auto& cmd : this->history) {
-        fout << cmd << std::endl;
+    for (std::size_t i{this->persisted}; i < this->history.size(); ++i) {
+        fout << this->history[i] << std::endl;
     }
 
     fout.close();
+    this->persisted = this->history.size();
     return 0;
 }
 

@@ -22,6 +22,7 @@ public:
 
 private:
     std::vector<std::string> history;
+    std::size_t persisted = 0;
     std::filesystem::path history_dir = ".local/share/yush";
     std::filesystem::path file = ".local/share/yush/history";
 };
