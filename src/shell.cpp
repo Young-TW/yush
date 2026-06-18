@@ -1,5 +1,7 @@
 #include "shell.h"
 
+#include <fcntl.h>
+#include <cstdio>
 #include <signal.h>
 #include <stdlib.h>
 #include <sys/wait.h>
@@ -326,22 +328,270 @@ int Shell::exec_line(const std::string& line) {
             continue;
         }
 
-        Command command(segment.text);
-        command.parse();
-        if (command.arg().empty()) {
+        Command probe(segment.text);
+        probe.parse();
+        if (probe.arg().empty()) {
             continue;
         }
 
-        if (command.arg()[0] == "exit") {
+        if (probe.arg()[0] == "exit") {
             this->exiting = true;
             this->exit_code =
-                command.arg().size() > 1 ? atoi(command.arg()[1].c_str()) : status;
+                probe.arg().size() > 1 ? atoi(probe.arg()[1].c_str()) : status;
             return this->exit_code;
         }
 
-        status = exec_cmd(command);
+        status = exec_pipeline(segment.text);
     }
 
+    return status;
+}
+
+namespace {
+
+struct Redir {
+    enum class Type { In, Out, Append } type;
+    std::string target;
+};
+
+// Quote-aware split of a pipeline segment into its commands at top-level `|`.
+std::vector<std::string> split_pipe(const std::string& segment) {
+    std::vector<std::string> parts;
+    std::string cur;
+    bool in_single{false};
+    bool in_double{false};
+
+    for (std::size_t i{0}; i < segment.size(); ++i) {
+        char c{segment[i]};
+        if (c == '\\' && !in_single && i + 1 < segment.size()) {
+            cur += c;
+            cur += segment[++i];
+            continue;
+        }
+        if (c == '\'' && !in_double) {
+            in_single = !in_single;
+        } else if (c == '"' && !in_single) {
+            in_double = !in_double;
+        } else if (c == '|' && !in_single && !in_double) {
+            parts.push_back(cur);
+            cur.clear();
+            continue;
+        }
+        cur += c;
+    }
+    parts.push_back(cur);
+    return parts;
+}
+
+// Pull `<`, `>` and `>>` redirections (attached or space-separated) out of a
+// command, returning the command text with them removed. Targets are expanded
+// through the normal parser so variables and quotes are honored.
+std::string extract_redirs(const std::string& text, std::vector<Redir>& redirs) {
+    std::string cleaned;
+    bool in_single{false};
+    bool in_double{false};
+    const std::size_t n{text.size()};
+
+    auto read_target = [&](std::size_t& i) -> std::string {
+        while (i < n && (text[i] == ' ' || text[i] == '\t')) {
+            ++i;
+        }
+        std::string raw;
+        bool s{false};
+        bool d{false};
+        while (i < n) {
+            char c{text[i]};
+            if (!s && !d && (c == ' ' || c == '\t' || c == '<' || c == '>' || c == '|')) {
+                break;
+            }
+            if (c == '\'' && !d) {
+                s = !s;
+            } else if (c == '"' && !s) {
+                d = !d;
+            }
+            raw += c;
+            ++i;
+        }
+        Command t(raw);
+        t.parse();
+        return t.arg().empty() ? std::string{} : t.arg()[0];
+    };
+
+    for (std::size_t i{0}; i < n;) {
+        char c{text[i]};
+        if (c == '\\' && !in_single && i + 1 < n) {
+            cleaned += c;
+            cleaned += text[i + 1];
+            i += 2;
+            continue;
+        }
+        if (c == '\'' && !in_double) {
+            in_single = !in_single;
+            cleaned += c;
+            ++i;
+            continue;
+        }
+        if (c == '"' && !in_single) {
+            in_double = !in_double;
+            cleaned += c;
+            ++i;
+            continue;
+        }
+
+        if (!in_single && !in_double && c == '<') {
+            ++i;
+            redirs.push_back({Redir::Type::In, read_target(i)});
+            cleaned += ' ';
+            continue;
+        }
+        if (!in_single && !in_double && c == '>') {
+            ++i;
+            Redir::Type type{Redir::Type::Out};
+            if (i < n && text[i] == '>') {
+                type = Redir::Type::Append;
+                ++i;
+            }
+            redirs.push_back({type, read_target(i)});
+            cleaned += ' ';
+            continue;
+        }
+
+        cleaned += c;
+        ++i;
+    }
+
+    return cleaned;
+}
+
+// Open each redirection target and dup2 it onto the right fd. Returns 0 on
+// success, -1 (after printing an error) on the first failure.
+int apply_redirs(const std::vector<Redir>& redirs) {
+    for (const auto& r : redirs) {
+        int fd{-1};
+        int target_fd{r.type == Redir::Type::In ? 0 : 1};
+        switch (r.type) {
+        case Redir::Type::In:
+            fd = open(r.target.c_str(), O_RDONLY);
+            break;
+        case Redir::Type::Out:
+            fd = open(r.target.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            break;
+        case Redir::Type::Append:
+            fd = open(r.target.c_str(), O_WRONLY | O_CREAT | O_APPEND, 0644);
+            break;
+        }
+        if (fd < 0) {
+            fmt::print(stderr, "yush: {}: cannot open\n", r.target);
+            return -1;
+        }
+        dup2(fd, target_fd);
+        close(fd);
+    }
+    return 0;
+}
+
+}  // namespace
+
+int Shell::exec_simple(const std::string& text) {
+    std::vector<Redir> redirs;
+    std::string cleaned{extract_redirs(text, redirs)};
+
+    Command cmd(cleaned);
+    cmd.parse();
+
+    if (redirs.empty()) {
+        return exec_cmd(cmd);
+    }
+
+    int saved_in{dup(0)};
+    int saved_out{dup(1)};
+    int status{1};
+    if (apply_redirs(redirs) == 0) {
+        status = exec_cmd(cmd);
+    }
+    fflush(stdout);  // flush builtin output to the redirected fd before restoring
+    dup2(saved_in, 0);
+    dup2(saved_out, 1);
+    close(saved_in);
+    close(saved_out);
+    return status;
+}
+
+int Shell::exec_pipeline(const std::string& segment) {
+    std::vector<std::string> commands{split_pipe(segment)};
+    if (commands.size() == 1) {
+        return exec_simple(commands[0]);
+    }
+
+    fflush(stdout);  // keep parent's buffered output ahead of child output
+
+    const std::size_t n{commands.size()};
+    int prev_read{-1};
+    std::vector<pid_t> pids;
+
+    for (std::size_t i{0}; i < n; ++i) {
+        int pipefd[2]{-1, -1};
+        if (i + 1 < n && pipe(pipefd) == -1) {
+            fmt::print(stderr, "yush: pipe failed\n");
+            break;
+        }
+
+        pid_t pid{fork()};
+        if (pid == -1) {
+            fmt::print(stderr, "yush: fork failed\n");
+            break;
+        }
+
+        if (pid == 0) {
+            if (prev_read != -1) {
+                dup2(prev_read, 0);
+                close(prev_read);
+            }
+            if (i + 1 < n) {
+                dup2(pipefd[1], 1);
+                close(pipefd[0]);
+                close(pipefd[1]);
+            }
+
+            std::vector<Redir> redirs;
+            std::string cleaned{extract_redirs(commands[i], redirs)};
+            if (apply_redirs(redirs) != 0) {
+                _exit(1);
+            }
+            Command cmd(cleaned);
+            cmd.parse();
+            signal(SIGINT, SIG_DFL);
+            int st{exec_cmd(cmd)};
+            fflush(stdout);  // _exit does not flush stdio buffers
+            _exit(st & 0xff);
+        }
+
+        if (prev_read != -1) {
+            close(prev_read);
+        }
+        if (i + 1 < n) {
+            close(pipefd[1]);
+            prev_read = pipefd[0];
+        }
+        pids.push_back(pid);
+    }
+
+    if (prev_read != -1) {
+        close(prev_read);
+    }
+
+    int status{0};
+    for (std::size_t i{0}; i < pids.size(); ++i) {
+        int st{0};
+        waitpid(pids[i], &st, 0);
+        if (i + 1 == pids.size()) {
+            if (WIFEXITED(st)) {
+                status = WEXITSTATUS(st);
+            } else if (WIFSIGNALED(st)) {
+                status = 128 + WTERMSIG(st);
+            }
+        }
+    }
     return status;
 }
 
@@ -373,6 +623,8 @@ int Shell::exec_file(const Command& cmd) {
     for (size_t i{0}; i < env_strings.size(); i++) {
         envp[i] = const_cast<char*>(env_strings[i].c_str());
     }
+
+    fflush(stdout);  // keep buffered builtin output ahead of the child's output
 
     pid_t pid{fork()};
     if (pid == -1) {

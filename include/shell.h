@@ -36,6 +36,8 @@ private:
     std::string read();
     std::string read(std::istream& input_stream);
     std::vector<Command> read_script(const std::filesystem::path& file);
+    int exec_pipeline(const std::string& segment);
+    int exec_simple(const std::string& text);
     int exec_file(const Command& cmd);
     int exec_shell_builtin(const Command& cmd);
 

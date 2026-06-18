@@ -141,3 +141,29 @@ TEST(ExecLine, OrRunsSecondOnFailure) {
 TEST(ExecLine, OrSkipsSecondOnSuccess) {
     EXPECT_EQ(shell.exec_line("/usr/bin/true || /usr/bin/false"), 0);
 }
+
+// A pipeline reports the exit status of its last stage.
+TEST(ExecLine, PipeStatusIsLastStage) {
+    EXPECT_EQ(shell.exec_line("/usr/bin/false | /usr/bin/true"), 0);
+    EXPECT_EQ(shell.exec_line("/usr/bin/true | /usr/bin/false"), 1);
+}
+
+// `>` then `<` round-trips data through a file, including for a builtin.
+TEST(ExecLine, RedirectOutAndAppend) {
+    const std::string path =
+        "/tmp/yush_test_redir_" + std::to_string(getpid()) + ".txt";
+    std::filesystem::remove(path);
+
+    shell.exec_line("echo first > " + path);
+    shell.exec_line("echo second >> " + path);
+
+    std::ifstream in(path);
+    std::string l1, l2;
+    std::getline(in, l1);
+    std::getline(in, l2);
+    in.close();
+    std::filesystem::remove(path);
+
+    EXPECT_EQ(l1.substr(0, 5), "first");
+    EXPECT_EQ(l2.substr(0, 6), "second");
+}
