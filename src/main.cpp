@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (result.unmatched().size() > 0) {
-        return Shell().run(result.unmatched().at(0));
+        return shell.run(result.unmatched().at(0));
     }
 
     return shell.run(result);
