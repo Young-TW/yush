@@ -59,6 +59,7 @@ int Shell::run(cxxopts::ParseResult& result) {
     do {
         std::string line;
         if (result["interactive"].as<bool>()) {
+            this->reap_jobs();
             this->output();
             line = this->read();
         }
@@ -245,6 +246,20 @@ std::string Shell::read(std::istream& input_stream) {
     return input;
 }
 
+void Shell::reap_jobs() {
+    int st{0};
+    pid_t pid{0};
+    while ((pid = waitpid(-1, &st, WNOHANG)) > 0) {
+        for (auto it{this->jobs.begin()}; it != this->jobs.end(); ++it) {
+            if (it->second == pid) {
+                fmt::print("[{}]+ Done\t{}\n", it->first, static_cast<int>(pid));
+                this->jobs.erase(it);
+                break;
+            }
+        }
+    }
+}
+
 int Shell::exec_cmd(const Command& cmd) {
     int status{0};
 
@@ -274,10 +289,11 @@ enum class Connector { Seq, And, Or };
 
 struct Segment {
     std::string text;
-    Connector conn;  // connector that precedes this segment
+    Connector conn;          // connector that precedes this segment
+    bool background{false};  // segment is followed by `&` (run asynchronously)
 };
 
-// Split a line into segments at top-level `;`, `&&` and `||`, honoring
+// Split a line into segments at top-level `;`, `&&`, `||` and `&`, honoring
 // single/double quotes and backslash escapes so separators inside quotes are
 // left untouched. Empty segments (e.g. from a trailing `;`) are dropped.
 std::vector<Segment> split_line(const std::string& line) {
@@ -287,11 +303,11 @@ std::vector<Segment> split_line(const std::string& line) {
     bool in_single{false};
     bool in_double{false};
 
-    auto flush = [&]() {
+    auto flush = [&](bool background) {
         std::size_t start{cur.find_first_not_of(" \t")};
         if (start != std::string::npos) {
             std::size_t end{cur.find_last_not_of(" \t")};
-            segments.push_back({cur.substr(start, end - start + 1), pending});
+            segments.push_back({cur.substr(start, end - start + 1), pending, background});
         }
         cur.clear();
     };
@@ -317,18 +333,23 @@ std::vector<Segment> split_line(const std::string& line) {
 
         if (!in_single && !in_double) {
             if (c == ';') {
-                flush();
+                flush(false);
                 pending = Connector::Seq;
                 continue;
             }
             if (c == '&' && i + 1 < line.size() && line[i + 1] == '&') {
-                flush();
+                flush(false);
                 pending = Connector::And;
                 ++i;
                 continue;
             }
+            if (c == '&') {  // single `&`: run the preceding command in background
+                flush(true);
+                pending = Connector::Seq;
+                continue;
+            }
             if (c == '|' && i + 1 < line.size() && line[i + 1] == '|') {
-                flush();
+                flush(false);
                 pending = Connector::Or;
                 ++i;
                 continue;
@@ -337,7 +358,7 @@ std::vector<Segment> split_line(const std::string& line) {
 
         cur += c;
     }
-    flush();
+    flush(false);
 
     return segments;
 }
@@ -366,6 +387,23 @@ int Shell::exec_line(const std::string& line) {
             this->exit_code =
                 probe.arg().size() > 1 ? atoi(probe.arg()[1].c_str()) : status;
             return this->exit_code;
+        }
+
+        if (segment.background) {
+            fflush(stdout);
+            pid_t pid{fork()};
+            if (pid == 0) {
+                signal(SIGINT, SIG_IGN);  // background jobs are not killed by Ctrl-C
+                int st{exec_pipeline(segment.text)};
+                fflush(stdout);
+                _exit(st & 0xff);
+            }
+            if (pid > 0) {
+                this->jobs.push_back({++this->job_count, pid});
+                fmt::print("[{}] {}\n", this->job_count, static_cast<int>(pid));
+            }
+            status = 0;
+            continue;
         }
 
         status = exec_pipeline(segment.text);

@@ -1,11 +1,14 @@
 #pragma once
 
+#include <sys/types.h>
+
 #include <filesystem>
 #include <fstream>
 #include <map>
 #include <set>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 #include "cxxopts.hpp"
@@ -44,6 +47,7 @@ private:
     std::string read();
     std::string read(std::istream& input_stream);
     std::vector<Command> read_script(const std::filesystem::path& file);
+    void reap_jobs();
     int exec_pipeline(const std::string& segment);
     int exec_simple(const std::string& text);
     int exec_if(const std::string& text);
@@ -54,6 +58,8 @@ private:
     bool exiting = false;
     int exit_code = 0;
     bool read_cancelled = false;
+    int job_count = 0;
+    std::vector<std::pair<int, pid_t>> jobs;  // (job number, pid) of background jobs
 
     History history;
     const std::filesystem::path rc_file = ".config/yush/config.yush";
