@@ -14,12 +14,42 @@
 #include "shell.h"
 
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <sys/stat.h>
 #include <unistd.h>
 
 #include "gtest/gtest.h"
+
+// `Shell::Shell()` constructs paths under $HOME/.config/yush and
+// $HOME/.local/share/yush. The bare GitHub Actions ubuntu runner does not
+// have these directories, and `Shell::Shell()` calls
+// `std::filesystem::create_directory` (not create_directories), so a
+// missing parent crashes the test binary during global initialization
+// with `filesystem_error: cannot create directory`. The production binary
+// never hits this because it ships an `etc/install.sh` that creates the
+// layout, but the test target has no such setup.
+//
+// Pre-create the directories here as a side effect of the static
+// initializer for `EnsureYushDirs`. Globals within a translation unit are
+// initialized in declaration order, and `EnsureYushDirs` is declared before
+// the `Shell shell;` global below, so the directories exist before the
+// `Shell` constructor runs. Uses `std::filesystem::create_directories`
+// (recursive) so it's safe even when $HOME or its parents already exist.
+namespace {
+struct EnsureYushDirs {
+    EnsureYushDirs() {
+        const char* home_c = std::getenv("HOME");
+        std::filesystem::path home =
+            home_c ? std::filesystem::path(home_c) : std::filesystem::current_path();
+        std::error_code ec;
+        std::filesystem::create_directories(home / ".config/yush", ec);
+        std::filesystem::create_directories(home / ".local/share/yush", ec);
+    }
+};
+EnsureYushDirs ensure_yush_dirs;
+}  // namespace
 
 // `command.cpp` declares `extern Shell shell;` and uses it during
 // `Command::parse()`. The production binary defines that global in
