@@ -224,7 +224,7 @@ std::string Shell::read(std::istream& input_stream) {
 }
 
 int Shell::exec_cmd(const Command& cmd) {
-    int status;
+    int status{0};
 
     if (functions.exist(cmd.arg()[0])) {
         for (const auto& cmd_str : string_parser(functions.get(cmd.arg()[0]), '\n')) {
