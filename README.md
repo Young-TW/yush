@@ -36,6 +36,19 @@ A simple shell built by Young.
     - [x] Windows 10
     - [x] Windows 11
 
+## Limitations
+
+yush intentionally omits or does not yet implement several features common in Bash and Zsh.
+
+- **Job control**: `fg`, `bg`, and `jobs` are not supported.
+- **Tab completion**: Interactive tab completion is not implemented.
+- **Globbing / pathname expansion**: Wildcards (`*`, `?`) are not expanded.
+- **Command substitution**: `$()` and backticks ` are not supported.
+- **Here-documents**: `<<` syntax is not implemented.
+- **Arrays**: Indexed and associative arrays are not supported.
+
+Most of these omissions are deliberate design choices to keep the shell lightweight. Some may be added in future releases.
+
 ## Contributing
 
 Please checkout [CONTRIBUTING.md](./CONTRIBUTING.md).
